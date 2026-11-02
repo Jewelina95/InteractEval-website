@@ -41,3 +41,10 @@ Supersedes the persistent-panel implementation above. The full-width opening is 
 
 ## Official public release (2026-11-02)
 The current approved continuous-article site is published at https://worldeology.com/InteractEval/. The Worldeology Lab homepage and sitemap point to this official route. Canonical/social/source links use the official path. Former preview entry pages redirect to their matching official pages, preserving query strings and section anchors.
+
+
+## Current website refresh (2026-11-02)
+
+The current InteractEval design is synchronized from Xgogu/InteractEval revision d0b99a665b7f3f2da31a26239897439214ec5962. This supersedes the earlier visual descriptions above. The opening introduces response versus interaction, followed by Why interact and How we extract. Both original manuscript figures loop automatically, pause offscreen, and show a completed view for reduced motion. The current six theory explanations, refined illustrations, judge model header icons, grouped leaderboard picker, publication measurements, and conversation library are retained. Official canonical URLs remain https://worldeology.com/InteractEval/ and Source links point to this repository.
+
+Publication remains owner-controlled through the existing Worldeology Lab deployment workflow. No credentials or changes to other Lab projects are included.

@@ -76,8 +76,6 @@ function afterExplorerRender(){
   syncEditorialHeader();
   $('#app').classList.toggle('journal-app',route==='research'||route==='home');
   setupIntroductoryPlayer();
-  if(typeof setupMotivationFigure==='function')setupMotivationFigure();
-  if(typeof setupSystemFigure==='function')setupSystemFigure();
   if(researchObserver)researchObserver.disconnect();
   if(route==='research'||route==='home'){
     researchObserver=new IntersectionObserver(entries=>{for(const entry of entries)if(entry.isIntersecting&&route!=='home')document.querySelectorAll('.article-rail [data-research-section]').forEach(a=>a.classList.toggle('active',a.dataset.researchSection===entry.target.id));},{rootMargin:'-90px 0px -55% 0px'});
