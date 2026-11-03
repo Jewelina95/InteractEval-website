@@ -112,3 +112,21 @@ the original approved artwork; illustration assets use a consistent pen style.
 Source graphics: `theory-rows-art.png` and `case-artwork.png` in the existing
 situation-theories asset directory. The first Why interact player and How we
 extract remain in place.
+
+## Figure 1 visual language and explicit explanations (2026-11-03)
+
+The three-row layout remains. The right-hand illustrations now match Figure 1's
+clean filled 2D characters, black outlines and cyan/mint/gold palette. The large
+shared-record brace, rotated notation and long external warrant route have been
+removed. Compact time tags connect the right-hand claims to the left-hand case.
+
+Each theory row asks a direct question and gives a concrete explanation. The
+iceberg pairs three quotations with supported participant/world interpretations.
+The movie follows request, revealed motive and reported landing while showing
+possible continuations. Agency contains an explicitly illustrative proposal,
+the quoted uncertainty supporting it, scene/direction/evidence checks, and the
+later uptake and adaptation to evaluate. Two short labelled arrows link the
+rows. All text remains at full contrast throughout playback; a moving outline
+and flow marker supply focus instead of dimming or concealing the other rows.
+The native SVG lettering remains editable. The new illustration asset is
+`theory-clean-art.png`; prior assets are retained for cached references.
