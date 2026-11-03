@@ -48,7 +48,7 @@ function systemArtwork(){
 
 
 function interactionFigure(kind){
- if(kind==='motivation'&&window.whyInteractionFigure)return window.whyInteractionFigure()+(window.theoryProcessFigure?.()||'');
+ if(kind==='motivation'&&window.whyInteractionFigure)return window.whyInteractionFigure();
  const why=kind==='motivation',id=why?'response-interaction':'system-overview';
  const title=why?'Why interact':'How we extract';
  const description=why?'A relevant reply can leave the task unresolved. Follow what changes across the conversation.':'We reconstruct participant states and event trajectories, then evaluate each contribution in context.';
