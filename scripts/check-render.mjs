@@ -5,7 +5,7 @@ const source=fs.readFileSync('results-explorer.js','utf8');
 const start=source.indexOf('function resultsHomeV2()');
 const end=source.indexOf('function comparisonDataTable(',start);
 const makeContext=()=>{
- const c={location:{hash:''},selectedMainLevel:null,lastMainComparisonHash:'',mainComparisonGroups:[],mainComparisonGroup:'',console};
+ const c={location:{hash:''},selectedMainLevel:null,lastMainComparisonHash:'',mainComparisonGroups:[],mainComparisonGroup:'',URLSearchParams,console};
  for(const name of ['atlasHero','motivationFigure','mainRail','atlasKeyFindings','capabilityMatrix','mainBehaviorSection','mainComparisonPanel','proactivityOpening'])c[name]=()=>`<p>${name}</p>`;
  c.interactionFigure=kind=>kind==='motivation'?'<p>motivationFigure</p>':'<p>theory-v5.png</p>';
  c.journalSection=(id,index,kicker,title,deck,body)=>`<section id="${id}"><h2>${title}</h2>${body}</section>`;
@@ -25,3 +25,17 @@ const order=['atlasHero','mainRail','motivationFigure','theory-v5.png','atlasKey
 for(let i=1;i<order.length;i++)assert.ok(html.indexOf(order[i-1])<html.indexOf(order[i]),`${order[i-1]} must precede ${order[i]}`);
 assert.ok(!html.includes('data-main-panel'));
 console.log('Original opening precedes the shared sidebar and continuous response, system, and findings content.');
+
+// Finding links must select their evidence on reload as well as on click.
+c.mainComparisonGroups=[
+ {id:'stages',items:[['stage-profile','All three stages']]},
+ {id:'scenarios',items:[['information','Information gaps']]},
+ {id:'partners',items:[['pairings','All 100 pairings']]}
+];
+for(const [measure,group] of [['stage-profile','stages'],['information','scenarios'],['pairings','partners']]){
+ c.location.hash='#comparisons?measure='+measure;
+ vm.runInContext('resultsHomeV2()',c);
+ assert.equal(c.mainComparisonGroup,group);
+ assert.equal(c.mainComparisonMeasure,measure);
+}
+console.log('All three finding deep links select the corresponding evidence.');

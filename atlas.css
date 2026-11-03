@@ -1,4 +1,20 @@
 /* Atlas: the selected data-first direction, with persistent site and section navigation. */
+.atlas-findings-list{list-style:none;margin:24px 0 0;padding:0;border-top:1px solid #d5ded5}
+.atlas-findings-list>li{margin:0;border-bottom:1px solid #d5ded5}
+.atlas-finding-link{display:grid;grid-template-columns:40px minmax(0,1fr);gap:18px;padding:25px 12px 25px 0;color:inherit;text-decoration:none;border-radius:3px;transition:background-color 160ms ease}
+.atlas-finding-link:hover{background:#f3f6f1}
+.atlas-finding-link:focus-visible{outline:2px solid #234e3b;outline-offset:5px}
+.atlas-finding-number{padding-top:3px;color:#688173;font:500 14px/1.5 var(--sans);font-variant-numeric:tabular-nums}
+.atlas-finding-text h3{margin:0 0 10px;color:#193b30;font:550 clamp(19px,2vw,24px)/1.35 var(--sans);letter-spacing:-.4px;text-wrap:pretty}
+.atlas-finding-text p{margin:0!important;color:#52645b;font:400 14px/1.65 var(--sans)}
+.atlas-finding-evidence{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px 20px;margin-top:14px;color:#688173;font:400 12px/1.5 var(--sans)}
+.atlas-finding-destination{color:#234e3b;font-weight:500}
+.atlas-finding-destination>span{display:inline-block;margin-left:5px}
+.finding-stage-ranges{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;padding:18px 0;border-block:1px solid #d5ded5;margin-top:20px}
+.finding-stage-ranges>span{display:grid;gap:7px;color:#52645b;font:400 13px/1.45 var(--sans)}
+.finding-stage-ranges strong{font:500 24px/1.2 var(--sans);color:#193b30;font-variant-numeric:tabular-nums}
+@media(max-width:600px){.atlas-finding-link{grid-template-columns:24px minmax(0,1fr);gap:12px;padding:22px 0}.atlas-finding-text h3{font-size:19px}.atlas-finding-text p{font-size:13px}.atlas-finding-evidence{display:grid;gap:7px}.finding-stage-ranges{gap:10px}.finding-stage-ranges>span{font-size:12px}}
+@media(prefers-reduced-motion:reduce){.atlas-finding-link{transition:none}}
 :root{--header-height:82px;--forest:#193b30;--paper:#fff;--surface:#fff;--text:#193b30;--muted:#52645b;--line:#d5ded5}
 html{scroll-padding-top:calc(var(--header-height) + 24px)}
 body{background:#fff;font-family:var(--sans);color:#193b30}
