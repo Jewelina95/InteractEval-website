@@ -48,3 +48,18 @@ The current approved continuous-article site is published at https://worldeology
 The current InteractEval design is synchronized from Xgogu/InteractEval revision d0b99a665b7f3f2da31a26239897439214ec5962. This supersedes the earlier visual descriptions above. The opening introduces response versus interaction, followed by Why interact and How we extract. Both original manuscript figures loop automatically, pause offscreen, and show a completed view for reduced motion. The current six theory explanations, refined illustrations, judge model header icons, grouped leaderboard picker, publication measurements, and conversation library are retained. Official canonical URLs remain https://worldeology.com/InteractEval/ and Source links point to this repository.
 
 Publication remains owner-controlled through the existing Worldeology Lab deployment workflow. No credentials or changes to other Lab projects are included.
+
+## Why interact: three time slices (2026-11-03)
+
+The Main page and standalone `response-interaction.html` now use the approved
+Figure 1 comic and dialogue. A common request appears in two fictional scenes:
+ordinary curiosity and fear during an alien arrival. The 28-second player
+highlights scene context, extraction of a response from Situation A, observable
+evidence, participant latent-state estimates and event chains. Fear persists in
+B; observed landing does not establish hostile alien intent. This is a
+conceptual illustration, not a new empirical result or a model-internal trace.
+
+The artwork stays intact in `assets/research/figure1/figure1.png`.
+`why-interaction.js` and `why-interaction.css` provide playback, replay, seeking,
+time-slice selection, visibility pausing and reduced-motion support. The existing
+How we extract figure and the other sections remain in their previous order.
