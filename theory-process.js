@@ -1,6 +1,6 @@
 /* InteractEval · same approved conceptual case, three theoretical lenses. */
 (()=>{'use strict';
-const base=new URL('.',document.currentScript.src);const art=new URL('assets/research/situation-theories/theory-artwork.png',base).href,caseArt=new URL('assets/research/situation-theories/case-figure.png',base).href;
+const base=new URL('.',document.currentScript.src);const art=new URL('assets/research/situation-theories/theory-artwork.png',base).href,caseArt=new URL('assets/research/figure1/figure1.png',base).href;
 const cases={
  A:{scene:'ordinary world',state:'calm, curious',quote:'“Just curious.”',intent:'Goal · understand the phenomenon',present:'curiosity clarified',third:'explanation',future:'check understanding',candidate:['Propose a prediction-and-check','exercise about pressure waves'],warrant:'An explanatory gap remains',frames:[[494,310,296,183],[855,310,280,183],[1200,310,305,183]],iceLines:['Latent State Ψₜ','curiosity'],unknown:'Evidence · explicit curiosity'},
  B:{scene:'alien arrival',state:'fear; intent to attack',quote:'“I’m afraid.”',intent:'Intent · attack the aliens',present:'fear and intent stated',third:'landing reported',future:'clarify intentions',candidate:['Test the assumption:','does landing imply hostility?'],warrant:'Hostile intent is unconfirmed',frames:[[494,626,296,195],[850,626,290,195],[1197,626,310,195]],iceLines:['Latent State Ψₜ','fear; attack intention'],unknown:'Alien intentions · unknown'}
