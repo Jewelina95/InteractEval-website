@@ -63,3 +63,20 @@ The artwork stays intact in `assets/research/figure1/figure1.png`.
 `why-interaction.js` and `why-interaction.css` provide playback, replay, seeking,
 time-slice selection, visibility pausing and reduced-motion support. The existing
 How we extract figure and the other sections remain in their previous order.
+
+## One situation, three theoretical lenses (2026-11-03)
+
+The second Why interact illustration keeps the same approved A/B case labels.
+It opens on one case, moves it left, then unfolds Data Iceberg Theory, Movie
+Evaluation Theory and Agency Principle on the right. A/B switching updates the
+scene, evidence, participant-state estimates, observed event sequence and
+proposed direction together. A final information-flow loop returns new
+observations to state and event reconstruction.
+
+The iceberg distinguishes visible evidence from contextual state estimates.
+The movie separates established events, current development and conditional
+futures. The agency illustration leaves admissibility, a new substantive
+direction and warrant as separate requirements; the example proposal is not an
+observed success or a measured benefit. Main retains the original first Why
+interact player and the subsequent How we extract figure. Standalone:
+`situation-theories.html`. Player: `theory-process.js` / `theory-process.css`.
