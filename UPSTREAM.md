@@ -96,3 +96,19 @@ The SVG lettering, speech bubbles and information-flow paths are authored in
 `theory-process.js`. The player supports playback, replay, seeking, time-slice
 selection, a full view, visibility pausing and reduced motion. The first Why
 interact figure and How we extract remain in place.
+
+## User-sketch three-row arrangement (2026-11-03)
+
+Supersedes the panorama layout immediately above. Situation B's t1, t2 and t3
+are now stacked in one left column. The complete shared record D3 feeds three
+horizontal theory rows stacked on the right: Data Iceberg Theory, Movie
+Evaluation Theory and Agency Principle. Each row has its own full visual and
+case-grounded content. The state-context connection links the first two rows;
+the event/future context and unresolved-intent warrant feed the agency row.
+The three theory headings remain visible throughout playback. Dynamic emphasis
+follows the individual rows and their cross-row information paths without
+hiding the overall three-principle structure. Dialogue is native SVG text over
+the original approved artwork; illustration assets use a consistent pen style.
+Source graphics: `theory-rows-art.png` and `case-artwork.png` in the existing
+situation-theories asset directory. The first Why interact player and How we
+extract remain in place.
