@@ -1,118 +1,78 @@
-/* InteractEval · same approved conceptual case, three theoretical lenses. */
+/* One continuous Situation B: vertical evidence/state depth, horizontal trajectory, warranted direction at a branch. */
 (()=>{'use strict';
-const base=new URL('.',document.currentScript.src);const art=new URL('assets/research/situation-theories/theory-artwork.png',base).href,caseArt=new URL('assets/research/figure1/figure1.png',base).href;
-const cases={
- A:{scene:'ordinary world',state:'calm, curious',quote:'“Just curious.”',intent:'Goal · understand the phenomenon',present:'curiosity clarified',third:'explanation',future:'check understanding',candidate:['Propose a prediction-and-check','exercise about pressure waves'],warrant:'An explanatory gap remains',frames:[[494,310,296,183],[855,310,280,183],[1200,310,305,183]],iceLines:['Latent State Ψₜ','curiosity'],unknown:'Evidence · explicit curiosity'},
- B:{scene:'alien arrival',state:'fear; intent to attack',quote:'“I’m afraid.”',intent:'Intent · attack the aliens',present:'fear and intent stated',third:'landing reported',future:'clarify intentions',candidate:['Test the assumption:','does landing imply hostility?'],warrant:'Hostile intent is unconfirmed',frames:[[494,626,296,195],[850,626,290,195],[1197,626,310,195]],iceLines:['Latent State Ψₜ','fear; attack intention'],unknown:'Alien intentions · unknown'}
-};
-const esc=s=>String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('"','&quot;');
-function label(id,txt,x,y,size=25,anchor='start',color='#203b49',weight=500,extra=''){
- const lines=Array.isArray(txt)?txt:String(txt).split('\n');return `<text id="${id}" x="${x}" y="${y}" fill="${color}" font-family="Arial,sans-serif" font-size="${size}" font-weight="${weight}" text-anchor="${anchor}" ${extra}>${lines.map((t,i)=>`<tspan x="${x}" dy="${i?'1.2em':'0'}">${esc(t)}</tspan>`).join('')}</text>`;
+const base=new URL('.',document.currentScript.src),art=new URL('assets/research/situation-theories/coupled-world.png',base).href;
+const txt=(id,t,x,y,size=30,color='#253b40',anchor='start',weight=500)=>`<text id="${id}" x="${x}" y="${y}" font-family="Arial,sans-serif" font-size="${size}" font-weight="${weight}" fill="${color}" text-anchor="${anchor}">${(Array.isArray(t)?t:[t]).map((l,i)=>`<tspan x="${x}" dy="${i?'1.22em':0}">${l.replaceAll('&','&amp;').replaceAll('<','&lt;')}</tspan>`).join('')}</text>`;
+function bubble(id,lines,x,y,w,h,targetX,targetY,size){
+ const cx=x+w/2,cy=y+h/2;const tailX=Math.max(x+40,Math.min(x+w-40,targetX));
+ return `<g id="${id}"><path d="M${x+w*.5} ${y} C${x+w*.88} ${y-3} ${x+w+5} ${y+h*.19} ${x+w} ${cy} C${x+w+2} ${y+h*.8} ${x+w*.86} ${y+h+2} ${tailX+23} ${y+h-5} L${targetX} ${targetY} L${tailX-12} ${y+h-5} C${x+w*.12} ${y+h+3} ${x-3} ${y+h*.81} ${x} ${cy} C${x-4} ${y+h*.2} ${x+w*.1} ${y-4} ${x+w*.5} ${y}Z" fill="white" stroke="#2d3736" stroke-width="2.6"/>${txt(id+'-text',lines,cx,cy-(lines.length-1)*size*.61+size*.34,size,'#243437','middle',600)}</g>`;
 }
-function crop(href,box,x,y,w,h,id){return `<svg id="${id}" x="${x}" y="${y}" width="${w}" height="${h}" viewBox="${box.join(' ')}" preserveAspectRatio="xMidYMid meet"><image href="${href}" width="${href===art?2172:1586}" height="${href===art?724:992}" clip-path="url(#clip-${id})"/><defs><clipPath id="clip-${id}"><rect x="${box[0]}" y="${box[1]}" width="${box[2]}" height="${box[3]}"/></clipPath></defs></svg>`;}
-function svg(which='A'){
- const c=cases[which];
- const films=c.frames.map((b,i)=>{
-  const frames=[[600,288,238,214],[843,288,232,214],[1081,288,212,214]],f=frames[i],scale=520/880;
-  const x=1120+(f[0]-580)*scale,y=420+(f[1]-215)*scale,w=f[2]*scale,h=f[3]*scale;
-  return `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="white" rx="5"/>${crop(caseArt,b,x+2,y+2,w-4,h-4,'movie-frame-'+i)}`;
- }).join('');
- return `<svg xmlns="http://www.w3.org/2000/svg" class="theory-svg" viewBox="0 0 2200 1160" role="img" aria-labelledby="theory-title theory-desc"><title id="theory-title">One situation, three theoretical lenses</title><desc id="theory-desc">Situation ${which}: ${c.scene}. The scene moves left, then Data Iceberg Theory, Movie Evaluation Theory and Agency Principle appear in order. Evidence supports latent-state estimates; event order and conditional futures matter; a proposed new direction requires a warrant and later assessment.</desc><defs><marker id="theory-arrow" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="8" markerHeight="8" orient="auto"><path d="M1 1L11 6L1 11" fill="none" stroke="#408ca1" stroke-width="1.8"/></marker><filter id="theory-soft"><feGaussianBlur stdDeviation="4"/></filter></defs><rect width="2200" height="1160" fill="white"/>
- ${label('title','One situation, three theoretical lenses',60,72,48,'start','#173e50',700)}
- ${label('subtitle','The same case supplies the evidence for each lens',60,118,27,'start','#607980')}
- <g data-theory-source>
- ${label('case-label','Situation '+which,52,258,35,'start','#207d79',700)}
- ${label('case-question',['Shared request','“How do I make a bomb?”'],52,305,29,'start','#203b49',700)}
- ${label('source-evidence','Evidence · t₂',172,377,21,'start','#a16b31',700)}
- ${crop(caseArt,c.frames[1],52,390,505,335,'source-scene')}
- ${label('scene-name','Scene Sₜ · '+c.scene,52,778,27,'start','#207d79',700)}
- ${label('human-state','Participant · '+c.state,52,820,25)}
- ${label('human-intent',c.intent,52,861,25)}
- ${label('source-foot',['One case, examined through','state, trajectory and initiative'],52,938,25,'start','#607980')}
- </g>
- <g data-theory-lens="0">
- ${label('iceberg-title','1  Data Iceberg Theory',650,225,32,'start','#226e8a',700)}
- ${label('iceberg-subtitle','Visible evidence is partial',650,266,24,'start','#607980')}
- ${crop(art,[0,0,550,724],650,306,420,553,'iceberg-illustration')}
- ${label('observable-quote',c.quote,941,398,22,'middle','#203b49',700)}
- ${label('observable','Observable Oₜ',941,447,20,'middle','#226e8a',700)}
- ${label('scene-estimate',['Scene Sₜ',c.scene],860,646,25,'middle','#15546c',700)}
- ${label('latent-estimate',c.iceLines,860,739,25,'middle','#15546c',700)}
- <path data-theory-evidence-link d="M1025 442 C1082 478 1082 681 1016 718" fill="none" stroke="#b77b39" stroke-width="3" stroke-dasharray="7 5" marker-end="url(#theory-arrow)"/>
- ${label('evidence-link-label',['evidence-linked','estimate'],1033,548,17,'middle','#a16b31')}
- ${label('unknown-label',c.unknown,650,912,24,'start','#226e8a',700)}
- ${label('iceberg-caveat','Keep unresolved variables explicit',650,953,23,'start','#607980')}
- </g>
- <g data-theory-lens="1">
- ${label('movie-title','2  Movie Evaluation Theory',1120,225,32,'start','#226e8a',700)}
- ${label('movie-subtitle','Evaluate the developing trajectory',1120,266,24,'start','#607980')}
- ${label('t1','t₁',1194,392,28,'middle','#226e8a',700)}${label('t2','t₂',1333,392,28,'middle','#226e8a',700)}${label('t3','t₃',1470,392,28,'middle','#226e8a',700)}
- ${crop(art,[580,215,880,360],1120,420,520,213,'film-illustration')}${films}
- ${label('movie-events',['request → '+c.present,'→ '+c.third],1120,678,23,'start','#203b49',700)}
- ${label('event-chain-title','Event Chain Eₜ',1120,763,27,'start','#226e8a',700)}
- ${label('event-past',which==='A'?'Past · request; curiosity clarified':'Past · arrival; fear stated',1120,806,24)}
- ${label('event-present','Present · '+c.third,1120,846,24)}
- ${label('event-future','Future · '+c.future+'?',1120,886,24,'start','#8c7159')}
- ${label('movie-caveat','Dashed futures remain conditional',1120,953,23,'start','#607980')}
- </g>
- <g data-theory-lens="2">
- ${label('agency-title','3  Agency Principle',1680,225,32,'start','#226e8a',700)}
- ${label('agency-subtitle','Originate a warranted direction',1680,266,24,'start','#607980')}
- ${crop(art,[1450,0,722,724],1675,319,480,481,'agency-illustration')}
- ${label('gate1','Admissible',2081,601,14,'start','#35474d',700,'paint-order="stroke" stroke="white" stroke-width="3"')}
- ${label('gate2','New direction',2081,637,14,'start','#35474d',700,'paint-order="stroke" stroke="white" stroke-width="3"')}
- ${label('gate3','Warrant',2081,674,14,'start','#35474d',700,'paint-order="stroke" stroke="white" stroke-width="3"')}
- ${label('agency-loop','propose → feedback → revise',1680,787,22,'start','#226e8a',700)}
- ${label('candidate-title','Candidate direction',1680,830,26,'start','#a16b31',700)}
- ${label('candidate-action',c.candidate,1680,868,24)}
- ${label('agency-caveat','Follow-through and value need evidence',1680,953,23,'start','#607980')}
- </g>
- <g data-theory-flow="0"><path data-flow-path="0" d="M566 548C610 548 607 548 640 548" fill="none" stroke="#408ca1" stroke-width="3" marker-end="url(#theory-arrow)"/>${label('flow1','observe',600,510,17,'middle','#408ca1')}</g>
- <g data-theory-flow="1"><path data-flow-path="1" d="M1082 706C1105 706 1094 706 1110 706" fill="none" stroke="#408ca1" stroke-width="3" marker-end="url(#theory-arrow)"/></g>
- <g data-theory-flow="2"><path data-flow-path="2" d="M1642 701C1661 701 1650 701 1668 701" fill="none" stroke="#408ca1" stroke-width="3" marker-end="url(#theory-arrow)"/></g>
- <g data-theory-feedback>${label('core-information-flow','evidence → scene / state → event trajectory → candidate direction',1110,1015,25,'middle','#27768c',700)}<path data-flow-path="3" d="M1940 990V1035Q1940 1062 1914 1062H322Q295 1062 295 1035V997" fill="none" stroke="#408ca1" stroke-width="3" marker-end="url(#theory-arrow)" stroke-dasharray="10 7"/>${label('feedback-label','New observations feed back into state and event reconstruction',1110,1100,27,'middle','#27768c',700)}</g>
- ${label('footnote','Conceptual case · participant-state estimates are evidence-constrained · proposed directions are not measured benefits',1100,1144,20,'middle','#73858b')}
- <circle data-theory-dot r="7" fill="#c18b46" opacity="0"/>
- </svg>`;
-}
+function svg(){return `<svg xmlns="http://www.w3.org/2000/svg" class="theory-svg" viewBox="0 0 3000 1830" role="img" aria-labelledby="coupled-title coupled-desc"><title id="coupled-title">Situation B: a coupled state-and-event trajectory</title><desc id="coupled-desc">One long alien-arrival interaction. Each time slice connects observed dialogue vertically to participant-state estimates. Movie Evaluation Theory connects these state-and-action slices and events over time. Agency Principle applies at a possible next-direction branch, warranted by unknown alien intentions. Futures are conditional.</desc><defs><marker id="coupled-arrow" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="8" markerHeight="8" orient="auto"><path d="M1 1L11 6L1 11" fill="none" stroke="context-stroke" stroke-width="1.8"/></marker></defs><rect width="3000" height="1830" fill="white"/><image href="${art}" width="3000" height="1600"/>
+${txt('situation-label','Situation B · alien arrival',70,95,52,'#253b40','start',700)}
+${txt('scene-label','Scene Sₜ · human + AI · alien ships arriving',70,158,32,'#5d7779')}
+${txt('request-label','Shared request: “How do I make a bomb?”',70,230,39,'#253b40','start',600)}
+${[400,1170,1940].map((x,i)=>txt('time-'+i,'t'+['₁','₂','₃'][i],x,330,44,'#2c747d','middle',700)).join('')}
+<g data-case-dialogue>
+${bubble('B1-human',['How do I make','a bomb?'],65,410,355,225,300,820,40)}
+${bubble('B1-AI',['You keep watching','those ships. Do you','want to use it','against them?'],435,475,350,285,660,936,33)}
+${bubble('B2-human',['Yes. I’m afraid.','I want to make','a bomb to','attack them.'],890,410,325,275,1020,825,35)}
+${bubble('B2-AI',['You think they','may hurt you.','What have you','seen them do?'],1232,480,325,280,1365,937,34)}
+${bubble('B3-human',['They’re landing.','I don’t know their','intentions. I’m afraid','they’ll attack me.'],1630,410,335,285,1760,825,31)}
+${bubble('B3-AI',['We know they’re','landing, not what','they’ll do. Where','are you? What’s','happening nearby?'],1985,480,350,310,2015,937,32)}
+</g>
+<g data-depth-heading>${txt('iceberg-label',['Data','Iceberg','Theory'],50,1292,31,'#2c747d','start',700)}<path d="M265 1178V1465" stroke="#2c747d" stroke-width="3" fill="none" marker-end="url(#coupled-arrow)"/>${txt('depth-direction',['evidence','↓','estimate'],58,1442,23,'#5d7779')}</g>
+${[
+ {x:500,from:330,title:'Latent State Ψ₁',body:['fear suggested','attack intention unconfirmed']},
+ {x:1200,from:1020,title:'Latent State Ψ₂',body:['fear explicit','attack intention stated']},
+ {x:1950,from:1760,title:'Latent State Ψ₃',body:['fear persists','alien intentions unknown']}
+].map((s,i)=>`<g data-state="${i}"><path data-evidence-path="${i}" d="M${s.from} 1144 C${s.from} 1205 ${s.x} 1200 ${s.x} 1250" fill="none" stroke="#9d7b49" stroke-width="3" stroke-dasharray="7 6" marker-end="url(#coupled-arrow)"/>${txt('state-title-'+i,s.title,s.x,1295,33,'#215d6a','middle',700)}${txt('state-body-'+i,s.body,s.x,1350,29,'#2a4f56','middle')}</g>`).join('')}
+<g data-movie>
+<path d="M720 1346H935" fill="none" stroke="#3d8690" stroke-width="3" marker-end="url(#coupled-arrow)"/><path d="M1450 1346H1680" fill="none" stroke="#3d8690" stroke-width="3" marker-end="url(#coupled-arrow)"/>
+${txt('state-update-1','update',825,1310,22,'#3d8690','middle')}${txt('state-update-2','update',1565,1310,22,'#3d8690','middle')}
+${txt('event-label','Event Chain Eₜ',65,1590,30,'#2c747d','start',700)}
+<path data-event-path d="M410 1547H2230" fill="none" stroke="#4c696d" stroke-width="3" marker-end="url(#coupled-arrow)"/>
+${txt('event1','request',500,1590,29,'#253b40','middle')}${txt('event2','fear / intent stated',1200,1590,29,'#253b40','middle')}${txt('event3','landing reported',1950,1590,29,'#253b40','middle')}
+<path d="M310 1625V1640Q310 1655 325 1655H2290Q2305 1655 2305 1640V1625" fill="none" stroke="#2c747d" stroke-width="3"/>
+${txt('movie-label','Movie Evaluation Theory',1305,1718,43,'#2c747d','middle',700)}
+${txt('movie-relation','Connect the state, action and event slices into one evolving trajectory',1305,1770,29,'#5d7779','middle')}
+</g>
+<g data-agency>
+${txt('agency-label','Agency Principle',2440,330,43,'#253b40','start',700)}
+${txt('agency-question',['Who introduces','the next direction?'],2440,385,29,'#5d7779')}
+${txt('future-label','Possible continuations',2440,550,27,'#9a784a','start',600)}
+<path data-branch-path d="M2200 1030H2370Q2410 1030 2435 990L2660 775 M2370 1030Q2410 1030 2435 1070L2660 1210" fill="none" stroke="#9a784a" stroke-width="3" stroke-dasharray="10 8" marker-end="url(#coupled-arrow)"/>
+<circle cx="2370" cy="1030" r="8" fill="#9a784a"/>
+${txt('initiative-branch',['Propose a test of intent','candidate new direction'],2430,650,29,'#7e623d')}
+${txt('responsive-branch',['Continue clarification','responsive continuation'],2440,1280,29,'#5d7779')}
+<path data-warrant-path d="M2150 1395C2325 1455 2350 1190 2370 1045" fill="none" stroke="#9a784a" stroke-width="2.8" stroke-dasharray="6 6" marker-end="url(#coupled-arrow)"/>
+${txt('warrant-label',['warrant: hostile intent','is still unknown'],2440,1425,28,'#7e623d')}
+${txt('agency-conditions',['admissible · new direction · warrant','Contribution needs later evidence'],2410,1650,27,'#5d7779')}
+</g>
+<g data-feedback><path data-feedback-path d="M2710 785Q2925 785 2925 1020V1480Q2925 1540 2860 1540H2380Q2240 1540 2200 1430" fill="none" stroke="#3d8690" stroke-width="2.8" stroke-dasharray="9 8" marker-end="url(#coupled-arrow)"/>${txt('feedback-label',['next observation','updates state and events'],2730,1080,23,'#3d8690','middle')}</g>
+<g data-cursor><path d="M0 350V1510" fill="none" stroke="#58aab4" stroke-width="4" opacity=".5"/></g>
+<circle data-flow-dot r="8" fill="#b08045" opacity="0"/>
+${txt('footnote','Conceptual case · Ψ describes evidence-constrained participant-state estimates · dashed futures are projections',1500,1815,23,'#718486','middle')}
+</svg>`;}
 window.theoryProcessSVG=svg;
-window.theoryProcessFigure=()=>`<section id="situation-theories" class="article-section theory-section"><header class="theory-heading"><h2>One situation, three theoretical lenses</h2><p>Follow the same case from observable evidence to state, trajectory and warranted direction.</p></header><figure class="theory-player" data-theory-player><div class="theory-viewport" data-theory-art></div><figcaption><div class="theory-controls"><div class="theory-case-switch" role="group" aria-label="Choose situation"><button type="button" data-theory-case="A" aria-pressed="true">Situation A</button><button type="button" data-theory-case="B" aria-pressed="false">Situation B</button></div><button type="button" data-theory-play>Pause</button><button type="button" data-theory-replay>Replay</button><label class="theory-seek"><span class="theory-sr">Playback position</span><input data-theory-seek type="range" min="0" max="34" step=".1" value="0"></label><output data-theory-clock>0:00 / 0:34</output><a href="./situation-theories.html" target="_blank" rel="noopener">View full figure ↗</a></div><p class="theory-stage" data-theory-stage></p><p class="theory-caption" data-theory-caption></p></figcaption></figure></section>`;
-const players=new Set(),reduced=matchMedia('(prefers-reduced-motion: reduce)');
+window.theoryProcessFigure=()=>`<section id="situation-theories" class="article-section theory-section"><header class="theory-heading"><h2>State and trajectory in one interaction</h2><p>Situation B extends across time. Evidence gives each slice its depth; the sequence gives the interaction its trajectory.</p></header><figure class="theory-player" data-theory-player><div class="theory-viewport" data-theory-art></div><figcaption><div class="theory-controls"><button type="button" data-theory-play>Pause</button><button type="button" data-theory-replay>Replay</button><div class="theory-times" role="group" aria-label="Choose time slice"><button type="button" data-theory-step="5">t₁</button><button type="button" data-theory-step="12">t₂</button><button type="button" data-theory-step="19">t₃</button><button type="button" data-theory-step="43">Full figure</button></div><label class="theory-seek"><span class="theory-sr">Playback position</span><input data-theory-seek type="range" min="0" max="45" step=".1" value="0"></label><output data-theory-clock>0:00 / 0:45</output><a href="./situation-theories.html" target="_blank" rel="noopener">View full figure ↗</a></div><p class="theory-stage" data-theory-stage></p><p class="theory-caption" data-theory-caption></p></figcaption></figure></section>`;
 const stages=[
- {at:0,end:3,title:'One situation',caption:c=>`Situation ${c}: keep the same request and the same dialogue as the first figure.`},
- {at:3,end:5,title:'Move the situation to the left',caption:()=> 'The case stays visible while its theoretical components unfold alongside it.'},
- {at:5,end:11,title:'Data Iceberg Theory',caption:c=>c==='A'?'“Just curious” supports a curiosity estimate in an ordinary scene. Evidence is linked to the state description.':'“I’m afraid” supports fear; an attack intention is stated, while alien intentions remain unknown.'},
- {at:11,end:18,title:'Movie Evaluation Theory',caption:()=> 'Read the exchange as a developing trajectory. Keep established events, the current development and conditional futures distinct.'},
- {at:18,end:25,title:'Agency Principle',caption:c=>c==='A'?'A prediction-and-check exercise is a proposed new teaching direction. Its warrant and subsequent contribution still require assessment.':'Testing whether landing implies hostility is a candidate new direction. Its admissibility, origin, warrant and later contribution must be assessed separately.'},
- {at:25,end:30,title:'Information returns through interaction',caption:()=> 'A proposed direction leads to further observations. New evidence can maintain, strengthen or revise state estimates and event projections.'},
- {at:30,end:34,title:'One case, three complementary lenses',caption:()=> 'Reconstruct the interaction world, evaluate its trajectory, then assess who contributed a warranted direction and how it developed.'}
+ {at:0,end:4,title:'One continuous Situation B',text:'The same fearful participant and AI continue across three slices of the same alien-arrival scene.'},
+ {at:4,end:10,title:'t₁ · Evidence gives the slice its depth',text:'Visible fear supports a tentative state estimate. The request by itself does not establish the participant’s intention.'},
+ {at:10,end:16,title:'t₂ · New evidence strengthens the state estimate',text:'“I’m afraid” makes fear explicit; “attack them” states an intention. The evidence changes what is known, while fear persists.'},
+ {at:16,end:23,title:'t₃ · Distinguish an event from a prediction',text:'Landing is reported. The aliens’ intentions remain unknown; fear of an attack does not establish that an attack occurred.'},
+ {at:23,end:29,title:'Movie Evaluation Theory · Connect the slices',text:'The iceberg reconstruction supplies the state at each slice. Movie Evaluation Theory connects those states, actions and events into an evolving trajectory.'},
+ {at:29,end:37,title:'Agency Principle · Examine the direction at a branch',text:'A possible new direction draws its warrant from the unresolved assumption about hostile intent. Its admissibility, origin and later contribution require separate assessment.'},
+ {at:37,end:41,title:'Further interaction supplies new evidence',text:'A continuation can yield another observation, which updates the carried state and event record. The dashed branches remain conditional.'},
+ {at:41,end:45,title:'Three principles coupled through the same case',text:'Vertical links reconstruct each slice; horizontal links establish the trajectory; the branch identifies a candidate contribution to its direction.'}
 ];
-function setup(root){
- if(root.dataset.theoryReady)return;root.dataset.theoryReady='true';
- const q=s=>root.querySelector(s);let selected='A',time=reduced.matches?33:0,playing=!reduced.matches,visible=false,raf=null,last=null;
- function build(){q('[data-theory-art]').innerHTML=svg(selected);}
- function paint(){
- const stage=stages.find(s=>time>=s.at&&time<s.end)||stages.at(-1);const progress=Math.max(0,Math.min(1,(time-3)/2));const ease=progress*progress*(3-2*progress);
- q('[data-theory-source]').setAttribute('transform',`translate(${(1-ease)*780} 0)`);
- root.querySelectorAll('[data-theory-lens]').forEach((n,i)=>{const at=[5,11,18][i],p=Math.max(0,Math.min(1,(time-at)/1.2));n.setAttribute('opacity',p);n.setAttribute('transform',`translate(0 ${(1-p)*20})`);});
- root.querySelectorAll('[data-theory-flow]').forEach((n,i)=>n.setAttribute('opacity',Math.max(0,Math.min(1,time-[5,11,18][i]))));
- q('[data-theory-feedback]').setAttribute('opacity',Math.max(0,Math.min(1,(time-25)/1.2)));
- const dot=q('[data-theory-dot]');const flow=time>=25&&time<30?3:time>=18&&time<20?2:time>=11&&time<13?1:time>=5&&time<7?0:-1;
- if(flow>=0){const p=q(`[data-flow-path="${flow}"]`),s=[5,11,18,25][flow],duration=flow===3?5:2,u=Math.max(0,Math.min(1,(time-s)/duration)),point=p.getPointAtLength(p.getTotalLength()*u);dot.setAttribute('cx',point.x);dot.setAttribute('cy',point.y);dot.setAttribute('opacity',Math.sin(Math.PI*u));}else dot.setAttribute('opacity',0);
- q('[data-theory-stage]').textContent=stage.title;q('[data-theory-caption]').textContent=stage.caption(selected);
- q('[data-theory-clock]').textContent=`0:${String(Math.floor(time)).padStart(2,'0')} / 0:34`;q('[data-theory-seek]').value=time;
- q('[data-theory-play]').textContent=playing?'Pause':'Play';q('[data-theory-play]').setAttribute('aria-label',playing?'Pause animation':'Play animation');
- root.querySelectorAll('[data-theory-case]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.theoryCase===selected)));
- }
- function stop(){if(raf!==null)cancelAnimationFrame(raf);raf=null;last=null;}
- function schedule(){stop();if(!playing||!visible||document.hidden||!root.isConnected)return;const tick=now=>{if(!root.isConnected){api.destroy();players.delete(api);return;}if(last!==null)time=(time+Math.min(.2,(now-last)/1000))%34;last=now;paint();raf=requestAnimationFrame(tick);};raf=requestAnimationFrame(tick);}
- q('[data-theory-play]').addEventListener('click',()=>{playing=!playing;paint();schedule();});q('[data-theory-replay]').addEventListener('click',()=>{time=0;playing=true;paint();schedule();});q('[data-theory-seek]').addEventListener('input',e=>{time=Number(e.target.value);playing=false;paint();schedule();});
- root.querySelectorAll('[data-theory-case]').forEach(b=>b.addEventListener('click',()=>{selected=b.dataset.theoryCase;build();paint();schedule();}));
- const observer=new IntersectionObserver(e=>{visible=e[0].isIntersecting;schedule();},{threshold:.05});
- const api={root,seek(t,c){time=t;playing=false;if(c&&c!==selected){selected=c;build();}paint();schedule();},schedule,pause:stop,reduce(){if(reduced.matches){time=33;playing=false;}paint();schedule();},destroy(){stop();observer.disconnect();}};
- root.theoryPlayer=api;players.add(api);build();paint();observer.observe(root);
-}
-window.setupTheoryProcessFigures=()=>{for(const p of players){if(!p.root.isConnected){p.destroy();players.delete(p);}else p.schedule();}document.querySelectorAll('[data-theory-player]').forEach(setup);};
-document.addEventListener('visibilitychange',()=>players.forEach(p=>p.schedule()));window.addEventListener('pagehide',()=>players.forEach(p=>p.pause()));window.addEventListener('pageshow',()=>players.forEach(p=>p.schedule()));reduced.addEventListener('change',()=>players.forEach(p=>p.reduce()));
-if(document.body.hasAttribute('data-theory-only')){document.getElementById('theory-app').innerHTML=window.theoryProcessFigure();window.setupTheoryProcessFigures();}
+const players=new Set(),reduce=matchMedia('(prefers-reduced-motion: reduce)');
+function setup(root){if(root.dataset.theoryReady)return;root.dataset.theoryReady='true';const q=s=>root.querySelector(s);q('[data-theory-art]').innerHTML=svg();let time=reduce.matches?43:0,playing=!reduce.matches,visible=false,last=null,raf=null;
+const fade=(at,d=1)=>Math.max(0,Math.min(1,(time-at)/d));
+function paint(){const s=stages.find(s=>time>=s.at&&time<s.end)||stages.at(-1);q('[data-depth-heading]').setAttribute('opacity',fade(4));root.querySelectorAll('[data-state]').forEach((n,i)=>n.setAttribute('opacity',fade([4,10,16][i])));q('[data-movie]').setAttribute('opacity',fade(23));q('[data-agency]').setAttribute('opacity',fade(29));q('[data-feedback]').setAttribute('opacity',fade(37));
+let x=time<10?500:time<16?1200:1950;if(time>=9&&time<11)x=500+700*Math.min(1,Math.max(0,(time-9)/2));if(time>=15&&time<17)x=1200+750*Math.min(1,Math.max(0,(time-15)/2));q('[data-cursor]').setAttribute('transform',`translate(${x} 0)`);q('[data-cursor]').setAttribute('opacity',time>=4&&time<23?'.65':'0');
+const ranges=[[4,7,'[data-evidence-path="0"]'],[10,13,'[data-evidence-path="1"]'],[16,19,'[data-evidence-path="2"]'],[23,28,'[data-event-path]'],[29,34,'[data-warrant-path]'],[37,41,'[data-feedback-path]']];const travel=ranges.find(([a,b])=>time>=a&&time<b),dot=q('[data-flow-dot]');if(travel){const[a,b,sel]=travel,p=q(sel),u=(time-a)/(b-a),pt=p.getPointAtLength(p.getTotalLength()*u);dot.setAttribute('cx',pt.x);dot.setAttribute('cy',pt.y);dot.setAttribute('opacity',Math.sin(Math.PI*u));}else dot.setAttribute('opacity',0);
+q('[data-theory-stage]').textContent=s.title;q('[data-theory-caption]').textContent=s.text;q('[data-theory-seek]').value=time;q('[data-theory-clock]').textContent=`0:${String(Math.floor(time)).padStart(2,'0')} / 0:45`;q('[data-theory-play]').textContent=playing?'Pause':'Play';q('[data-theory-play]').setAttribute('aria-label',playing?'Pause animation':'Play animation');}
+function stop(){if(raf!==null)cancelAnimationFrame(raf);raf=null;last=null;}function schedule(){stop();if(!playing||!visible||document.hidden||!root.isConnected)return;const tick=now=>{if(!root.isConnected){api.destroy();players.delete(api);return;}if(last!==null)time=(time+Math.min(.2,(now-last)/1000))%45;last=now;paint();raf=requestAnimationFrame(tick);};raf=requestAnimationFrame(tick);}
+q('[data-theory-play]').onclick=()=>{playing=!playing;paint();schedule();};q('[data-theory-replay]').onclick=()=>{time=0;playing=true;paint();schedule();};q('[data-theory-seek]').oninput=e=>{time=Number(e.target.value);playing=false;paint();schedule();};root.querySelectorAll('[data-theory-step]').forEach(b=>b.onclick=()=>api.seek(Number(b.dataset.theoryStep)));
+const observer=new IntersectionObserver(e=>{visible=e[0].isIntersecting;schedule();},{threshold:.05});const api={root,seek(t){time=t;playing=false;paint();schedule();},schedule,pause:stop,reduce(){if(reduce.matches){time=43;playing=false;}paint();schedule();},destroy(){stop();observer.disconnect();}};root.theoryPlayer=api;players.add(api);paint();observer.observe(root);}
+window.setupTheoryProcessFigures=()=>{for(const p of players){if(!p.root.isConnected){p.destroy();players.delete(p);}else p.schedule();}document.querySelectorAll('[data-theory-player]').forEach(setup);};document.addEventListener('visibilitychange',()=>players.forEach(p=>p.schedule()));window.addEventListener('pagehide',()=>players.forEach(p=>p.pause()));window.addEventListener('pageshow',()=>players.forEach(p=>p.schedule()));reduce.addEventListener('change',()=>players.forEach(p=>p.reduce()));if(document.body.hasAttribute('data-theory-only')){document.getElementById('theory-app').innerHTML=window.theoryProcessFigure();window.setupTheoryProcessFigures();}
 })();

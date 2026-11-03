@@ -80,3 +80,19 @@ direction and warrant as separate requirements; the example proposal is not an
 observed success or a measured benefit. Main retains the original first Why
 interact player and the subsequent How we extract figure. Standalone:
 `situation-theories.html`. Player: `theory-process.js` / `theory-process.css`.
+
+## Coupled Situation B panorama (2026-11-03)
+
+Supersedes the separate three-lens illustrations above. The second Why interact
+player now uses one continuous, hand-inked Situation B panorama. Each time
+slice links dialogue and visible behavior vertically to its participant-state
+estimate; those state slices and events connect horizontally into the Movie
+Evaluation Theory trajectory. Agency Principle is attached to a conditional
+continuation branch, with an evidence-warrant link from unresolved alien intent.
+The graph retains all six approved dialogue bubbles and persistent fear. It
+keeps projections distinct from observed events and proposed direction distinct
+from demonstrated contribution. Artwork: `assets/research/situation-theories/coupled-world.png`.
+The SVG lettering, speech bubbles and information-flow paths are authored in
+`theory-process.js`. The player supports playback, replay, seeking, time-slice
+selection, a full view, visibility pausing and reduced motion. The first Why
+interact figure and How we extract remain in place.
