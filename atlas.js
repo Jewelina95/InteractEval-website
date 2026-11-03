@@ -32,6 +32,7 @@ function syncAtlasLayout(){
  syncAtlasActiveSection();
  atlasResponsiveTables();
  atlasDataMotion();
+ window.InteractEvalFindingFocus?.fromLocation();
 }
 function atlasResponsiveTables(){
  document.querySelectorAll('.comparison-data-table,.agent-results-table').forEach(table=>{
@@ -42,8 +43,9 @@ function atlasResponsiveTables(){
    for(const row of table.querySelectorAll('tbody tr')){
      const cells=[...row.children];if(cells.length!==heads.length)continue;
      const card=document.createElement('article'),name=document.createElement('div'),list=document.createElement('dl');
+     if(row.dataset.comparisonModel)card.dataset.comparisonModel=row.dataset.comparisonModel;
      name.className='atlas-comparison-identity';name.innerHTML=cells[0].innerHTML;card.append(name);
-     cells.slice(1).forEach((cell,i)=>{const item=document.createElement('div'),term=document.createElement('dt'),value=document.createElement('dd');const identity=headerNodes[i+1].querySelector('.model-identity');if(identity)term.append(identity.cloneNode(true));else term.textContent=heads[i+1];value.innerHTML=cell.innerHTML;item.append(term,value);list.append(item)});
+     cells.slice(1).forEach((cell,i)=>{const item=document.createElement('div'),term=document.createElement('dt'),value=document.createElement('dd');const identity=headerNodes[i+1].querySelector('.model-identity');if(identity)term.append(identity.cloneNode(true));else term.textContent=heads[i+1];value.innerHTML=cell.innerHTML;if(cell.dataset.comparisonMetric)item.dataset.comparisonMetric=cell.dataset.comparisonMetric;item.append(term,value);list.append(item)});
      card.append(list);cards.append(card);
    }
    wrap.dataset.atlasCards='true';wrap.classList.add('has-atlas-cards');wrap.after(cards);
@@ -73,7 +75,8 @@ document.addEventListener('click',event=>{
   if(location.hash!==finding.getAttribute('href'))history.pushState(null,'',finding.getAttribute('href'));
   lastMainComparisonHash=location.hash;
   document.getElementById('main-comparison-body')?.focus({preventScroll:true});
-  atlasScrollTo(document.getElementById('comparisons'));
+  window.InteractEvalFindingFocus?.show(finding.dataset.findingMeasure);
+  atlasScrollTo(document.querySelector('#main-comparison-body .comparison-content')||document.getElementById('comparisons'));
  }
  const toggle=event.target.closest('[data-atlas-contents]');
  if(toggle){const expanded=toggle.getAttribute('aria-expanded')!=='true';toggle.setAttribute('aria-expanded',String(expanded));document.querySelector('.main-results-rail').classList.toggle('is-open',expanded);}
