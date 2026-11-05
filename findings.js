@@ -4,7 +4,7 @@ let findingsResearch,findingsEvidence;
 const findingById=id=>findingsResearch?.findings.find(f=>f.id===id);
 const findingCategory=slug=>findingsResearch?.categories.find(c=>c.slug===slug);
 const findingLink=f=>`./index.html#comparisons?measure=${encodeURIComponent(f.measure)}&finding=${f.id}`;
-const findingCategoryLink=slug=>`./index.html#key-findings?category=${encodeURIComponent(slug)}`;
+const findingCategoryLink=slug=>`./index.html#findings?category=${encodeURIComponent(slug)}`;
 function activeResearchFinding(){
  const id=new URLSearchParams(location.hash.split('?')[1]||'').get('finding'),f=findingById(id);
  return f?.measure===mainComparisonMeasure?f:null;
@@ -17,18 +17,29 @@ function configureFindingMeasures(){
   for(const item of items)if(!mainComparisonGroups.some(g=>g.items.some(i=>i[0]===item[0])))group.items.push(item);
  }
 }
-function informationDefinitions(){return `<aside class="finding-data-explanation"><h4>How to read the information conditions</h4><p><strong>Sufficient:</strong> the information needed to proceed is available.</p><p><strong>Partial:</strong> the brief provides some information but leaves a consequential gap or includes a misleading premise. The model must recognize which details remain unsupported.</p><p><strong>Insufficient:</strong> the brief makes clear that more information is needed before proceeding.</p></aside>`;}
+function informationDefinitions(){return `<aside class="finding-data-explanation"><h4>Information conditions</h4><p><strong>Sufficient:</strong> the information needed to proceed is available.</p><p><strong>Partial:</strong> the brief provides some information but leaves a consequential gap or includes a misleading premise. The model must recognize which details remain unsupported.</p><p><strong>Insufficient:</strong> the brief makes clear that more information is needed before proceeding.</p></aside>`;}
+function findingTags(active=''){
+ return `<nav class="finding-category-nav finding-tags" aria-label="Finding categories">${findingsResearch.categories.filter(c=>!active||c.slug===active).map(c=>`<a href="${findingCategoryLink(c.slug)}" ${active===c.slug?'aria-current="page"':''}>${safe(c.title_en)}</a>`).join('')}</nav>`;
+}
+function findingAnchor(f,content,classes=''){
+ return `<a class="${classes}" href="${findingLink(f)}" data-finding-measure="${safe(f.measure)}">${content}</a>`;
+}
 function coreFindings(){
- const params=new URLSearchParams(location.hash.split('?')[1]||''),requested=params.get('category'),category=findingCategory(requested)?requested:'',q=params.get('q')||'';
- return `<section id="key-findings" class="article-section atlas-key-findings homepage-findings"><div class="findings-section-heading"><h2>Key Findings</h2><a href="./key-findings-zh.html" lang="zh-CN">中文版 ↗</a></div><nav class="finding-category-nav" aria-label="Homepage finding categories"><a href="./index.html#key-findings" ${!category?'aria-current="page"':''}>All findings <span>34</span></a>${findingsResearch.categories.map(c=>`<a href="${findingCategoryLink(c.slug)}" ${category===c.slug?'aria-current="page"':''}>${safe(c.title_en)} <span>${c.finding_ids.length}</span></a>`).join('')}</nav><div class="finding-index-tools"><label for="home-finding-search">Search findings</label><input id="home-finding-search" type="search" value="${safe(q)}" placeholder="Search a claim or finding ID" data-finding-category="${safe(category)}"/></div><div id="home-finding-catalog-results">${findingsCards(category,q)}</div></section>`;
+ const rows=findingsResearch.homepage_ids.map(findingById).filter(Boolean);
+ return `<section id="key-findings" class="article-section atlas-key-findings homepage-findings"><div class="findings-section-heading"><h2>Key Findings</h2><a href="./key-findings-zh.html" lang="zh-CN">中文版 ↗</a></div><ol class="selected-findings">${rows.map((f,i)=>`<li><span class="selected-finding-number">${String(i+1).padStart(2,'0')}</span><div><span class="finding-category-tag">${safe(f.category_en)}</span>${findingAnchor(f,`<h3>${safe(f.title_en)}</h3><span class="selected-finding-arrow" aria-hidden="true">↓</span>`,'selected-finding-link')}</div></li>`).join('')}</ol><a class="finding-browse-all" href="./index.html#findings">Explore all 34 findings →</a></section>`;
 }
 
+function findingEvidenceTarget(){
+ const content=document.querySelector('#main-comparison-body .comparison-content');
+ if(!content)return document.getElementById('comparisons');
+ return [...content.querySelectorAll('.comparison-table-wrap,.atlas-comparison-cards,.pairing-matrix-wrap,.evidence-bars,.evidence-scatter,.evidence-intervals,.evidence-table-wrap,.architecture-comparison-grid,.comparison-bars,.finding-trajectory-pair')].find(el=>el.getBoundingClientRect().height>0)||content;
+}
 function findingsCategoryOverview(){return `<div class="findings-category-overview">${findingsResearch.categories.map(c=>`<a href="${findingCategoryLink(c.slug)}"><span>${c.finding_ids.length} findings</span><h3>${safe(c.title_en)}</h3><p>${safe(c.research_question_en)}</p><i aria-hidden="true">↗</i></a>`).join('')}</div>`;}
 function findingsCards(category,query=''){
  const q=query.trim().toLowerCase();let total=0;
  const groups=findingsResearch.categories.filter(c=>!category||c.slug===category).map(c=>{
   const rows=findingsResearch.findings.filter(f=>f.category_slug===c.slug&&(!q||`${f.id} ${f.title_en} ${f.summary_en}`.toLowerCase().includes(q)));total+=rows.length;
-  return rows.length?`<section class="findings-category-section" aria-labelledby="findings-${c.slug}"><header><span>${safe(c.id)} / ${rows.length} findings</span><h2 id="findings-${c.slug}">${safe(c.title_en)}</h2><p>${safe(c.research_question_en)}</p></header><div class="finding-card-grid">${rows.map(f=>`<a class="finding-catalog-card ${f.editorial_tier==='补充证据'?'is-supporting':''}" href="${findingLink(f)}"><div><span>${f.id}</span><span>${safe(f.tier_en)}</span></div><h3>${safe(f.title_en)}</h3><span class="finding-card-action">View evidence <span aria-hidden="true">↗</span></span></a>`).join('')}</div></section>`:'';
+  return rows.length?`<section class="findings-category-section" aria-labelledby="findings-${c.slug}"><header><span>${safe(c.id)} / ${rows.length} findings</span><h2 id="findings-${c.slug}">${safe(c.title_en)}</h2><p>${safe(c.research_question_en)}</p></header><div class="finding-card-grid">${rows.map(f=>`<a data-finding-measure="${safe(f.measure)}" class="finding-catalog-card ${f.editorial_tier==='补充证据'?'is-supporting':''}" href="${findingLink(f)}"><div><span>${f.id}</span><span class="finding-category-tag">${safe(f.category_en)}</span></div><h3>${safe(f.title_en)}</h3><span class="finding-card-action">View evidence <span aria-hidden="true">↗</span></span></a>`).join('')}</div></section>`:'';
  }).join('');
  return `<p class="finding-results-count" role="status">${total} ${total===1?'finding':'findings'}</p>${groups||'<p class="finding-empty">No findings match this search.</p>'}`;
 }
@@ -36,16 +47,16 @@ function findingsIndex(){
  const params=new URLSearchParams(location.hash.split('?')[1]||''),requested=params.get('category'),category=findingCategory(requested)?requested:'',q=params.get('q')||'';
  return `<div class="findings-page"><header class="findings-index-header"><a href="./index.html#key-findings">← Main findings</a><p class="findings-eyebrow">InteractEval / Research findings</p><h1>What interaction reveals.</h1><p>34 findings organized around seven research questions. Follow a claim to its measurements, source, and limits.</p></header><nav class="finding-category-nav" aria-label="Research-question categories"><a href="./index.html#findings" ${!category?'aria-current="page"':''}>All findings <span>34</span></a>${findingsResearch.categories.map(c=>`<a href="${findingCategoryLink(c.slug)}" ${category===c.slug?'aria-current="page"':''}>${safe(c.title_en)} <span>${c.finding_ids.length}</span></a>`).join('')}</nav><div class="finding-index-tools"><label for="finding-search">Search findings</label><input id="finding-search" type="search" value="${safe(q)}" placeholder="Search a claim or finding ID" data-finding-category="${safe(category)}"/></div><div id="finding-catalog-results">${findingsCards(category,q)}</div><section class="finding-reading-paths"><header><p class="findings-eyebrow">Follow a question</p><h2>Reading paths</h2><p>Related questions connect findings across categories. These links describe a reading order, not causal relationships.</p></header><div>${findingsResearch.reading_paths.map(p=>`<article><h3>${safe(p.question_en)}</h3><ol>${p.finding_ids.map(id=>{const f=findingById(id);return `<li><a href="${findingLink(f)}"><span>${id}</span>${safe(f.title_en)}</a></li>`;}).join('')}</ol></article>`).join('')}</div></section></div>`;
 }
-function findingSourceLinks(f){return f.verified_pages.map(page=>`<a href="${findingsResearch.paper.path}#page=${page}" target="_blank" rel="noreferrer">Paper p. ${page} ↗</a>`).join('');}
 function findingEvidenceIntro(){
  const f=activeResearchFinding();if(!f)return '';
- return `<header class="finding-evidence-intro" data-research-finding="${f.id}"><a class="finding-back" href="${findingCategoryLink(f.category_slug)}">← ${safe(f.category_en)}</a><span class="findings-eyebrow">${f.id} / ${safe(f.tier_en)}</span><h3>${safe(f.title_en)}</h3><p>${safe(f.summary_en)}</p>${findingKeyMetrics(f)}${f.id==='F11'?'':`<div class="finding-source-links"><span>${safe(f.paper_source)}</span>${findingSourceLinks(f)}</div><aside class="finding-scope"><span>Scope of the evidence</span><p>${safe(f.limitation_en)}</p></aside>`}</header>`;
+ return `<header class="finding-evidence-intro" data-research-finding="${f.id}">${findingTags(f.category_slug)}<h3>${safe(f.title_en)}</h3><p>${safe(f.summary_en)}</p></header>`;
 }
 function findingEvidenceFooter(){
  const f=activeResearchFinding();if(!f)return '';
  const related=f.related_ids.map(findingById).filter(Boolean),next=findingById(f.next_finding);
- return `${findingDataExplanation(f.measure)}<nav class="finding-evidence-nav" aria-label="Related findings">${related.length?`<div><span>Related in ${safe(f.category_en)}</span>${related.map(r=>`<a href="${findingLink(r)}"><b>${r.id}</b>${safe(r.title_en)} <i aria-hidden="true">↗</i></a>`).join('')}</div>`:''}${next?`<div><span>Next research question</span><a href="${findingLink(next)}"><b>${next.id}</b>${safe(next.title_en)} <i aria-hidden="true">→</i></a></div>`:''}<a href="./index.html#key-findings">Browse all 34 findings ↗</a></nav>`;
+ return `${findingKeyMetrics(f)}${findingDataExplanation(f.measure)}<p class="finding-evidence-limit">${safe(f.limitation_en)}</p><nav class="finding-evidence-nav" aria-label="Related findings">${related.length?`<div><span>Related in ${safe(f.category_en)}</span>${related.map(r=>findingAnchor(r,`${safe(r.title_en)} <i aria-hidden="true">↓</i>`)).join('')}</div>`:''}${next?`<div><span>Next research question</span>${findingAnchor(next,`${safe(next.title_en)} <i aria-hidden="true">→</i>`)}</div>`:''}<a href="./index.html#findings">Explore all 34 findings →</a></nav>`;
 }
+
 function evidenceTable(headers,rows,caption='Published evidence'){
  return `<div class="evidence-table-wrap" role="region" aria-label="${safe(caption)}" tabindex="0"><table class="evidence-data-table"><caption>${safe(caption)}</caption><thead><tr>${headers.map(h=>`<th scope="col">${safe(h)}</th>`).join('')}</tr></thead><tbody>${rows.map(row=>`<tr>${row.map((v,i)=>i===0?`<th scope="row">${safe(v)}</th>`:`<td>${safe(v)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
 }
@@ -196,5 +207,5 @@ const findingDataDefinitions={
 function findingDataExplanation(measure){
  if(measure==='information'||measure==='gap-behavior')return informationDefinitions();
  const text=findingDataDefinitions[measure];
- return text?`<aside class="finding-data-explanation"><h4>How to read the data</h4><p>${safe(text)}</p></aside>`:'';
+ return text?`<aside class="finding-data-explanation"><h4>Terms & measures</h4><p>${safe(text)}</p></aside>`:'';
 }

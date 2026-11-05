@@ -6,7 +6,7 @@ import crypto from 'node:crypto';
 const data=JSON.parse(fs.readFileSync('data/findings-v5.json','utf8'));
 assert.equal(data.findings.length,34);
 assert.equal(data.categories.length,7);
-assert.equal(data.homepage_ids.length,34);
+assert.equal(data.homepage_ids.length,12);
 const ids=new Set(data.findings.map(f=>f.id));
 assert.equal(ids.size,34);
 const categorized=data.categories.flatMap(c=>c.finding_ids);
@@ -36,21 +36,22 @@ for(const f of data.findings){
  assert.ok(html.includes('finding-key-metrics'),f.id+' missing key metrics');
  assert.ok(html.includes('finding-data-explanation'),f.id+' missing below-data explanation');
  assert.ok(html.includes(`data-research-finding="${f.id}"`),f.id+' missing context');
- if(f.id==='F11'){
-  assert.ok(!html.includes('finding-source-links'));
-  assert.ok(!html.includes('finding-scope'));
-  assert.ok(html.includes('How to read the data'));
-  assert.ok(html.includes('8.5 percentage points'));
- }else{
-  assert.ok(html.includes('Scope of the evidence'),f.id+' missing limitation');
-  assert.ok(html.includes('InteractEval_research_v5.pdf#page='),f.id+' missing paper');
- }
+ assert.ok(!html.includes('finding-source-links'),f.id+' source chips remain');
+ assert.ok(!html.includes('How to read'),f.id+' tutorial heading remains');
+ assert.ok(html.includes(f.limitation_en),f.id+' missing limitation');
+ assert.ok(html.indexOf('finding-key-metrics')>html.indexOf('</header>'),f.id+' metrics must follow the evidence');
+ if(f.id==='F11')assert.ok(html.includes('8.5 percentage points'));
  assert.ok(!/\bNaN\b|undefined|Infinity/.test(html),f.id+' invalid rendered value');
  assert.ok(/<table|evidence-bars|comparison-bars|architecture-comparison-grid/.test(html),f.id+' missing evidence');
 }
 c.location.hash='#key-findings';
 const homepage=vm.runInContext('coreFindings()',c);
-assert.equal((homepage.match(/class="finding-catalog-card/g)||[]).length,34);
+assert.equal((homepage.match(/class="selected-finding-link/g)||[]).length,12);
+assert.ok(!homepage.includes('All findings'));
+assert.ok(!homepage.includes('home-finding-search'));
+for(const id of data.homepage_ids)assert.ok(homepage.includes('finding='+id));
+assert.ok(homepage.includes('data-finding-measure="stage-profile"'));
+assert.ok(homepage.includes('finding-category-tag'));
 assert.ok(!homepage.includes('finding-data-explanation'));
 assert.ok(!homepage.includes('finding-information-definitions'));
 assert.equal((fs.readFileSync('key-findings-zh.html','utf8').match(/class="finding-catalog-card/g)||[]).length,34);
@@ -64,4 +65,4 @@ for(const category of data.categories){
 }
 assert.match(vm.runInContext("findingsCards('', 'F42')",c),/1 finding/);
 assert.match(vm.runInContext("findingsCards('', 'no matching phrase xyz')",c),/No findings match/);
-console.log('34 evidence views render with source links, caveats and valid values; 7 exclusive categories, 34 homepage claims, search and original finding routes verified.');
+console.log('34 evidence views render with below-chart metrics, definitions, caveats and valid values; 7 exclusive categories, 12 curated homepage rows, search and original finding routes verified.');
