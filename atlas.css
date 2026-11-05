@@ -5,7 +5,7 @@
 .atlas-finding-link:hover{background:#f3f6f1}
 .atlas-finding-link:focus-visible{outline:2px solid #234e3b;outline-offset:5px}
 .atlas-finding-number{padding-top:3px;color:#688173;font:500 14px/1.5 var(--sans);font-variant-numeric:tabular-nums}
-.atlas-finding-text h3{margin:0 0 10px;color:#193b30;font:550 clamp(19px,2vw,24px)/1.35 var(--sans);letter-spacing:-.4px;text-wrap:pretty}
+.atlas-finding-text h3{margin:0;color:#193b30;font:550 clamp(19px,2vw,24px)/1.35 var(--sans);letter-spacing:-.4px;text-wrap:pretty}
 .atlas-finding-text p{margin:0!important;color:#52645b;font:400 14px/1.65 var(--sans)}
 .atlas-finding-evidence{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px 20px;margin-top:14px;color:#688173;font:400 12px/1.5 var(--sans)}
 .atlas-finding-destination{color:#234e3b;font-weight:500}
@@ -305,3 +305,15 @@ html[data-ui-input=keyboard] select,html[data-ui-input=keyboard] select::picker-
 .leaderboard-measure-field select:focus-visible{outline:2px solid #52765b;outline-offset:3px}
 .leaderboard-selection .comparison-switch{align-self:end;margin-bottom:2px}
 @media(max-width:600px){.leaderboard-selection>.leaderboard-measure-field{width:100%}.leaderboard-selection .comparison-switch{align-self:start}.leaderboard-measure-field select{font-size:16px}}
+
+/* Concise findings with a shared definition of the information conditions. */
+.finding-information-definitions{margin:0 12px 25px 58px}
+.finding-information-definitions table{width:100%;table-layout:fixed;border-collapse:collapse;text-align:left;color:#193b30;font:400 14px/1.55 var(--sans)}
+.finding-information-definitions caption{text-align:left;color:#52645b;font-size:14px;margin-bottom:10px}
+.finding-information-definitions th,.finding-information-definitions td{padding:12px 14px;border:1px solid #d5ded5;vertical-align:top}
+.finding-information-definitions th{background:#f3f6f1;font-weight:700}
+.results-page .main-capability-table tbody td{font-weight:700}
+.results-page .main-capability-table :is(thead th,tbody td,tfoot td).active-level-column{background:#ffe7a1;color:#513b0f;font-weight:800}
+.main-capability-table .active-level-column :is(strong,span){color:#513b0f;font-weight:700}
+.atlas-mobile-model button[data-main-level="L5"],.atlas-mobile-model button[data-main-level="L6"]{background:#ffe7a1;color:#513b0f}
+@media(max-width:600px){.finding-information-definitions{margin:0 0 22px 36px}.finding-information-definitions table{font-size:12px}.finding-information-definitions th,.finding-information-definitions td{padding:9px 6px}}

@@ -16,15 +16,15 @@ const fallback=source.indexOf('function renderSystemOverview(');
 if(fallback>=0)vm.runInContext(source.slice(fallback,source.indexOf('function resultsHomeV2()',fallback)),c);
 vm.runInContext(source.slice(start,end),c);
 const html=vm.runInContext('resultsHomeV2()',c);
-assert.match(html,/atlasHero/);assert.match(html,/atlasKeyFindings/);assert.match(html,/theory-v5.png/);
+assert.match(html,/atlasHero/);assert.match(html,/atlasKeyFindings/);assert.ok(!html.includes('theory-v5.png'), 'Removed theory illustration must stay absent');
 c.systemFigure=()=>'<section>animated-system</section>';
-if(!source.includes("${interactionFigure("))assert.match(vm.runInContext('resultsHomeV2()',c),/animated-system/);
+if(!source.includes("${interactionFigure("))assert.ok(!vm.runInContext('resultsHomeV2()',c).includes('animated-system'));
 console.log('Main orchestration renders the figures and core content with the current figure renderer.');
 
-const order=['atlasHero','mainRail','motivationFigure','theory-v5.png','atlasKeyFindings'];
+const order=['atlasHero','mainRail','motivationFigure','atlasKeyFindings'];
 for(let i=1;i<order.length;i++)assert.ok(html.indexOf(order[i-1])<html.indexOf(order[i]),`${order[i-1]} must precede ${order[i]}`);
 assert.ok(!html.includes('data-main-panel'));
-console.log('Original opening precedes the shared sidebar and continuous response, system, and findings content.');
+console.log('Original opening precedes the shared sidebar, response figure, and findings.');
 
 // Finding links must select their evidence on reload as well as on click.
 c.mainComparisonGroups=[
