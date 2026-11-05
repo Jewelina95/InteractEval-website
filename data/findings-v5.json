@@ -1,6 +1,6 @@
 {
-  "title": "InteractEval: 34 academically revised findings",
-  "schema_version": "research-question-taxonomy-v5",
+  "title": "InteractEval: 40 academically reviewed findings",
+  "schema_version": "research-question-taxonomy-v6",
   "status": "taxonomy, site navigation and focus proposal; no live site changes",
   "language_principle": "Short clear generalizable academic claim; no model-specific numbers in headline; evidence panel owns numbers and caveats.",
   "homepage_ids": [
@@ -15,12 +15,15 @@
     "F28",
     "F30",
     "F32",
-    "F36"
+    "F36",
+    "F43",
+    "F44",
+    "F45"
   ],
-  "reviewed_count": 34,
+  "reviewed_count": 40,
   "editorial_tiers": {
-    "首页核心": 12,
-    "延伸发现": 18,
+    "首页核心": 15,
+    "延伸发现": 21,
     "补充证据": 4
   },
   "findings": [
@@ -1298,6 +1301,191 @@
       "related_ids": [
         "F36"
       ]
+    },
+    {
+      "id": "F43",
+      "group": "测量效度与稳健性",
+      "editorial_tier": "首页核心",
+      "title_en": "Static evaluation can mistake legitimate adaptation for failure.",
+      "title_zh": "静态评估可能将合理的交互适应误判为失败。",
+      "summary_en": "Without scene revision, 22.9% of turns after an admitted rule revision receive an L1 failure against rules that the interaction has already changed.",
+      "clarification": "Without scene revision, 22.9% of turns after an admitted rule revision receive an L1 failure against rules that the interaction has already changed.",
+      "supporting_data": "22.9% of turns after an admitted revision",
+      "paper_source": "Table 34; §4.9.3",
+      "pdf_pages": "49,50",
+      "limitation": "This is a controlled removal of scene revision. The denominator includes only turns after an admitted revision, not all turns or all static evaluation systems.",
+      "limitation_en": "This is a controlled removal of scene revision. The denominator includes only turns after an admitted revision, not all turns or all static evaluation systems.",
+      "measure": "scene-revision",
+      "category_id": "C07",
+      "category_slug": "measurement",
+      "category_en": "Measurement Validity",
+      "tier_en": "Core finding",
+      "verified_pages": [
+        49,
+        50
+      ],
+      "related_ids": [
+        "F36",
+        "F44"
+      ],
+      "related_within_category": "F36,F44",
+      "next_finding": "F07",
+      "priority_zh": "强烈推荐",
+      "clean_permalink_proposed": "https://worldeology.com/InteractEval/index.html#comparisons?measure=scene-revision&finding=F43"
+    },
+    {
+      "id": "F44",
+      "group": "测量效度与稳健性",
+      "editorial_tier": "首页核心",
+      "title_en": "Evaluating more capabilities at once can make AI judgments less reliable.",
+      "title_zh": "同时评估更多能力，反而可能降低 AI 评判的可靠性。",
+      "summary_en": "Combining all six capability grades in one call lowers single-level probe separation from 90% to 61% and repeated-grading agreement from 0.871 to 0.833.",
+      "clarification": "Combining all six capability grades in one call lowers single-level probe separation from 90% to 61% and repeated-grading agreement from 0.871 to 0.833.",
+      "supporting_data": "Single-level probes: 90% → 61%; reliability: 0.871 → 0.833",
+      "paper_source": "Table 34; §4.9.3",
+      "pdf_pages": "49,50",
+      "limitation": "These controlled probes test separation required by the instrument’s definitions. Agreement across grading runs is a reliability measure, not independent objective accuracy.",
+      "limitation_en": "These controlled probes test separation required by the instrument’s definitions. Agreement across grading runs is a reliability measure, not independent objective accuracy.",
+      "measure": "joint-level-judging",
+      "category_id": "C07",
+      "category_slug": "measurement",
+      "category_en": "Measurement Validity",
+      "tier_en": "Core finding",
+      "verified_pages": [
+        49,
+        50
+      ],
+      "related_ids": [
+        "F43",
+        "F37"
+      ],
+      "related_within_category": "F43,F37",
+      "next_finding": "F42",
+      "priority_zh": "强烈推荐",
+      "clean_permalink_proposed": "https://worldeology.com/InteractEval/index.html#comparisons?measure=joint-level-judging&finding=F44"
+    },
+    {
+      "id": "F45",
+      "group": "测量效度与稳健性",
+      "editorial_tier": "首页核心",
+      "title_en": "Naturally occurring interactions can leave major capabilities untested.",
+      "title_zh": "自然发生的交互数据可能系统性遗漏重要能力。",
+      "summary_en": "Functional tasks make up approximately 2.6% of the original role-play material. Across the audited observational source pools, 10–13 of the 27 designed scenario cells contain no samples before coverage correction.",
+      "clarification": "Functional tasks make up approximately 2.6% of the original role-play material. Across the audited observational source pools, 10–13 of the 27 designed scenario cells contain no samples before coverage correction.",
+      "supporting_data": "Functional role-play cases: ≈2.6%; empty cells: 10–13 / 27",
+      "paper_source": "Table 2; §3.2.2",
+      "pdf_pages": "12,13",
+      "limitation": "The 2.6% share concerns role-play material; the empty-cell range concerns the audited source pools. The 27 cells define this study’s sampling frame, not every possible capability or natural interaction.",
+      "limitation_en": "The 2.6% share concerns role-play material; the empty-cell range concerns the audited source pools. The 27 cells define this study’s sampling frame, not every possible capability or natural interaction.",
+      "measure": "scenario-coverage",
+      "category_id": "C07",
+      "category_slug": "measurement",
+      "category_en": "Measurement Validity",
+      "tier_en": "Core finding",
+      "verified_pages": [
+        12,
+        13
+      ],
+      "related_ids": [
+        "F36",
+        "F48"
+      ],
+      "related_within_category": "F36,F48",
+      "next_finding": "F07",
+      "priority_zh": "强烈推荐",
+      "clean_permalink_proposed": "https://worldeology.com/InteractEval/index.html#comparisons?measure=scenario-coverage&finding=F45"
+    },
+    {
+      "id": "F46",
+      "group": "交互对象与群体效应",
+      "editorial_tier": "延伸发现",
+      "title_en": "Simulated users can be more expressive yet less consistent than humans.",
+      "title_zh": "模拟用户可能表达更丰富，却比真实用户更缺乏一致性。",
+      "summary_en": "Simulated users have MTLD lexical diversity of 79.8–95.5 versus 60.1 in human–AI logs, but flagged user contradictions of 7.1%–18.1% versus 4.6% in those logs.",
+      "clarification": "Simulated users have MTLD lexical diversity of 79.8–95.5 versus 60.1 in human–AI logs, but flagged user contradictions of 7.1%–18.1% versus 4.6% in those logs.",
+      "supporting_data": "MTLD: 79.8–95.5 vs 60.1; contradictions: 7.1%–18.1% vs 4.6%",
+      "paper_source": "Table 16; §4.5.2",
+      "pdf_pages": "34,35",
+      "limitation": "Contradiction checks differ: simulated users are checked against prior utterances and their role view; human logs are checked only against prior utterances. These descriptive rates are not a matched causal comparison. MTLD measures lexical diversity, not realism.",
+      "limitation_en": "Contradiction checks differ: simulated users are checked against prior utterances and their role view; human logs are checked only against prior utterances. These descriptive rates are not a matched causal comparison. MTLD measures lexical diversity, not realism.",
+      "measure": "simulated-user-quality",
+      "category_id": "C04",
+      "category_slug": "partners",
+      "category_en": "Partner and Group Effects",
+      "tier_en": "Further finding",
+      "verified_pages": [
+        34,
+        35
+      ],
+      "related_ids": [
+        "F21",
+        "F24"
+      ],
+      "related_within_category": "F21,F24",
+      "next_finding": "F45",
+      "priority_zh": "推荐",
+      "clean_permalink_proposed": "https://worldeology.com/InteractEval/index.html#comparisons?measure=simulated-user-quality&finding=F46"
+    },
+    {
+      "id": "F47",
+      "group": "测量效度与稳健性",
+      "editorial_tier": "延伸发现",
+      "title_en": "Adaptive stopping can conceal differences between AI systems.",
+      "title_zh": "自适应结束交互可能掩盖 AI 系统之间的能力差异。",
+      "summary_en": "On the same fixed-length subsample, the across-model composite range is 0.223 under adaptive stopping and 0.267 at 32 turns. The full-design adaptive range is 0.222. Weaker systems lose more over the extended interactions.",
+      "clarification": "On the same fixed-length subsample, the across-model composite range is 0.223 under adaptive stopping and 0.267 at 32 turns. The full-design adaptive range is 0.222. Weaker systems lose more over the extended interactions.",
+      "supporting_data": "Matched subsample: 0.223 → 0.267; full-design adaptive: 0.222",
+      "paper_source": "Table 31; §4.9.2",
+      "pdf_pages": "47",
+      "limitation": "Continuing after natural stopping changes the evaluation conditions and includes turns after successful closure. The within-subsample comparison is 0.223 versus 0.267; 0.222 is the full-design reference, not the matched baseline.",
+      "limitation_en": "Continuing after natural stopping changes the evaluation conditions and includes turns after successful closure. The within-subsample comparison is 0.223 versus 0.267; 0.222 is the full-design reference, not the matched baseline.",
+      "measure": "fixed32",
+      "category_id": "C07",
+      "category_slug": "measurement",
+      "category_en": "Measurement Validity",
+      "tier_en": "Further finding",
+      "verified_pages": [
+        47
+      ],
+      "related_ids": [
+        "F06",
+        "F36"
+      ],
+      "related_within_category": "F06,F36",
+      "next_finding": "F14",
+      "priority_zh": "推荐",
+      "clean_permalink_proposed": "https://worldeology.com/InteractEval/index.html#comparisons?measure=fixed32&finding=F47"
+    },
+    {
+      "id": "F48",
+      "group": "测量效度与稳健性",
+      "editorial_tier": "延伸发现",
+      "title_en": "The presentation of identical information can change measured AI performance.",
+      "title_zh": "相同的信息仅因呈现方式不同，就可能改变测得的 AI 表现。",
+      "summary_en": "Replacing structured scene and profile fields with natural-language prose lowers scores for nine of ten systems, with a mean absolute composite change of approximately 0.012. The information content is held fixed.",
+      "clarification": "Replacing structured scene and profile fields with natural-language prose lowers scores for nine of ten systems, with a mean absolute composite change of approximately 0.012. The information content is held fixed.",
+      "supporting_data": "Models with lower scores: 9 / 10; mean |Δq|: ≈0.012",
+      "paper_source": "Tables 26–27; §4.9.1",
+      "pdf_pages": "43,44",
+      "limitation": "Serialization changes wherever scenes and profiles enter the protocol, including generation and engagement judgment. The effect cannot be attributed to the scoring judge alone. Mean absolute change includes the one model whose score rises.",
+      "limitation_en": "Serialization changes wherever scenes and profiles enter the protocol, including generation and engagement judgment. The effect cannot be attributed to the scoring judge alone. Mean absolute change includes the one model whose score rises.",
+      "measure": "serialization-format",
+      "category_id": "C07",
+      "category_slug": "measurement",
+      "category_en": "Measurement Validity",
+      "tier_en": "Further finding",
+      "verified_pages": [
+        43,
+        44
+      ],
+      "related_ids": [
+        "F45",
+        "F40"
+      ],
+      "related_within_category": "F45,F40",
+      "next_finding": "F06",
+      "priority_zh": "推荐",
+      "clean_permalink_proposed": "https://worldeology.com/InteractEval/index.html#comparisons?measure=serialization-format&finding=F48"
     }
   ],
   "evidence_anchors": [
@@ -1996,7 +2184,8 @@
         "F22",
         "F23",
         "F24",
-        "F28"
+        "F28",
+        "F46"
       ],
       "transition_to_next_zh": "交互复杂性会放大差距；能否通过认知架构增强主动能力？",
       "next_category": "C05",
@@ -2061,7 +2250,12 @@
         "F37",
         "F40",
         "F41",
-        "F42"
+        "F42",
+        "F43",
+        "F44",
+        "F45",
+        "F47",
+        "F48"
       ],
       "transition_to_next_zh": "回到 C01：哪些能力差异在可审计的测量下依然成立？",
       "next_category": "C01",

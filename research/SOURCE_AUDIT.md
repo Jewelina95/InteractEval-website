@@ -1,6 +1,6 @@
 # Research taxonomy publication audit — 5 November 2026
 
-The supplied workbook and JSON are retained unchanged. All 34 IDs and English titles agree. The public catalog derives from them with English evidence summaries and limitations.
+The supplied workbook and JSON are retained unchanged. The original 34 IDs and English titles agree. The public catalog derives from them with English evidence summaries and limitations.
 
 The earlier `assets/Qwen_InteractEval.pdf` has different pagination and omits the newer representation experiments. It remains available for existing research pages. New findings link to the matching 100-page edition, `assets/InteractEval_research_v5.pdf`, SHA-256 `f36861fc53e88d020a99ad587c59e6e54e43b60772f10f73a5699101b343b2a4`.
 
@@ -20,16 +20,23 @@ The earlier `assets/Qwen_InteractEval.pdf` has different pagination and omits th
 - Extractor stability: Table 25, p. 43; judge-family comparisons: Tables 23–24 and accompanying prose, p. 43.
 - Cost: Table 35, p. 50. Generation: 2 × (4,450 input + 305 output) = 9,510 tokens/exchange. Evaluation: 146,450 input + 13,230 output = 159,680, approximately 16.8×. Component totals multiply per-call counts by calls per exchange. Parallelism changes latency, not token totals.
 
-## Compatibility and interpretation
+## Current catalog and navigation
 
-The original first two destinations remain `measure=stage-profile` and `measure=information`. New links add IDs F01 and F07; earlier URLs still work. The pairing destination remains available. The homepage now displays all 34 findings in seven research-question categories, as requested in the subsequent revision. The supplied editorial tiers are retained as labels; all four supporting items are visible on the homepage. Stable F01 and F07 evidence destinations remain unchanged.
+The catalog contains 40 findings in seven exclusive categories. The homepage displays 15 curated rows: the original 12 plus F43–F45. F46–F48 are available in the full catalog. Category tags link to the index. Finding links select the existing corresponding result measure and scroll to its visible table or chart. Key metrics, terms and limits follow the data; paper-page and table-ID chips are omitted from the interface. Original F01 and F07 destinations remain compatible.
 
-Each finding belongs to exactly one category. Related links and reading paths indicate reading order, not causal inference. Every evidence context includes its limitations. The F07 context displays only the three information conditions supported by the new Table 7; the older partial-subvariant view is retained outside that context.
+The Chinese page and Markdown download contain the same 40 IDs. Supplied v5 workbook/JSON files remain unchanged; the derived website catalog includes the six user-requested additions.
+
+## New findings F43–F48
+
+All six were checked against `Qwen_InteractEval (2).pdf`, whose SHA-256 exactly matches the existing 100-page `assets/InteractEval_research_v5.pdf` listed above.
+
+- F43: Tables 33–34, pp. 49–50. No scene revision: 0.229 old-rule L1 failures among turns after an admitted revision. This is not a failure rate across all turns.
+- F44: Table 34, p. 50. Joint level call: single-level probe separation 0.90 → 0.61; reliability 0.871 → 0.833. Reliability is independent-run grade agreement, not objective accuracy.
+- F45: §3.2.2, pp. 12–13 and Table 2. Approximately 2.6% functional tasks in original role-play material; 10–13 of the 27 designed cells empty across audited source pools before coverage correction. These quantities have different source scopes.
+- F46: Table 16, p. 35. All ten simulated-user rows plus the human-log row transcribed. MTLD and contradiction flags have different units. Human contradiction checks exclude role views; simulated-user checks include them, so the comparison is descriptive rather than matched.
+- F47: Table 31, p. 47. The matched fixed-length subsample compares 0.223 adaptive range with 0.267 fixed-32 range. The user-supplied 0.222 is the full-design adaptive range and is shown separately. Per-system matched adaptive and fixed-32 values reuse the site's published duration data. Continued episodes can include post-closure turns.
+- F48: Tables 26–27, p. 44. All ten prose scores transcribed and compared to the existing reference composites. Nine decrease; mean absolute difference from displayed rounded rows is 0.0124, reported as approximately 0.012. Serialization affects generation and engagement as well as scoring.
 
 ## Validation
 
-`node scripts/check-render.mjs` verifies the main article and original routes. `node scripts/check-findings.mjs` renders all 34 evidence contexts with published model data, verifies seven exclusive categories and related IDs, source integrity, invalid values, 34 homepage claims, original destinations and search. Browser checks cover all 34 direct links, category filtering, search, original destinations and desktop/mobile layouts.
-
-## Homepage and data-reading revision
-
-All 34 findings are now rendered directly in the homepage Key Findings section. Definitions appear below the corresponding data, including the three information conditions. Each evidence view has curated, prominent key metrics and matching table values receive emphasis. `key-findings-zh.html` and `research/Key_Findings_zh.md` provide a separate Chinese version with the same 34 IDs and seven categories.
+`node scripts/check-render.mjs` verifies the main article and original routes. `node scripts/check-findings.mjs` renders all 40 evidence contexts, checks 15 curated homepage rows, all Chinese IDs, seven exclusive categories, valid values, related links and the unchanged source PDF hash. Source tables retain their reported denominators and caveats.
