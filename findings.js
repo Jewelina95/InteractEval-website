@@ -54,7 +54,7 @@ function findingEvidenceIntro(){
 function findingEvidenceFooter(){
  const f=activeResearchFinding();if(!f)return '';
  const related=f.related_ids.map(findingById).filter(Boolean),next=findingById(f.next_finding);
- return `${findingKeyMetrics(f)}${findingDataExplanation(f.measure)}<p class="finding-evidence-limit">${safe(f.limitation_en)}</p><nav class="finding-evidence-nav" aria-label="Related findings">${related.length?`<div><span>Related in ${safe(f.category_en)}</span>${related.map(r=>findingAnchor(r,`${safe(r.title_en)} <i aria-hidden="true">↓</i>`)).join('')}</div>`:''}${next?`<div><span>Next research question</span>${findingAnchor(next,`${safe(next.title_en)} <i aria-hidden="true">→</i>`)}</div>`:''}<a href="./index.html#findings">Explore all ${findingsResearch.findings.length} findings →</a></nav>`;
+ return `${f.evidence_summary_en?`<p class="finding-evidence-statement">${safe(f.evidence_summary_en)}</p>`:''}${findingKeyMetrics(f)}${findingDataExplanation(f.measure)}<p class="finding-evidence-limit">${safe(f.limitation_en)}</p><nav class="finding-evidence-nav" aria-label="Related findings">${related.length?`<div><span>Related in ${safe(f.category_en)}</span>${related.map(r=>findingAnchor(r,`${safe(r.title_en)} <i aria-hidden="true">↓</i>`)).join('')}</div>`:''}${next?`<div><span>Next research question</span>${findingAnchor(next,`${safe(next.title_en)} <i aria-hidden="true">→</i>`)}</div>`:''}<a href="./index.html#findings">Explore all ${findingsResearch.findings.length} findings →</a></nav>`;
 }
 
 function evidenceTable(headers,rows,caption='Published evidence'){

@@ -40,3 +40,7 @@ All six were checked against `Qwen_InteractEval (2).pdf`, whose SHA-256 exactly 
 ## Validation
 
 `node scripts/check-render.mjs` verifies the main article and original routes. `node scripts/check-findings.mjs` renders all 40 evidence contexts, checks 15 curated homepage rows, all Chinese IDs, seven exclusive categories, valid values, related links and the unchanged source PDF hash. Source tables retain their reported denominators and caveats.
+
+## Workbook wording alignment
+
+The original 34 English and Chinese headlines match sheet `02_34条逐句审校` exactly. The visible English explanation, required-evidence sentence and claim boundary are faithful translations of columns F, G and J; the original Chinese column values are retained alongside them in the site data. No old V2 headline is substituted. The original twelve homepage items follow sheet `01_首页精选12` in order, including F28 before F26; the authorized F43–F45 additions follow them. The six later findings remain based on the user-supplied wording and the source corrections documented above.

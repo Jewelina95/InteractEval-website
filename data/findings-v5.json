@@ -11,8 +11,8 @@
     "F13",
     "F19",
     "F23",
-    "F26",
     "F28",
+    "F26",
     "F30",
     "F32",
     "F36",
@@ -54,8 +54,8 @@
       "next_finding_url_proposed": "https://worldeology.com/InteractEval/index.html#comparisons?measure=information&finding=F07",
       "category_url_proposed": "https://worldeology.com/InteractEval/index.html#findings?category=capability",
       "clean_permalink_proposed": "https://worldeology.com/InteractEval/index.html#comparisons?measure=stage-profile&finding=F01",
-      "summary_en": "Across ten systems, the across-model score range is 0.035 for passive execution and 0.370 for proactive promotion: a 10.6-fold difference in separation.",
-      "limitation_en": "These are ranges across models, not improvements within one model. The raw-grade comparison also widens: 0.034 to 0.341.",
+      "summary_en": "This identifies the capability dimension with the largest differences between models; it does not claim that all models already have strong initiative.",
+      "limitation_en": "These are across-model ranges, not improvements within a single model.",
       "tier_en": "Core finding",
       "verified_pages": [
         24,
@@ -64,7 +64,18 @@
       ],
       "related_ids": [
         "F02"
-      ]
+      ],
+      "evidence_summary_en": "Passive score range: 0.035; proactive score range: 0.370, approximately 10.6 times as large.",
+      "copy_source": {
+        "workbook": "research/InteractEval_Findings_Research_Taxonomy_v5.xlsx",
+        "sheet": "02_34条逐句审校",
+        "row": 5,
+        "columns": [
+          "F",
+          "G",
+          "J"
+        ]
+      }
     },
     {
       "id": "F02",
@@ -93,15 +104,26 @@
       "next_finding_url_proposed": "https://worldeology.com/InteractEval/index.html#comparisons?measure=case-trajectories&finding=F13",
       "category_url_proposed": "https://worldeology.com/InteractEval/index.html#findings?category=capability",
       "clean_permalink_proposed": "https://worldeology.com/InteractEval/index.html#comparisons?measure=stage-profile&finding=F02",
-      "summary_en": "DeepSeek V4 Pro and Claude Opus 5.5 both score 0.787 in passive execution, but 0.170 and 0.540 in proactive promotion.",
-      "limitation_en": "This contrast concerns the ten models and scenario design in the study.",
+      "summary_en": "Both models score 0.787 on passive execution, but 0.170 and 0.540 on proactive promotion. This contrasts their capability profiles rather than their overall intelligence.",
+      "limitation_en": "Limited to the ten models tested.",
       "tier_en": "Further finding",
       "verified_pages": [
         24
       ],
       "related_ids": [
         "F03"
-      ]
+      ],
+      "evidence_summary_en": "Both passive scores: 0.787; proactive scores: 0.170 versus 0.540 (3.18×).",
+      "copy_source": {
+        "workbook": "research/InteractEval_Findings_Research_Taxonomy_v5.xlsx",
+        "sheet": "02_34条逐句审校",
+        "row": 6,
+        "columns": [
+          "F",
+          "G",
+          "J"
+        ]
+      }
     },
     {
       "id": "F03",
@@ -130,8 +152,8 @@
       "next_finding_url_proposed": "https://worldeology.com/InteractEval/index.html#comparisons?measure=weighting-sensitivity&finding=F06",
       "category_url_proposed": "https://worldeology.com/InteractEval/index.html#findings?category=capability",
       "clean_permalink_proposed": "https://worldeology.com/InteractEval/index.html#comparisons?measure=stage-profile&finding=F03",
-      "summary_en": "DeepSeek V4 Pro and Kimi K3 have similar composites, 0.430 and 0.425, but proactive scores of 0.170 and 0.212 and L6/L5 ratios of 0.832 and 0.965.",
-      "limitation_en": "A similar composite does not establish equivalent capability profiles.",
+      "summary_en": "The composite aggregates per-turn grades across six capability levels through the dependency cascade, weighting and aggregation over turns. It is not a model’s exam score.",
+      "limitation_en": "Similar aggregate scores do not imply identical capabilities.",
       "tier_en": "Core finding",
       "verified_pages": [
         24,
@@ -139,7 +161,18 @@
       ],
       "related_ids": [
         "F04"
-      ]
+      ],
+      "evidence_summary_en": "DeepSeek: 0.430; Kimi: 0.425. Proactive scores: 0.170 versus 0.212; L6/L5: 0.832 versus 0.965.",
+      "copy_source": {
+        "workbook": "research/InteractEval_Findings_Research_Taxonomy_v5.xlsx",
+        "sheet": "02_34条逐句审校",
+        "row": 7,
+        "columns": [
+          "F",
+          "G",
+          "J"
+        ]
+      }
     },
     {
       "id": "F04",
@@ -168,15 +201,26 @@
       "next_finding_url_proposed": "https://worldeology.com/InteractEval/index.html#comparisons?measure=case-trajectories&finding=F13",
       "category_url_proposed": "https://worldeology.com/InteractEval/index.html#findings?category=capability",
       "clean_permalink_proposed": "https://worldeology.com/InteractEval/index.html#comparisons?measure=coherence&finding=F04",
-      "summary_en": "All ten models score lower at L6 than L5; the L6/L5 ratio ranges from 0.832 to 0.965.",
-      "limitation_en": "The dependency cascade mechanically constrains higher levels. Part of this gap can arise from the scoring rule.",
+      "summary_en": "L5 measures the value of a justified strategy; L6 measures coordination across turns. Part of the decline between them reflects the cascaded scoring rules.",
+      "limitation_en": "Part of the gap is mechanically produced by the cascade constraints.",
       "tier_en": "Supporting evidence",
       "verified_pages": [
         24
       ],
       "related_ids": [
         "F01"
-      ]
+      ],
+      "evidence_summary_en": "All ten models have L6 below L5; L6/L5 ranges from 0.832 to 0.965.",
+      "copy_source": {
+        "workbook": "research/InteractEval_Findings_Research_Taxonomy_v5.xlsx",
+        "sheet": "02_34条逐句审校",
+        "row": 8,
+        "columns": [
+          "F",
+          "G",
+          "J"
+        ]
+      }
     },
     {
       "id": "F05",
@@ -205,8 +249,8 @@
       "next_finding_url_proposed": "https://worldeology.com/InteractEval/index.html#comparisons?measure=closure-purpose&finding=F17",
       "category_url_proposed": "https://worldeology.com/InteractEval/index.html#findings?category=context",
       "clean_permalink_proposed": "https://worldeology.com/InteractEval/index.html#comparisons?measure=purpose&finding=F05",
-      "summary_en": "Claude 5 Opus scores 0.600 in task-oriented settings and 0.454 in open-ended settings. GLM scores 0.403 and 0.421.",
-      "limitation_en": "Different purposes measure different demands. Closure rates cannot directly rank capability across purposes.",
+      "summary_en": "This compares the same model’s interaction scores in functional and nonfunctional scenes. The latter do not measure real-world intimate relationship skills.",
+      "limitation_en": "Different purposes cannot be ranked directly by closure rate.",
       "tier_en": "Further finding",
       "verified_pages": [
         24,
@@ -214,7 +258,18 @@
       ],
       "related_ids": [
         "F07"
-      ]
+      ],
+      "evidence_summary_en": "Claude 5 Opus: task-oriented 0.600 versus relational 0.454; GLM: 0.403 versus 0.421.",
+      "copy_source": {
+        "workbook": "research/InteractEval_Findings_Research_Taxonomy_v5.xlsx",
+        "sheet": "02_34条逐句审校",
+        "row": 9,
+        "columns": [
+          "F",
+          "G",
+          "J"
+        ]
+      }
     },
     {
       "id": "F06",
@@ -243,15 +298,26 @@
       "next_finding_url_proposed": "https://worldeology.com/InteractEval/index.html#comparisons?measure=stage-profile&finding=F03",
       "category_url_proposed": "https://worldeology.com/InteractEval/index.html#findings?category=measurement",
       "clean_permalink_proposed": "https://worldeology.com/InteractEval/index.html#comparisons?measure=weighting-sensitivity&finding=F06",
-      "summary_en": "Equal weighting of the six levels narrows the composite range from 0.222 to 0.163, a reduction of about 26.6%.",
-      "limitation_en": "The records stay fixed; only aggregation changes. The main ordering is largely preserved.",
+      "summary_en": "The dialogues stay the same; only the weights of the six capability levels change. The across-model composite range falls from 0.222 to 0.163. This does not mean the models’ actual capabilities have changed.",
+      "limitation_en": "The same records are rescored. This is not a decline in actual model performance; the main ordering remains largely stable.",
       "tier_en": "Further finding",
       "verified_pages": [
         47
       ],
       "related_ids": [
         "F36"
-      ]
+      ],
+      "evidence_summary_en": "Composite range: reference weights 0.222 → equal level weights 0.163, a reduction of approximately 26.6%.",
+      "copy_source": {
+        "workbook": "research/InteractEval_Findings_Research_Taxonomy_v5.xlsx",
+        "sheet": "02_34条逐句审校",
+        "row": 10,
+        "columns": [
+          "F",
+          "G",
+          "J"
+        ]
+      }
     },
     {
       "id": "F07",
@@ -280,8 +346,8 @@
       "next_finding_url_proposed": "https://worldeology.com/InteractEval/index.html#comparisons?measure=case-trajectories&finding=F13",
       "category_url_proposed": "https://worldeology.com/InteractEval/index.html#findings?category=context",
       "clean_permalink_proposed": "https://worldeology.com/InteractEval/index.html#comparisons?measure=information&finding=F07",
-      "summary_en": "All three matched models score lower with partial than insufficient information. GPT-6 Astra scores 0.662, 0.592 and 0.603 under sufficient, partial and insufficient information.",
-      "limitation_en": "This matched comparison covers three models. It does not establish that adding information generally harms performance.",
+      "summary_en": "In matched scenes, partial information is harder than an obvious lack of information. This controlled comparison tests only three models.",
+      "limitation_en": "The controlled comparison includes only three models.",
       "tier_en": "Core finding",
       "verified_pages": [
         26,
@@ -289,7 +355,18 @@
       ],
       "related_ids": [
         "F08"
-      ]
+      ],
+      "evidence_summary_en": "GPT-6 Astra: sufficient 0.662; partial 0.592; insufficient 0.603. The other two models show the same direction.",
+      "copy_source": {
+        "workbook": "research/InteractEval_Findings_Research_Taxonomy_v5.xlsx",
+        "sheet": "02_34条逐句审校",
+        "row": 11,
+        "columns": [
+          "F",
+          "G",
+          "J"
+        ]
+      }
     },
     {
       "id": "F08",
@@ -318,8 +395,8 @@
       "next_finding_url_proposed": "https://worldeology.com/InteractEval/index.html#comparisons?measure=question-vs-agency&finding=F11",
       "category_url_proposed": "https://worldeology.com/InteractEval/index.html#findings?category=context",
       "clean_permalink_proposed": "https://worldeology.com/InteractEval/index.html#comparisons?measure=gap-behavior&finding=F08",
-      "summary_en": "Unsupported factual additions occur on 5.1% of turns with sufficient information, 16.4% with partial information and 10.3% with insufficient information.",
-      "limitation_en": "Fabrication means treating an absent, task-relevant fact as known. It does not include every fictional narrative or explicit assumption.",
+      "summary_en": "An unsupported factual claim treats a specific date, amount, rule or other consequential detail as known even though neither the scene nor the user supplied it. This does not generalize to every form of hallucination.",
+      "limitation_en": "Fabrication here means unsupported additions of task-relevant facts.",
       "tier_en": "Supporting evidence",
       "verified_pages": [
         27,
@@ -327,7 +404,18 @@
       ],
       "related_ids": [
         "F09"
-      ]
+      ],
+      "evidence_summary_en": "Unsupported additions of key facts: sufficient 5.1%; partial 16.4%; obviously insufficient 10.3%.",
+      "copy_source": {
+        "workbook": "research/InteractEval_Findings_Research_Taxonomy_v5.xlsx",
+        "sheet": "02_34条逐句审校",
+        "row": 12,
+        "columns": [
+          "F",
+          "G",
+          "J"
+        ]
+      }
     },
     {
       "id": "F09",
@@ -356,8 +444,8 @@
       "next_finding_url_proposed": "https://worldeology.com/InteractEval/index.html#comparisons?measure=stage-profile&finding=F01",
       "category_url_proposed": "https://worldeology.com/InteractEval/index.html#findings?category=context",
       "clean_permalink_proposed": "https://worldeology.com/InteractEval/index.html#comparisons?measure=gap-correlation&finding=F09",
-      "summary_en": "Passive-execution scores and fabrication rates have a Spearman correlation of +0.77 across ten models.",
-      "limitation_en": "This is a cross-sectional association. It does not show that stronger execution causes unsupported factual claims.",
+      "summary_en": "Across the ten tested systems, the model-level correlation is ρ = 0.77. This does not establish that stronger execution causes unsupported factual additions.",
+      "limitation_en": "This is a cross-sectional association, not evidence that capability causes unsupported additions.",
       "tier_en": "Core finding",
       "verified_pages": [
         27,
@@ -365,7 +453,18 @@
       ],
       "related_ids": [
         "F08"
-      ]
+      ],
+      "evidence_summary_en": "Spearman ρ = +0.77 across ten models. For example, the unsupported-addition rate is 16.8% for Opus 5.5 and 2.7% for GLM.",
+      "copy_source": {
+        "workbook": "research/InteractEval_Findings_Research_Taxonomy_v5.xlsx",
+        "sheet": "02_34条逐句审校",
+        "row": 13,
+        "columns": [
+          "F",
+          "G",
+          "J"
+        ]
+      }
     },
     {
       "id": "F11",
@@ -394,15 +493,26 @@
       "next_finding_url_proposed": "https://worldeology.com/InteractEval/index.html#comparisons?measure=information&finding=F07",
       "category_url_proposed": "https://worldeology.com/InteractEval/index.html#findings?category=capability",
       "clean_permalink_proposed": "https://worldeology.com/InteractEval/index.html#comparisons?measure=question-vs-agency&finding=F11",
-      "summary_en": "For Kimi, changing the partner raises clarification frequency by 0.085, while the L5 change is 0.006 with a 95% interval of −0.027 to 0.043.",
-      "limitation_en": "The L5 interval includes zero. This partner comparison does not control conversation length and does not show that clarification causes initiative.",
+      "summary_en": "This compares clarification-question frequency with the L5 score. It does not show an increase in conversation turns or in time spent guiding the interaction.",
+      "limitation_en": "Only the change in clarification frequency is established. Conversation length is not controlled, and the confidence interval for the L5 change crosses zero.",
       "tier_en": "Further finding",
       "verified_pages": [
         35
       ],
       "related_ids": [
         "F01"
-      ]
+      ],
+      "evidence_summary_en": "Clarification frequency changes by +0.085; L5 changes by +0.006 (95% CI −0.027 to +0.043).",
+      "copy_source": {
+        "workbook": "research/InteractEval_Findings_Research_Taxonomy_v5.xlsx",
+        "sheet": "02_34条逐句审校",
+        "row": 14,
+        "columns": [
+          "F",
+          "G",
+          "J"
+        ]
+      }
     },
     {
       "id": "F13",
@@ -431,8 +541,8 @@
       "next_finding_url_proposed": "https://worldeology.com/InteractEval/index.html#comparisons?measure=pairings&finding=F19",
       "category_url_proposed": "https://worldeology.com/InteractEval/index.html#findings?category=trajectory",
       "clean_permalink_proposed": "https://worldeology.com/InteractEval/index.html#comparisons?measure=case-trajectories&finding=F13",
-      "summary_en": "The two reimbursement cases have identical six-level grades on their first two turns. Case 1 ends at turn 5 with interest 0.20; Case 2 reaches successful closure at turn 6.",
-      "limitation_en": "Both participants behave differently across the cases. This illustrative contrast cannot assign causality to the assistant alone.",
+      "summary_en": "A single response is one AI reply after a user utterance. Replies can correctly address the user while repeatedly applying the same strategy without advancing the task or relationship.",
+      "limitation_en": "Both participants behave differently across these cases, so the contrast does not support causal attribution.",
       "tier_en": "Core finding",
       "verified_pages": [
         28,
@@ -440,7 +550,18 @@
       ],
       "related_ids": [
         "F14"
-      ]
+      ],
+      "evidence_summary_en": "Reimbursement cases: Case 1 ends at turn 5 after interest falls to 0.20; Case 2 completes at turn 6. Their first two turns have identical six-level grades.",
+      "copy_source": {
+        "workbook": "research/InteractEval_Findings_Research_Taxonomy_v5.xlsx",
+        "sheet": "02_34条逐句审校",
+        "row": 15,
+        "columns": [
+          "F",
+          "G",
+          "J"
+        ]
+      }
     },
     {
       "id": "F14",
@@ -469,15 +590,26 @@
       "next_finding_url_proposed": "https://worldeology.com/InteractEval/index.html#comparisons?measure=weighting-sensitivity&finding=F06",
       "category_url_proposed": "https://worldeology.com/InteractEval/index.html#findings?category=trajectory",
       "clean_permalink_proposed": "https://worldeology.com/InteractEval/index.html#comparisons?measure=turn-divergence&finding=F14",
-      "summary_en": "The across-model range of turn scores grows from 0.109 at turn 1 to 0.204 at turn 16.",
-      "limitation_en": "Later turns include only episodes that reach them. The table reports the surviving fraction beside every score.",
+      "summary_en": "The gap is the range of average per-turn composite interaction scores among dialogues still present at the same turn: 0.109 at turn 1 and 0.204 at turn 16. Later-turn samples are selected.",
+      "limitation_en": "Later turns are subject to selection effects.",
       "tier_en": "Further finding",
       "verified_pages": [
         48
       ],
       "related_ids": [
         "F16"
-      ]
+      ],
+      "evidence_summary_en": "Across ten models, the per-turn score range rises from 0.109 at turn 1 to 0.204 at turn 16.",
+      "copy_source": {
+        "workbook": "research/InteractEval_Findings_Research_Taxonomy_v5.xlsx",
+        "sheet": "02_34条逐句审校",
+        "row": 16,
+        "columns": [
+          "F",
+          "G",
+          "J"
+        ]
+      }
     },
     {
       "id": "F16",
@@ -506,8 +638,8 @@
       "next_finding_url_proposed": "https://worldeology.com/InteractEval/index.html#comparisons?measure=reconstruction-ablation&finding=F36",
       "category_url_proposed": "https://worldeology.com/InteractEval/index.html#findings?category=trajectory",
       "clean_permalink_proposed": "https://worldeology.com/InteractEval/index.html#comparisons?measure=termination-outcomes&finding=F16",
-      "summary_en": "Interest exhaustion accounts for 87.6% to 99.0% of endings across systems.",
-      "limitation_en": "These are simulated users under adaptive stopping. Open-ended settings often have no concrete goal to complete.",
+      "summary_en": "The simulated evaluation stops according to user interest or patience and goal completion. In nonfunctional scenes, the absence of a clear closure goal is not a failure.",
+      "limitation_en": "Nonfunctional scenes often have no clear endpoint.",
       "tier_en": "Supporting evidence",
       "verified_pages": [
         29,
@@ -515,7 +647,18 @@
       ],
       "related_ids": [
         "F17"
-      ]
+      ],
+      "evidence_summary_en": "Interest-exhaustion endings account for 87.6%–99.0% across systems.",
+      "copy_source": {
+        "workbook": "research/InteractEval_Findings_Research_Taxonomy_v5.xlsx",
+        "sheet": "02_34条逐句审校",
+        "row": 17,
+        "columns": [
+          "F",
+          "G",
+          "J"
+        ]
+      }
     },
     {
       "id": "F17",
@@ -544,15 +687,26 @@
       "next_finding_url_proposed": "https://worldeology.com/InteractEval/index.html#comparisons?measure=purpose&finding=F05",
       "category_url_proposed": "https://worldeology.com/InteractEval/index.html#findings?category=trajectory",
       "clean_permalink_proposed": "https://worldeology.com/InteractEval/index.html#comparisons?measure=closure-purpose&finding=F17",
-      "summary_en": "Gemini 3.8 Flash reaches successful closure in 4.3% of task-oriented episodes and 0.2% of open-ended episodes.",
-      "limitation_en": "An open-ended conversation need not aim to close a task. Low closure in that condition does not by itself mean failure.",
+      "summary_en": "Successful closure is substantially more frequent in task-oriented than relationship-oriented scenes. Comparing completion rates across scenes can confound interaction purpose with model capability.",
+      "limitation_en": "Low closure in nonfunctional tasks must not be treated as failure.",
       "tier_en": "Further finding",
       "verified_pages": [
         30
       ],
       "related_ids": [
         "F13"
-      ]
+      ],
+      "evidence_summary_en": "Gemini 3.8 Flash: task-oriented closure 4.3% versus relational closure 0.2%, approximately 21.5×.",
+      "copy_source": {
+        "workbook": "research/InteractEval_Findings_Research_Taxonomy_v5.xlsx",
+        "sheet": "02_34条逐句审校",
+        "row": 18,
+        "columns": [
+          "F",
+          "G",
+          "J"
+        ]
+      }
     },
     {
       "id": "F18",
@@ -581,15 +735,26 @@
       "next_finding_url_proposed": "https://worldeology.com/InteractEval/index.html#comparisons?measure=reconstruction-ablation&finding=F36",
       "category_url_proposed": "https://worldeology.com/InteractEval/index.html#findings?category=trajectory",
       "clean_permalink_proposed": "https://worldeology.com/InteractEval/index.html#comparisons?measure=stopping-ablation&finding=F18",
-      "summary_en": "Episodes with a persistently dominant Degrade path last 6.2 turns under the full instrument and 13.7 without the patience budget.",
-      "limitation_en": "This is an ablation of the stopping rule on degrading trajectories, not a training intervention on model capability.",
+      "summary_en": "Patience means the user’s patience budget recorded by the evaluator, not the model’s own memory. Removing this mechanism extends persistently Degrade-dominant trajectories from 6.2 to 13.7 turns.",
+      "limitation_en": "Limited to trajectories whose dominant path remains Degrade.",
       "tier_en": "Supporting evidence",
       "verified_pages": [
         50
       ],
       "related_ids": [
         "F16"
-      ]
+      ],
+      "evidence_summary_en": "Persistently Degrade-dominant dialogues: 6.2 turns with the mechanism versus 13.7 without the patience budget.",
+      "copy_source": {
+        "workbook": "research/InteractEval_Findings_Research_Taxonomy_v5.xlsx",
+        "sheet": "02_34条逐句审校",
+        "row": 19,
+        "columns": [
+          "F",
+          "G",
+          "J"
+        ]
+      }
     },
     {
       "id": "F19",
@@ -618,8 +783,8 @@
       "next_finding_url_proposed": "https://worldeology.com/InteractEval/index.html#comparisons?measure=case-trajectories&finding=F13",
       "category_url_proposed": "https://worldeology.com/InteractEval/index.html#findings?category=partners",
       "clean_permalink_proposed": "https://worldeology.com/InteractEval/index.html#comparisons?measure=pairings&finding=F19",
-      "summary_en": "The mixed-effects analysis attributes 9.9% of the variance of scored system, partner and pairing together to the pairing.",
-      "limitation_en": "This denominator differs from total episode variance. The 10.9% matrix residual additionally combines pairing, self-play and measurement noise.",
+      "summary_en": "The observed assistant performance depends on its pairing. Pairing contributes 9.9% of the variance on the specific scale used in the study.",
+      "limitation_en": "The 9.9% figure is defined on the specified variance scale.",
       "tier_en": "Core finding",
       "verified_pages": [
         31,
@@ -628,7 +793,18 @@
       ],
       "related_ids": [
         "F23"
-      ]
+      ],
+      "evidence_summary_en": "Pairing accounts for 9.9% of the score variance across model, partner and pairing components.",
+      "copy_source": {
+        "workbook": "research/InteractEval_Findings_Research_Taxonomy_v5.xlsx",
+        "sheet": "02_34条逐句审校",
+        "row": 20,
+        "columns": [
+          "F",
+          "G",
+          "J"
+        ]
+      }
     },
     {
       "id": "F21",
@@ -657,15 +833,26 @@
       "next_finding_url_proposed": "https://worldeology.com/InteractEval/index.html#comparisons?measure=reconstruction-ablation&finding=F36",
       "category_url_proposed": "https://worldeology.com/InteractEval/index.html#findings?category=partners",
       "clean_permalink_proposed": "https://worldeology.com/InteractEval/index.html#comparisons?measure=pairing-summary&finding=F21",
-      "summary_en": "Gemini as partner yields mean assistant score 0.392 and range 0.209; DeepSeek yields mean 0.490 and range 0.425.",
-      "limitation_en": "A lower mean score is not the same as greater discrimination. The comparison covers ten simulated partners.",
+      "summary_en": "The “user” is a model acting as the user in the evaluation. Discrimination is the difference between the highest and lowest scores across assistants, not how difficult a user is to interact with.",
+      "limitation_en": "Based only on the ten simulated users.",
       "tier_en": "Further finding",
       "verified_pages": [
         31
       ],
       "related_ids": [
         "F23"
-      ]
+      ],
+      "evidence_summary_en": "Gemini user: mean assistant score 0.392, range 0.209; DeepSeek user: mean 0.490, range 0.425.",
+      "copy_source": {
+        "workbook": "research/InteractEval_Findings_Research_Taxonomy_v5.xlsx",
+        "sheet": "02_34条逐句审校",
+        "row": 21,
+        "columns": [
+          "F",
+          "G",
+          "J"
+        ]
+      }
     },
     {
       "id": "F22",
@@ -694,8 +881,8 @@
       "next_finding_url_proposed": "https://worldeology.com/InteractEval/index.html#comparisons?measure=extractor-stability&finding=F40",
       "category_url_proposed": "https://worldeology.com/InteractEval/index.html#findings?category=partners",
       "clean_permalink_proposed": "https://worldeology.com/InteractEval/index.html#comparisons?measure=self-gap&finding=F22",
-      "summary_en": "Mean self-play excess is +0.020. DeepSeek scores 0.430 with the standard user and 0.501 in self-play; Gemini changes from 0.450 to 0.328.",
-      "limitation_en": "Self-play can help or hurt. Model-family or style similarity may contribute to the observed differences.",
+      "summary_en": "The average self-play excess is +0.020, but some systems score lower in self-play. The claim therefore says ‘can’ and ‘some’, rather than making a universal assertion.",
+      "limitation_en": "Model-family similarity may be a confound.",
       "tier_en": "Further finding",
       "verified_pages": [
         33,
@@ -703,7 +890,18 @@
       ],
       "related_ids": [
         "F24"
-      ]
+      ],
+      "evidence_summary_en": "Average self-play excess: +0.020. DeepSeek: 0.430 → 0.501; Gemini: 0.450 → 0.328.",
+      "copy_source": {
+        "workbook": "research/InteractEval_Findings_Research_Taxonomy_v5.xlsx",
+        "sheet": "02_34条逐句审校",
+        "row": 22,
+        "columns": [
+          "F",
+          "G",
+          "J"
+        ]
+      }
     },
     {
       "id": "F23",
@@ -732,15 +930,26 @@
       "next_finding_url_proposed": "https://worldeology.com/InteractEval/index.html#comparisons?measure=architecture-stages&finding=F25",
       "category_url_proposed": "https://worldeology.com/InteractEval/index.html#findings?category=partners",
       "clean_permalink_proposed": "https://worldeology.com/InteractEval/index.html#comparisons?measure=partner-pressure&finding=F23",
-      "summary_en": "Gemini as partner adds +0.249 pressure at L2–L3; Fable adds +0.044 at L5–L6 relative to the standard user.",
-      "limitation_en": "Positive pressure means a lower assistant score relative to the standard partner. Partner behavior and model identity are confounded.",
+      "summary_en": "Some users chiefly test information understanding and state updating (L2–L3); others chiefly test strategic anticipation and coordination (L5–L6).",
+      "limitation_en": "User behavior is confounded with model identity.",
       "tier_en": "Core finding",
       "verified_pages": [
         32
       ],
       "related_ids": [
         "F28"
-      ]
+      ],
+      "evidence_summary_en": "Gemini user: extra L2–L3 pressure +0.249; Fable user: extra L5–L6 pressure +0.044.",
+      "copy_source": {
+        "workbook": "research/InteractEval_Findings_Research_Taxonomy_v5.xlsx",
+        "sheet": "02_34条逐句审校",
+        "row": 23,
+        "columns": [
+          "F",
+          "G",
+          "J"
+        ]
+      }
     },
     {
       "id": "F24",
@@ -769,8 +978,8 @@
       "next_finding_url_proposed": "https://worldeology.com/InteractEval/index.html#comparisons?measure=role-probes&finding=F31",
       "category_url_proposed": "https://worldeology.com/InteractEval/index.html#findings?category=partners",
       "clean_permalink_proposed": "https://worldeology.com/InteractEval/index.html#comparisons?measure=role-asymmetry&finding=F24",
-      "summary_en": "User identity explains 94.4% of variation in the user-side matrix. Its residual is 2.0%, compared with 10.9% for the assistant-side matrix.",
-      "limitation_en": "The two roles use different rubrics. The matrix residual is not the same statistic as the mixed-effects pairing component.",
+      "summary_en": "Under the different scoring criteria for the two roles, the user-side main effect is 94.4%, the user-side residual 2.0% and the assistant-side residual 10.9%.",
+      "limitation_en": "The two roles do not use identical rubrics.",
       "tier_en": "Further finding",
       "verified_pages": [
         33,
@@ -778,7 +987,18 @@
       ],
       "related_ids": [
         "F19"
-      ]
+      ],
+      "evidence_summary_en": "User-side main effect: 94.4%; user-side residual: 2.0%; assistant-side residual: 10.9%.",
+      "copy_source": {
+        "workbook": "research/InteractEval_Findings_Research_Taxonomy_v5.xlsx",
+        "sheet": "02_34条逐句审校",
+        "row": 24,
+        "columns": [
+          "F",
+          "G",
+          "J"
+        ]
+      }
     },
     {
       "id": "F25",
@@ -807,15 +1027,26 @@
       "next_finding_url_proposed": "https://worldeology.com/InteractEval/index.html#comparisons?measure=stage-profile&finding=F01",
       "category_url_proposed": "https://worldeology.com/InteractEval/index.html#findings?category=architectures",
       "clean_permalink_proposed": "https://worldeology.com/InteractEval/index.html#comparisons?measure=architecture-stages&finding=F25",
-      "summary_en": "All three architectures gain most at the proactive stage. Cognizer gains +0.012 at L1–L2 and +0.066 at L5–L6.",
-      "limitation_en": "Extra model calls and computation are not controlled, so the gain cannot be attributed to architecture alone.",
+      "summary_en": "This compares gains at different stages before and after adding an architecture to the same base model. Extra inference calls and cost are not controlled.",
+      "limitation_en": "Extra calls and computation budgets are not controlled.",
       "tier_en": "Further finding",
       "verified_pages": [
         41
       ],
       "related_ids": [
         "F26"
-      ]
+      ],
+      "evidence_summary_en": "Cognizer: L1–L2 gain +0.012; L5–L6 gain +0.066 (5.5×).",
+      "copy_source": {
+        "workbook": "research/InteractEval_Findings_Research_Taxonomy_v5.xlsx",
+        "sheet": "02_34条逐句审校",
+        "row": 25,
+        "columns": [
+          "F",
+          "G",
+          "J"
+        ]
+      }
     },
     {
       "id": "F26",
@@ -844,15 +1075,26 @@
       "next_finding_url_proposed": "https://worldeology.com/InteractEval/index.html#comparisons?measure=purpose&finding=F05",
       "category_url_proposed": "https://worldeology.com/InteractEval/index.html#findings?category=architectures",
       "clean_permalink_proposed": "https://worldeology.com/InteractEval/index.html#comparisons?measure=architecture-purpose&finding=F26",
-      "summary_en": "MetaMind gains +0.021 in task-oriented and +0.046 in open-ended settings; Cognizer gains +0.061 and +0.032.",
-      "limitation_en": "Interaction purpose operationalizes different demands here; it is not a direct measurement of real-world psychological skills.",
+      "summary_en": "Improvements emphasize different demands in task-oriented and relational scenes. This must not be generalized into a claim that the models have gained social-emotional skills validated in the real world.",
+      "limitation_en": "Interaction purpose is a proxy for particular capabilities, not an equivalent of real-world psychological skills.",
       "tier_en": "Core finding",
       "verified_pages": [
         41
       ],
       "related_ids": [
         "F30"
-      ]
+      ],
+      "evidence_summary_en": "MetaMind: task-oriented +0.021, relational +0.046; Cognizer: +0.061 and +0.032, respectively.",
+      "copy_source": {
+        "workbook": "research/InteractEval_Findings_Research_Taxonomy_v5.xlsx",
+        "sheet": "02_34条逐句审校",
+        "row": 26,
+        "columns": [
+          "F",
+          "G",
+          "J"
+        ]
+      }
     },
     {
       "id": "F28",
@@ -881,15 +1123,26 @@
       "next_finding_url_proposed": "https://worldeology.com/InteractEval/index.html#comparisons?measure=architecture-stages&finding=F25",
       "category_url_proposed": "https://worldeology.com/InteractEval/index.html#findings?category=partners",
       "clean_permalink_proposed": "https://worldeology.com/InteractEval/index.html#comparisons?measure=group-size&finding=F28",
-      "summary_en": "From two to four participants, mean L1–L4 scores fall by 0.030 and L5–L6 scores by 0.105: a 3.5-fold ratio of absolute declines.",
-      "limitation_en": "This is not a relative percentage decline. Every other seat is played by the same standard user.",
+      "summary_en": "Moving from two to four participants lowers L1–L4 scores by 0.030 and L5–L6 scores by 0.105. The 3.5× figure is the ratio of absolute score declines, not a multiple of capability lost.",
+      "limitation_en": "The other participants use the same standard user.",
       "tier_en": "Core finding",
       "verified_pages": [
         41
       ],
       "related_ids": [
         "F23"
-      ]
+      ],
+      "evidence_summary_en": "Mean L1–L4 decline: 0.030; mean L5–L6 decline: 0.105. The absolute decline is 3.5× as large.",
+      "copy_source": {
+        "workbook": "research/InteractEval_Findings_Research_Taxonomy_v5.xlsx",
+        "sheet": "02_34条逐句审校",
+        "row": 27,
+        "columns": [
+          "F",
+          "G",
+          "J"
+        ]
+      }
     },
     {
       "id": "F30",
@@ -918,8 +1171,8 @@
       "next_finding_url_proposed": "https://worldeology.com/InteractEval/index.html#comparisons?measure=role-probes&finding=F31",
       "category_url_proposed": "https://worldeology.com/InteractEval/index.html#findings?category=architectures",
       "clean_permalink_proposed": "https://worldeology.com/InteractEval/index.html#comparisons?measure=architecture-headroom&finding=F30",
-      "summary_en": "For MetaMind and Cognizer, proactive gain falls with the base proactive score, with reported r ≤ −0.99.",
-      "limitation_en": "There are only ten base models. Score ceilings and available headroom may partly explain the negative association.",
+      "summary_en": "The correlation is near −0.99, but there are only ten base models. Score ceilings and available room for improvement may account for part of the association.",
+      "limitation_en": "Only ten models are included. Score ceilings and headroom may partly explain the negative correlation.",
       "tier_en": "Core finding",
       "verified_pages": [
         39,
@@ -927,7 +1180,18 @@
       ],
       "related_ids": [
         "F25"
-      ]
+      ],
+      "evidence_summary_en": "Both architectures have reported r ≤ −0.99. DeepSeek gains: +0.063 / +0.092; Opus 5.5: +0.024 / +0.040.",
+      "copy_source": {
+        "workbook": "research/InteractEval_Findings_Research_Taxonomy_v5.xlsx",
+        "sheet": "02_34条逐句审校",
+        "row": 28,
+        "columns": [
+          "F",
+          "G",
+          "J"
+        ]
+      }
     },
     {
       "id": "F31",
@@ -956,8 +1220,8 @@
       "next_finding_url_proposed": "https://worldeology.com/InteractEval/index.html#comparisons?measure=role-asymmetry&finding=F24",
       "category_url_proposed": "https://worldeology.com/InteractEval/index.html#findings?category=representations",
       "clean_permalink_proposed": "https://worldeology.com/InteractEval/index.html#comparisons?measure=role-probes&finding=F31",
-      "summary_en": "At 75% depth, Qwen3.8-27B has within-dialogue user-interest R² of −0.082 as assistant and +0.168 in the user role.",
-      "limitation_en": "Negative R² is worse than the mean baseline. Linear decodability is not evidence of accurate understanding by itself.",
+      "summary_en": "The roles are the same model replying as an assistant or acting as a simulated user with another assistant. The measure is internal linear-probe R², not subjective understanding.",
+      "limitation_en": "Linear-probe readability does not establish genuine understanding.",
       "tier_en": "Further finding",
       "verified_pages": [
         36,
@@ -965,7 +1229,18 @@
       ],
       "related_ids": [
         "F32"
-      ]
+      ],
+      "evidence_summary_en": "Qwen3.8-27B: within-dialogue R² is −0.082 as assistant and +0.168 as user.",
+      "copy_source": {
+        "workbook": "research/InteractEval_Findings_Research_Taxonomy_v5.xlsx",
+        "sheet": "02_34条逐句审校",
+        "row": 29,
+        "columns": [
+          "F",
+          "G",
+          "J"
+        ]
+      }
     },
     {
       "id": "F32",
@@ -994,15 +1269,26 @@
       "next_finding_url_proposed": "https://worldeology.com/InteractEval/index.html#comparisons?measure=reconstruction-ablation&finding=F36",
       "category_url_proposed": "https://worldeology.com/InteractEval/index.html#findings?category=representations",
       "clean_permalink_proposed": "https://worldeology.com/InteractEval/index.html#comparisons?measure=shared-affection&finding=F32",
-      "summary_en": "Assistant-side affection directions have cosine similarity 0.620–0.737. Residual user-affection R² is negative in all three models, while residual user-anxiety R² is positive.",
-      "limitation_en": "These are linear readouts of annotated states. They do not establish subjective feelings or completely separate representations.",
+      "summary_en": "Affection is a researcher-annotated positive attitude toward the partner inferred from dialogue; it does not imply that AI actually experiences emotion. The decodable directions for both participants’ affection overlap, and residual user-affection R² is negative after controlling for their association.",
+      "limitation_en": "The evidence comes from linear-probe readability, not independent subjective feelings.",
       "tier_en": "Core finding",
       "verified_pages": [
         77
       ],
       "related_ids": [
         "F33"
-      ]
+      ],
+      "evidence_summary_en": "Affection probe-direction cosine: 0.620–0.737; residual user-affection R² is negative for all three models.",
+      "copy_source": {
+        "workbook": "research/InteractEval_Findings_Research_Taxonomy_v5.xlsx",
+        "sheet": "02_34条逐句审校",
+        "row": 30,
+        "columns": [
+          "F",
+          "G",
+          "J"
+        ]
+      }
     },
     {
       "id": "F33",
@@ -1031,15 +1317,26 @@
       "next_finding_url_proposed": "https://worldeology.com/InteractEval/index.html#comparisons?measure=extractor-stability&finding=F40",
       "category_url_proposed": "https://worldeology.com/InteractEval/index.html#findings?category=representations",
       "clean_permalink_proposed": "https://worldeology.com/InteractEval/index.html#comparisons?measure=shared-miscalibration&finding=F33",
-      "summary_en": "In 16 eligible Gemma–Gemma dialogues, interest-change readouts correlate at 0.264; their within-dialogue R² values are −0.374 and −0.246 on 204 boundaries.",
-      "limitation_en": "Correlation is not accuracy. A correlation of 0.264 should not be described as strong synchronization; the targets are evaluator-produced labels.",
+      "summary_en": "The positive correlation is r = 0.264, not ‘high synchronization’. Accuracy is evaluated against dialogue-based user-interest annotations, and both R² values are negative.",
+      "limitation_en": "The reference is an interest label produced by the evaluation framework. A correlation of 0.264 must not be described as highly synchronized.",
       "tier_en": "Further finding",
       "verified_pages": [
         37
       ],
       "related_ids": [
         "F34"
-      ]
+      ],
+      "evidence_summary_en": "Change correlation: r = 0.264; the two within-dialogue R² values are −0.374 and −0.246.",
+      "copy_source": {
+        "workbook": "research/InteractEval_Findings_Research_Taxonomy_v5.xlsx",
+        "sheet": "02_34条逐句审校",
+        "row": 31,
+        "columns": [
+          "F",
+          "G",
+          "J"
+        ]
+      }
     },
     {
       "id": "F34",
@@ -1068,8 +1365,8 @@
       "next_finding_url_proposed": "https://worldeology.com/InteractEval/index.html#comparisons?measure=reconstruction-ablation&finding=F36",
       "category_url_proposed": "https://worldeology.com/InteractEval/index.html#findings?category=representations",
       "clean_permalink_proposed": "https://worldeology.com/InteractEval/index.html#comparisons?measure=partner-integration&finding=F34",
-      "summary_en": "In Qwen3.8-27B, final-position recovery reaches 0.777 at layer 52. Removing forty selected heads retains 0.941 of sensitivity to the partner utterance.",
-      "limitation_en": "These are next-token KL-based interventions in one model, with 41 selected decisions from 17 scenes. Other positions and computation remain intact.",
+      "summary_en": "The evidence comes from next-token distribution restoration experiments in Qwen3.8-27B. It does not establish the same mechanism in other models.",
+      "limitation_en": "Limited to the specified model and next-token KL measure.",
       "tier_en": "Further finding",
       "verified_pages": [
         38,
@@ -1077,7 +1374,18 @@
       ],
       "related_ids": [
         "F35"
-      ]
+      ],
+      "evidence_summary_en": "Final-position recovery at layer 52: 0.777; sensitivity retained after removing 40 heads: 0.941.",
+      "copy_source": {
+        "workbook": "research/InteractEval_Findings_Research_Taxonomy_v5.xlsx",
+        "sheet": "02_34条逐句审校",
+        "row": 32,
+        "columns": [
+          "F",
+          "G",
+          "J"
+        ]
+      }
     },
     {
       "id": "F35",
@@ -1106,15 +1414,26 @@
       "next_finding_url_proposed": "https://worldeology.com/InteractEval/index.html#comparisons?measure=reconstruction-ablation&finding=F36",
       "category_url_proposed": "https://worldeology.com/InteractEval/index.html#findings?category=representations",
       "clean_permalink_proposed": "https://worldeology.com/InteractEval/index.html#comparisons?measure=representation-control&finding=F35",
-      "summary_en": "Adding or subtracting fitted relational directions in 60 contexts produces no consistent signed change beyond random-direction controls.",
-      "limitation_en": "This intervention does not establish that all behavioral control is impossible. At larger magnitudes, persona fit deteriorates; interest interventions also reduce coherence.",
+      "summary_en": "Intervening along interest and affection directions does not produce consistent behavior changes in the intended direction beyond random-direction controls.",
+      "limitation_en": "The paper does not supply enough aggregate numerical results.",
       "tier_en": "Further finding",
       "verified_pages": [
         37
       ],
       "related_ids": [
         "F31"
-      ]
+      ],
+      "evidence_summary_en": "Direction interventions in 60 contexts do not produce a consistent intended-direction change beyond random-direction controls.",
+      "copy_source": {
+        "workbook": "research/InteractEval_Findings_Research_Taxonomy_v5.xlsx",
+        "sheet": "02_34条逐句审校",
+        "row": 33,
+        "columns": [
+          "F",
+          "G",
+          "J"
+        ]
+      }
     },
     {
       "id": "F36",
@@ -1143,8 +1462,8 @@
       "next_finding_url_proposed": "https://worldeology.com/InteractEval/index.html#comparisons?measure=case-trajectories&finding=F13",
       "category_url_proposed": "https://worldeology.com/InteractEval/index.html#findings?category=measurement",
       "clean_permalink_proposed": "https://worldeology.com/InteractEval/index.html#comparisons?measure=reconstruction-ablation&finding=F36",
-      "summary_en": "Both judges read the complete transcript. State-probe separation rises from 64% to 91% with reconstruction; recurrence-probe separation rises from 49% to 89%.",
-      "limitation_en": "These are controlled probes whose required outcomes follow from the definitions, not estimates of real-world accuracy.",
+      "summary_en": "With the same multi-turn evidence, structured reconstruction raises state-change probe separation from 64% to 91% and recurrence-stagnation probe separation from 49% to 89%. The tests use predefined controlled probes.",
+      "limitation_en": "Probe pass rates come from controlled tests constructed according to the definitions; they cannot be generalized to real-world accuracy.",
       "tier_en": "Core finding",
       "verified_pages": [
         50,
@@ -1152,7 +1471,18 @@
       ],
       "related_ids": [
         "F40"
-      ]
+      ],
+      "evidence_summary_en": "State-change probes: 64% → 91%; recurrence-stagnation probes: 49% → 89%.",
+      "copy_source": {
+        "workbook": "research/InteractEval_Findings_Research_Taxonomy_v5.xlsx",
+        "sheet": "02_34条逐句审校",
+        "row": 34,
+        "columns": [
+          "F",
+          "G",
+          "J"
+        ]
+      }
     },
     {
       "id": "F37",
@@ -1181,15 +1511,26 @@
       "next_finding_url_proposed": "https://worldeology.com/InteractEval/index.html#comparisons?measure=coherence&finding=F04",
       "category_url_proposed": "https://worldeology.com/InteractEval/index.html#findings?category=measurement",
       "clean_permalink_proposed": "https://worldeology.com/InteractEval/index.html#comparisons?measure=human-audit&finding=F37",
-      "summary_en": "Human auditors endorse L1 judgments in 98.8% of reviewed records, L5 in 78.9% and L6 in 74.0%.",
-      "limitation_en": "Endorsement is acceptance under an audit with the full record available, not independent objective accuracy.",
+      "summary_en": "Endorsement is the acceptance rate in human audits of the evaluator’s existing judgments. It is neither agreement between human reviewers nor objective accuracy.",
+      "limitation_en": "Endorsement is not objective accuracy.",
       "tier_en": "Further finding",
       "verified_pages": [
         22
       ],
       "related_ids": [
         "F40"
-      ]
+      ],
+      "evidence_summary_en": "Human endorsement: L1 Goal 98.8%; L5 78.9%; L6 74.0%.",
+      "copy_source": {
+        "workbook": "research/InteractEval_Findings_Research_Taxonomy_v5.xlsx",
+        "sheet": "02_34条逐句审校",
+        "row": 35,
+        "columns": [
+          "F",
+          "G",
+          "J"
+        ]
+      }
     },
     {
       "id": "F40",
@@ -1218,15 +1559,26 @@
       "next_finding_url_proposed": "https://worldeology.com/InteractEval/index.html#comparisons?measure=role-probes&finding=F31",
       "category_url_proposed": "https://worldeology.com/InteractEval/index.html#findings?category=measurement",
       "clean_permalink_proposed": "https://worldeology.com/InteractEval/index.html#comparisons?measure=extractor-stability&finding=F40",
-      "summary_en": "Alternative extractors agree on 0.806 and 0.816 of latent-state records, while both retain ranking Spearman ρ = 0.988.",
-      "limitation_en": "Record agreement and ranking correlation are different statistics. Their numerical difference is not a comparable error rate.",
+      "summary_en": "Alternative state extractors agree on approximately 80.6%–81.6% of latent-state records while final model rankings correlate at ρ = 0.988. This does not prove that the rankings are correct.",
+      "limitation_en": "These are different statistics and cannot be directly compared as error rates.",
       "tier_en": "Further finding",
       "verified_pages": [
         43
       ],
       "related_ids": [
         "F41"
-      ]
+      ],
+      "evidence_summary_en": "State-record agreement: 0.806 / 0.816; final-ranking Spearman ρ = 0.988.",
+      "copy_source": {
+        "workbook": "research/InteractEval_Findings_Research_Taxonomy_v5.xlsx",
+        "sheet": "02_34条逐句审校",
+        "row": 36,
+        "columns": [
+          "F",
+          "G",
+          "J"
+        ]
+      }
     },
     {
       "id": "F41",
@@ -1255,15 +1607,26 @@
       "next_finding_url_proposed": "https://worldeology.com/InteractEval/index.html#comparisons?measure=weighting-sensitivity&finding=F06",
       "category_url_proposed": "https://worldeology.com/InteractEval/index.html#findings?category=measurement",
       "clean_permalink_proposed": "https://worldeology.com/InteractEval/index.html#comparisons?measure=judge-families&finding=F41",
-      "summary_en": "Alternative judges give their own family a small relative lift: +0.013 for GPT, +0.011 for Qwen and +0.017 for Gemini.",
-      "limitation_en": "Evidence of the same bias in the reference judge is weak. The shifts are small and do not overturn the broad conclusions.",
+      "summary_en": "Three alternative judges raise their own-family model’s relative score by 0.011–0.017. There is no clear evidence of such a preference by the reference judge.",
+      "limitation_en": "A significant own-family preference by the reference judge has not been established.",
       "tier_en": "Further finding",
       "verified_pages": [
         43
       ],
       "related_ids": [
         "F42"
-      ]
+      ],
+      "evidence_summary_en": "Relative additional score: approximately +0.011 to +0.017.",
+      "copy_source": {
+        "workbook": "research/InteractEval_Findings_Research_Taxonomy_v5.xlsx",
+        "sheet": "02_34条逐句审校",
+        "row": 37,
+        "columns": [
+          "F",
+          "G",
+          "J"
+        ]
+      }
     },
     {
       "id": "F42",
@@ -1292,15 +1655,26 @@
       "next_finding_url_proposed": "https://worldeology.com/InteractEval/index.html#comparisons?measure=architecture-stages&finding=F25",
       "category_url_proposed": "https://worldeology.com/InteractEval/index.html#findings?category=measurement",
       "clean_permalink_proposed": "https://worldeology.com/InteractEval/index.html#comparisons?measure=evaluation-cost&finding=F42",
-      "summary_en": "The reported protocol uses 159,680 evaluation tokens per exchange versus approximately 9,510 tokens to generate both participants, about 16.8 times as many.",
-      "limitation_en": "These are input plus output tokens under this protocol, not a universal lower bound. Parallel calls change latency, not the token total.",
+      "summary_en": "This concerns the paper’s process-evaluation configuration with 15 evaluation calls per exchange. Its token cost is approximately 17 times generation cost; this is not a universal theoretical lower bound.",
+      "limitation_en": "This cost belongs to the specific InteractEval protocol; it is not an inherent requirement of all interaction measurement.",
       "tier_en": "Further finding",
       "verified_pages": [
         50
       ],
       "related_ids": [
         "F36"
-      ]
+      ],
+      "evidence_summary_en": "Evaluation: 159,680 tokens versus approximately 9,510 for generation by both participants per exchange (about 16.8×).",
+      "copy_source": {
+        "workbook": "research/InteractEval_Findings_Research_Taxonomy_v5.xlsx",
+        "sheet": "02_34条逐句审校",
+        "row": 38,
+        "columns": [
+          "F",
+          "G",
+          "J"
+        ]
+      }
     },
     {
       "id": "F43",

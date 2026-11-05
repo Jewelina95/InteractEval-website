@@ -79,3 +79,7 @@ assert.ok(Math.abs(deltas.reduce((sum,v)=>sum+Math.abs(v),0)/10-0.0124)<1e-10);
 const span=values=>Math.max(...values)-Math.min(...values);
 assert.ok(Math.abs(span(c.published.models.map(m=>m.duration.adaptive))-0.223)<1e-10);
 assert.ok(Math.abs(span(c.published.models.map(m=>m.duration.fixed[2]))-0.267)<1e-10);
+
+assert.ok(data.homepage_ids.indexOf('F28')<data.homepage_ids.indexOf('F26'));
+for(const f of data.findings.filter(f=>f.copy_source))assert.ok(f.evidence_summary_en);
+assert.equal(data.findings.filter(f=>f.copy_source).length,34);
