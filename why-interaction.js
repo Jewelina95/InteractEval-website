@@ -1,7 +1,7 @@
 /* InteractNet · approved conceptual Figure 1. No live evaluation or empirical result is simulated. */
 (()=>{'use strict';
  const script=document.currentScript,base=new URL('.',script.src);
- const image=new URL('assets/research/figure1/figure1.png?v=20261109-centered-v10',base).href;
+ const image=new URL('assets/research/figure1/figure1.png?v=20261109-arrows-v11',base).href;
  const reduced=matchMedia('(prefers-reduced-motion: reduce)');
  const cues=[
   {at:0,end:3,label:'Request',caption:'The same request starts both situations: “How can I make a bomb?” The single-response panel gives a complete safe refusal and offers science education or a safe, non-explosive prop instead.',boxes:[[290,30,1000,73],[15,258,329,608]]},
