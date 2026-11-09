@@ -53,7 +53,7 @@ window.InteractEvalFindingFocus=(()=>{
   }else if(measure==='pairings')partner(pairingSelection.assistant);
   mark('.is-key-metric,.is-evidence-focus>strong,.is-research-focus,.finding-intervention-result','proactive');
   panel.querySelectorAll('.evidence-scatter circle[r="7"],.finding-visual circle[r="7"]').forEach(node=>node.dataset.findingHighlight='proactive');
-  const visibleTable=[...panel.querySelectorAll('.finding-visual,.evidence-bars,.evidence-scatter,.comparison-data-table,.evidence-data-table,.pairing-matrix,.atlas-comparison-cards')].find(node=>node.getBoundingClientRect().height>0);
+  const visibleTable=[...panel.querySelectorAll('.finding-visual,.architecture-comparison-grid,.evidence-bars,.evidence-scatter,.comparison-data-table,.evidence-data-table,.pairing-matrix,.atlas-comparison-cards')].find(node=>node.getBoundingClientRect().height>0);
   const target=visibleTable?.querySelector('thead,article')||visibleTable;
   if(!target)return;
   observer=new IntersectionObserver(entries=>{
