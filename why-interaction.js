@@ -1,4 +1,4 @@
-/* InteractNet · approved conceptual Figure 1. No live evaluation or empirical result is simulated. */
+/* InteractionNet · approved conceptual Figure 1. No live evaluation or empirical result is simulated. */
 (()=>{'use strict';
  const script=document.currentScript,base=new URL('.',script.src);
  const image=new URL('assets/research/figure1/figure1.png?v=20261109-arrows-v11',base).href;
