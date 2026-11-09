@@ -1,4 +1,4 @@
-# InteractEval · 40 条 Key Findings 中文版
+# InteractNet · 40 条 Key Findings 中文版
 
 ## 交互能力的分野
 

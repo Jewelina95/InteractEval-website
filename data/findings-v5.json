@@ -1,5 +1,5 @@
 {
-  "title": "InteractEval: 40 academically reviewed findings",
+  "title": "InteractNet: 40 academically reviewed findings",
   "schema_version": "research-question-taxonomy-v6",
   "status": "taxonomy, site navigation and focus proposal; no live site changes",
   "language_principle": "Short clear generalizable academic claim; no model-specific numbers in headline; evidence panel owns numbers and caveats.",
@@ -1638,7 +1638,7 @@
       "supporting_data": "评估 159,680 tokens vs 双方生成约 9,510 tokens／轮（约 16.8×）",
       "paper_source": "T35",
       "pdf_pages": "50",
-      "limitation": "特定 InteractEval 协议评估成本，不是所有交互测量的固有要求。",
+      "limitation": "特定 InteractNet 协议评估成本，不是所有交互测量的固有要求。",
       "measure": "evaluation-cost",
       "view_design": "生成 vs 评估 token 堆叠柱形 + 评估调用构成",
       "highlight": "高亮 17×；说明具体协议、并行开销与不是普遍下界",
@@ -1656,7 +1656,7 @@
       "category_url_proposed": "https://worldeology.com/InteractEval/index.html#findings?category=measurement",
       "clean_permalink_proposed": "https://worldeology.com/InteractEval/index.html#comparisons?measure=evaluation-cost&finding=F42",
       "summary_en": "This concerns the paper’s process-evaluation configuration with 15 evaluation calls per exchange. Its token cost is approximately 17 times generation cost; this is not a universal theoretical lower bound.",
-      "limitation_en": "This cost belongs to the specific InteractEval protocol; it is not an inherent requirement of all interaction measurement.",
+      "limitation_en": "This cost belongs to the specific InteractNet protocol; it is not an inherent requirement of all interaction measurement.",
       "tier_en": "Further finding",
       "verified_pages": [
         50
@@ -2365,7 +2365,7 @@
     },
     {
       "id": "F36",
-      "subject": "Full InteractEval",
+      "subject": "Full InteractNet",
       "metric": "state probe",
       "value": 0.91,
       "unit": "rate",
@@ -2385,7 +2385,7 @@
     },
     {
       "id": "F36",
-      "subject": "Full InteractEval",
+      "subject": "Full InteractNet",
       "metric": "recurrence probe",
       "value": 0.89,
       "unit": "rate",
