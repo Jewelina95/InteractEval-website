@@ -34,3 +34,14 @@
 .finding-tags a{border-radius:20px;padding:5px 10px;font-size:11px;background:#f4f7f0}
 .finding-evidence-limit{color:#686b5f;font:400 13px/1.65 var(--sans);margin:16px 0}
 @media(max-width:600px){.selected-findings>li{grid-template-columns:25px minmax(0,1fr);gap:10px;padding:19px 0}.selected-finding-link{gap:12px}.selected-finding-link h3{font-size:18px}.finding-category-tag{font-size:10px}}
+
+/* Reviewed November findings: a single uncluttered line for each claim. */
+.selected-findings>li{display:block;padding:0}
+.selected-findings>li>.selected-finding-link{display:grid;grid-template-columns:28px minmax(0,1fr) 20px;gap:20px;align-items:baseline;padding:23px 0}
+.selected-findings .selected-finding-number{padding:0}
+.selected-findings .selected-finding-link h3{font-size:clamp(18px,1.7vw,23px);line-height:1.45}
+.finding-evidence-intro{margin-top:0}.finding-visual{margin:24px 0 30px}.finding-visual figcaption,.finding-frontier h4{font:550 16px/1.5 var(--sans);color:#294b38;margin:0 0 18px}.finding-visual svg{width:100%;height:auto;display:block;max-width:900px}.finding-visual svg text{font:500 16px var(--sans);fill:#355743}
+.finding-intervention-steps{display:grid;grid-template-columns:1fr auto 1fr auto 1.2fr;gap:14px;align-items:center}.finding-intervention-steps>div{padding:20px;background:#f1f5ee;border:1px solid #d7e1d3;border-radius:6px;min-height:165px}.finding-intervention-steps span{font:500 12px/1.5 var(--sans);color:#647b69}.finding-intervention-steps strong{display:block;margin:12px 0;color:#294b38;font:650 20px/1.35 var(--sans)}.finding-intervention-steps p{font:400 13px/1.6 var(--sans)}.finding-intervention-steps .finding-intervention-result{background:#fff4d3;border-color:#dcc58a}
+@media(max-width:600px){.selected-findings>li>.selected-finding-link{grid-template-columns:22px minmax(0,1fr) 14px;gap:10px;padding:20px 0}.finding-intervention-steps{grid-template-columns:1fr}.finding-intervention-steps>span{text-align:center;transform:rotate(90deg)}.finding-intervention-steps>div{min-height:0}.finding-visual svg text{font-size:17px}}
+
+@media(max-width:600px){.finding-visual svg text{font-size:24px}}

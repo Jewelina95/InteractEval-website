@@ -44,3 +44,13 @@ All six were checked against `Qwen_InteractEval (2).pdf`, whose SHA-256 exactly 
 ## Workbook wording alignment
 
 The original 34 English and Chinese headlines match sheet `02_34条逐句审校` exactly. The visible English explanation, required-evidence sentence and claim boundary are faithful translations of columns F, G and J; the original Chinese column values are retained alongside them in the site data. No old V2 headline is substituted. The original twelve homepage items follow sheet `01_首页精选12` in order, including F28 before F26; the authorized F43–F45 additions follow them. The six later findings remain based on the user-supplied wording and the source corrections documented above.
+
+## Reviewed website list — 9 November 2026
+
+Source: https://docs.google.com/spreadsheets/d/1ALnCQklBXagNB87tN8BHyxlfuR50Jl6cZcJpSRDvJ5s/edit, modified 2026-11-09T16:06:49.484Z. The website-copy sheet supplies eleven public headlines in this order: F01, F07, F09, F13, F19, F22, F28, F26, F30, F32, F35. English and Chinese titles are copied exactly. Seven are confirmed; F09, F19, F22 and F32 retain provisional status in metadata and an explanatory sentence below their data. F43 remains pending and is not in the list.
+
+The list and evidence introductions have no category labels. #findings and #key-findings both lead into the same continuous article; clicking selects and scrolls to the corresponding evidence. Original numeric data and historical routes remain available. F03's profile comparison is integrated into F01, factual-addition evidence into F07, and the prior partner matrix remains below F19's new ranking-reversal diagram. F25, F33 and F36 are no longer independent published findings.
+
+New visual comparisons use the supplied sheet and existing numerical arrays: three stage ranges; information-condition lines; case interest timelines; Sol/Qwen ranking reversal under standard versus DeepSeek partners; role-similarity versus standard-minus-self score (reported correlation −0.65); matched two/four-participant declines; and the F30 gain/Frontier Emergence contrast. F30 uses only the reviewed counts (four stronger bases and zero weaker bases with nonzero FE under Cognizer/Claude Code), without inventing per-model FE rates. The source's claim boundaries are retained.
+
+Evidence emphasis starts after the destination chart is visible; static emphasis remains with reduced-motion preferences. Checks render all eleven reviewed findings and all forty historical evidence contexts. Browser verification covers every reviewed headline, absence of tags, visible highlights, ranking-reversal units, and desktop/mobile layouts.

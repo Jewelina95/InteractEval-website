@@ -34,7 +34,7 @@ window.InteractEvalFindingFocus=(()=>{
  }
  function show(measure){
   clear();
-  const finding=atlasFindings.find(finding=>finding.measure===measure);
+  const finding=activeResearchFinding()||atlasFindings.find(finding=>finding.measure===measure);
   const body=document.getElementById('main-comparison-body');
   if(!finding||!body||measure!==mainComparisonMeasure)return;
   if(measure==='information'&&mainInformationView!=='conditions')return;
@@ -48,8 +48,12 @@ window.InteractEvalFindingFocus=(()=>{
   }else if(measure==='information'){
    mark('[data-comparison-metric="partial"]','proactive');
    mark('[data-comparison-metric="insufficient"]','passive');
-  }else partner(pairingSelection.assistant);
-  const visibleTable=[...panel.querySelectorAll('.comparison-data-table,.pairing-matrix,.atlas-comparison-cards')].find(node=>node.getBoundingClientRect().height>0);
+  }else if(measure==='pairings'&&activeResearchFinding()?.id==='F19'){
+   for(const partner of ['claude-5-opus','deepseek-v4-pro'])for(const assistant of ['gpt-5.6-sol','qwen3.8-max'])mark(`[data-pairing-partner="${partner}"][data-pairing-assistant="${assistant}"]`,partner==='claude-5-opus'?'passive':'proactive');
+  }else if(measure==='pairings')partner(pairingSelection.assistant);
+  mark('.is-key-metric,.is-evidence-focus>strong,.is-research-focus,.finding-intervention-result','proactive');
+  panel.querySelectorAll('.evidence-scatter circle[r="7"],.finding-visual circle[r="7"]').forEach(node=>node.dataset.findingHighlight='proactive');
+  const visibleTable=[...panel.querySelectorAll('.finding-visual,.evidence-bars,.evidence-scatter,.comparison-data-table,.evidence-data-table,.pairing-matrix,.atlas-comparison-cards')].find(node=>node.getBoundingClientRect().height>0);
   const target=visibleTable?.querySelector('thead,article')||visibleTable;
   if(!target)return;
   observer=new IntersectionObserver(entries=>{

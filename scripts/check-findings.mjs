@@ -6,7 +6,7 @@ import crypto from 'node:crypto';
 const data=JSON.parse(fs.readFileSync('data/findings-v5.json','utf8'));
 assert.equal(data.findings.length,40);
 assert.equal(data.categories.length,7);
-assert.equal(data.homepage_ids.length,15);
+assert.equal(data.homepage_ids.length,11);
 const ids=new Set(data.findings.map(f=>f.id));
 assert.equal(ids.size,40);
 const categorized=data.categories.flatMap(c=>c.finding_ids);
@@ -46,30 +46,29 @@ for(const f of data.findings){
 }
 c.location.hash='#key-findings';
 const homepage=vm.runInContext('coreFindings()',c);
-assert.equal((homepage.match(/class="selected-finding-link/g)||[]).length,15);
+assert.equal((homepage.match(/class="selected-finding-link/g)||[]).length,11);
 assert.ok(!homepage.includes('All findings'));
 assert.ok(!homepage.includes('home-finding-search'));
 for(const id of data.homepage_ids)assert.ok(homepage.includes('finding='+id));
 assert.ok(homepage.includes('data-finding-measure="stage-profile"'));
-assert.ok(homepage.includes('finding-category-tag'));
+assert.ok(!homepage.includes('finding-category-tag'));
+assert.ok(!homepage.includes('finding-category-nav'));
 assert.ok(!homepage.includes('finding-data-explanation'));
 assert.ok(!homepage.includes('finding-information-definitions'));
-assert.equal((fs.readFileSync('key-findings-zh.html','utf8').match(/class="finding-catalog-card/g)||[]).length,40);
+assert.equal((fs.readFileSync('key-findings-zh.html','utf8').match(/class="selected-finding-link/g)||[]).length,11);
 assert.match(homepage,/measure=stage-profile&finding=F01/);
 assert.match(homepage,/measure=information&finding=F07/);
 assert.ok(homepage.indexOf('finding=F01')<homepage.indexOf('finding=F07'));
-for(const category of data.categories){
- c.location.hash='#findings?category='+category.slug;
- const html=vm.runInContext('findingsIndex()',c);
- assert.equal((html.match(/class="finding-catalog-card/g)||[]).length,category.finding_ids.length);
-}
-assert.match(vm.runInContext("findingsCards('', 'F42')",c),/1 finding/);
+const approved=['F01','F07','F09','F13','F19','F22','F28','F26','F30','F32','F35'];
+assert.deepEqual(data.published_ids,approved);
+assert.deepEqual(data.homepage_ids,approved);
+assert.equal(data.source_review.confirmed_ids.length,7);
+assert.equal(data.source_review.provisional_ids.length,4);
+for(const id of ['F03','F05','F24','F25','F33','F36','F43'])assert.ok(!homepage.includes('finding='+id));
+assert.equal(vm.runInContext('findingsIndex()',c),homepage);
+assert.match(vm.runInContext("findingsCards('', 'F35')",c),/Reading an AI/);
 assert.match(vm.runInContext("findingsCards('', 'no matching phrase xyz')",c),/No findings match/);
-console.log('40 evidence views render with below-chart metrics, definitions, caveats and valid values; 7 exclusive categories, 15 curated homepage rows, search and original finding routes verified.');
-
 for(const id of ['F43','F44','F45','F46','F47','F48'])assert.ok(ids.has(id));
-for(const id of ['F43','F44','F45'])assert.ok(data.homepage_ids.includes(id));
-for(const row of c.extra.prose_scores)assert.ok(Number.isFinite(row));
 assert.equal(c.extra.simulated_users.length,11);
 assert.equal(c.extra.prose_scores.length,10);
 
@@ -81,5 +80,10 @@ assert.ok(Math.abs(span(c.published.models.map(m=>m.duration.adaptive))-0.223)<1
 assert.ok(Math.abs(span(c.published.models.map(m=>m.duration.fixed[2]))-0.267)<1e-10);
 
 assert.ok(data.homepage_ids.indexOf('F28')<data.homepage_ids.indexOf('F26'));
-for(const f of data.findings.filter(f=>f.copy_source))assert.ok(f.evidence_summary_en);
-assert.equal(data.findings.filter(f=>f.copy_source).length,34);
+console.log('11 latest reviewed findings render without categories; 40 archived evidence routes remain valid; list order, review states, key metrics and original destinations verified.');
+
+c.location.hash='#comparisons?measure=pairings&finding=F19';
+vm.runInContext("mainComparisonMeasure='pairings'",c);
+const reversal=vm.runInContext('findingsMeasureContent(mainComparisonMeasure)',c);
+assert.ok(reversal.includes('0.394')&&reversal.includes('0.510'));
+assert.ok(!reversal.includes('39.4%')&&!reversal.includes('51.0%'));
