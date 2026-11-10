@@ -5,15 +5,14 @@
   "language_principle": "Short clear generalizable academic claim; no model-specific numbers in headline; evidence panel owns numbers and caveats.",
   "homepage_ids": [
     "F01",
+    "F04",
     "F07",
     "F09",
-    "F16",
+    "F14",
     "F19",
-    "F17",
     "F28",
     "F26",
     "F30",
-    "F32",
     "F44"
   ],
   "reviewed_count": 11,
@@ -170,7 +169,7 @@
       "group": "交互能力的分野",
       "editorial_tier": "补充证据",
       "title_zh": "能提出有价值的交互策略，并不代表能持续有效地执行。",
-      "title_en": "A promising interaction strategy does not guarantee effective follow-through.",
+      "title_en": "Every model’s follow-through falls short of its initiative.",
       "clarification": "L5衡量有根据的策略价值，L6衡量跨轮协调；两者下降部分受到级联评分规则影响。",
       "supporting_data": "10/10 模型 L6<L5；L6/L5 介于 0.832–0.965",
       "paper_source": "T5",
@@ -192,7 +191,7 @@
       "next_finding_url_proposed": "https://worldeology.com/InteractionNet/index.html#comparisons?measure=case-trajectories&finding=F13",
       "category_url_proposed": "https://worldeology.com/InteractionNet/index.html#findings?category=capability",
       "clean_permalink_proposed": "https://worldeology.com/InteractionNet/index.html#comparisons?measure=coherence&finding=F04",
-      "summary_en": "L5 measures the value of a justified strategy; L6 measures coordination across turns. Part of the decline between them reflects the cascaded scoring rules.",
+      "summary_en": "All ten models score lower on long-horizon coherence than on proactive initiative.",
       "limitation_en": "Part of the gap is mechanically produced by the cascade constraints.",
       "tier_en": "Supporting evidence",
       "verified_pages": [
@@ -212,7 +211,7 @@
           "J"
         ]
       },
-      "published": false
+      "published": true
     },
     {
       "id": "F05",
@@ -543,7 +542,7 @@
       "group": "交互轨迹与结果",
       "editorial_tier": "延伸发现",
       "title_zh": "对话越往后，模型在每轮交互质量上的差距可能越大。",
-      "title_en": "Differences in per-turn interaction quality can widen over time.",
+      "title_en": "Model differences widen as the interaction continues.",
       "clarification": "差距是同轮存续对话中的平均单轮综合交互评分极差（第1轮0.109、第16轮0.204）；晚轮样本有选择效应。",
       "supporting_data": "十模型单轮得分极差：第1轮 0.109 → 第16轮 0.204",
       "paper_source": "T32",
@@ -565,7 +564,7 @@
       "next_finding_url_proposed": "https://worldeology.com/InteractionNet/index.html#comparisons?measure=weighting-sensitivity&finding=F06",
       "category_url_proposed": "https://worldeology.com/InteractionNet/index.html#findings?category=trajectory",
       "clean_permalink_proposed": "https://worldeology.com/InteractionNet/index.html#comparisons?measure=turn-divergence&finding=F14",
-      "summary_en": "The gap is the range of average per-turn composite interaction scores among dialogues still present at the same turn: 0.109 at turn 1 and 0.204 at turn 16. Later-turn samples are selected.",
+      "summary_en": "At turn one the ten models are close; by turn sixteen the spread has nearly doubled.",
       "limitation_en": "Later turns are subject to selection effects.",
       "tier_en": "Further finding",
       "verified_pages": [
@@ -585,7 +584,7 @@
           "J"
         ]
       },
-      "published": false
+      "published": true
     },
     {
       "id": "F16",
@@ -635,7 +634,7 @@
           "J"
         ]
       },
-      "published": true,
+      "published": false,
       "review_status": "confirmed"
     },
     {
@@ -685,7 +684,7 @@
           "J"
         ]
       },
-      "published": true
+      "published": false
     },
     {
       "id": "F18",
@@ -1231,7 +1230,7 @@
       "evidence_summary_en": "Affection-direction cosine: 0.737 / 0.661 / 0.620; residual user-affection R²: −0.225 / −0.182 / −0.248.",
       "review_status": "provisional",
       "website_order": 10,
-      "published": true
+      "published": false
     },
     {
       "id": "F33",
@@ -2699,15 +2698,14 @@
   },
   "published_ids": [
     "F01",
+    "F04",
     "F07",
     "F09",
-    "F16",
+    "F14",
     "F19",
-    "F17",
     "F28",
     "F26",
     "F30",
-    "F32",
     "F44"
   ],
   "source_review": {
