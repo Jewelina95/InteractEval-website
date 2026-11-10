@@ -25,8 +25,37 @@ function findingAnchor(f,content,classes=''){
 function findingRows(rows=publishedFindings()){
  return `<ol class="selected-findings">${rows.map((f,i)=>`<li>${findingAnchor(f,`<span class="selected-finding-number">${String(i+1).padStart(2,'0')}</span><h3>${safe(f.title_en)}</h3><span class="selected-finding-arrow" aria-hidden="true">↓</span>`,'selected-finding-link')}</li>`).join('')}</ol>`;
 }
+// Column tags stay short enough to head a narrow column; the long category titles
+// above them carry the research question.
+const findingColumnTags={
+ capability:{tag:'Capability',note:'What separates today’s models'},
+ context:{tag:'Context',note:'When conditions change behavior'},
+ trajectory:{tag:'Trajectory',note:'Why good turns can still fail'},
+ partners:{tag:'Partners',note:'Who is interacting, and how many'},
+ architectures:{tag:'Architecture',note:'What an added harness changes'},
+ representations:{tag:'Representation',note:'What is encoded inside'},
+ measurement:{tag:'Measurement',note:'Whether the difference is real'},
+ concept:{tag:'Concept',note:'What the instrument is for'}
+};
+function findingColumns(rows=publishedFindings()){
+ const columns=[];
+ for(const f of rows){
+  let column=columns.find(c=>c.slug===f.category_slug);
+  if(!column){column={slug:f.category_slug,title:f.category_en||f.category_slug,findings:[]};columns.push(column);}
+  column.findings.push(f);
+ }
+ return columns;
+}
+function findingColumn(c,startIndex){
+ const meta=findingColumnTags[c.slug]||{tag:c.title||c.slug,note:''};
+ return `<section class="finding-column" data-finding-category="${safe(c.slug)}" aria-label="${safe(c.title)}"><header><span class="finding-column-tag">${safe(meta.tag)}</span>${meta.note?`<p class="finding-column-note">${safe(meta.note)}</p>`:''}</header><ol class="finding-column-list">${c.findings.map((f,i)=>`<li>${findingAnchor(f,`<span class="finding-column-number">${String(startIndex+i+1).padStart(2,'0')}</span><h3>${safe(f.title_en)}</h3>`,'finding-column-link')}</li>`).join('')}</ol></section>`;
+}
+function findingColumnsMarkup(rows=publishedFindings()){
+ const columns=findingColumns(rows);let offset=0;
+ return `<div class="finding-columns">${columns.map(c=>{const markup=findingColumn(c,offset);offset+=c.findings.length;return markup;}).join('')}</div>`;
+}
 function coreFindings(){
- return `<section id="key-findings" class="article-section atlas-key-findings homepage-findings"><div class="findings-section-heading"><h2>Key Findings</h2><a href="./key-findings-zh.html" lang="zh-CN">中文版 ↗</a></div>${findingRows()}</section>`;
+ return `<section id="key-findings" class="article-section atlas-key-findings homepage-findings"><div class="findings-section-heading"><h2>Key Findings</h2></div>${findingColumnsMarkup()}</section>`;
 }
 
 function findingEvidenceTarget(){
@@ -41,13 +70,12 @@ function findingsCards(_category='',query=''){
 }
 function findingsIndex(){return coreFindings();}
 function findingEvidenceIntro(){
- const f=activeResearchFinding();if(!f)return '';
- return `<header class="finding-evidence-intro" data-research-finding="${f.id}"><h3>${safe(f.title_en)}</h3><p>${safe(f.summary_en)}</p></header>`;
+ return '';
 }
 function findingEvidenceFooter(){
  const f=activeResearchFinding();if(!f)return '';
  const visible=new Set(findingsResearch.published_ids||[]),related=f.related_ids.map(findingById).filter(r=>r&&visible.has(r.id)&&r.id!==f.id),next=publishedFindings()[publishedFindings().findIndex(r=>r.id===f.id)+1];
- return `${f.evidence_summary_en?`<p class="finding-evidence-statement">${safe(f.evidence_summary_en)}</p>`:''}${findingKeyMetrics(f)}${findingDataExplanation(f.measure)}<p class="finding-evidence-limit">${safe(f.limitation_en)}</p><nav class="finding-evidence-nav" aria-label="Related findings">${related.length?`<div><span>Related findings</span>${related.map(r=>findingAnchor(r,`${safe(r.title_en)} <i aria-hidden="true">↓</i>`)).join('')}</div>`:''}${next?`<div><span>Next finding</span>${findingAnchor(next,`${safe(next.title_en)} <i aria-hidden="true">→</i>`)}</div>`:''}<a href="./index.html#key-findings">Back to key findings ↑</a></nav>`;
+ return `${f.evidence_summary_en?`<p class="finding-evidence-statement" data-research-finding="${f.id}">${safe(f.evidence_summary_en)}</p>`:''}${findingKeyMetrics(f)}${findingDataExplanation(f.measure)}<p class="finding-evidence-limit">${safe(f.limitation_en)}</p><nav class="finding-evidence-nav" aria-label="Related findings">${related.length?`<div><span>Related findings</span>${related.map(r=>findingAnchor(r,`${safe(r.title_en)} <i aria-hidden="true">↓</i>`)).join('')}</div>`:''}${next?`<div><span>Next finding</span>${findingAnchor(next,`${safe(next.title_en)} <i aria-hidden="true">→</i>`)}</div>`:''}<a href="./index.html#key-findings">Back to key findings ↑</a></nav>`;
 }
 
 function evidenceTable(headers,rows,caption='Published evidence'){
@@ -210,7 +238,7 @@ const primaryFindingMetrics={
  F42:[['Generation / tokens per exchange','9,510'],['Evaluation / tokens per exchange','159,680'],['Evaluation / generation','16.8×']]
 };
 const normalizeMetricValue=value=>String(value).trim().replace(/[−–]/g,'-').replace(/[,+\s]/g,'');
-function findingKeyMetrics(f){return `<section class="finding-key-metrics" aria-label="Key evidence metrics">${primaryFindingMetrics[f.id].map(([label,value])=>`<div><span>${safe(label)}</span><strong>${safe(value)}</strong></div>`).join('')}</section>`;}
+function findingKeyMetrics(f){return `<section class="finding-key-metrics" data-research-finding="${f.id}" aria-label="Key evidence metrics">${primaryFindingMetrics[f.id].map(([label,value])=>`<div><span>${safe(label)}</span><strong>${safe(value)}</strong></div>`).join('')}</section>`;}
 const findingDataDefinitions={
  "scene-revision":"An admitted revision is a rule change accepted under the scene-revision criteria. L1 grades goal preservation under the effective scene. The 22.9% rate counts old-rule failures only among turns after admitted revisions when revision is disabled; it is not an overall error rate.",
  "joint-level-judging":"Single-level probes vary one capability while holding the others fixed. Separation is the share graded in the direction required by the definitions. Reliability is agreement of level grades across two independent grading runs. These two quantities have separate denominators.",
