@@ -68,7 +68,7 @@ assert.deepEqual(data.published_ids,approved);
 assert.deepEqual(data.homepage_ids,approved);
 for(const id of ['F03','F05','F24','F25','F33','F36','F43','F13','F22','F35','F16','F17','F32'])assert.ok(!homepage.includes('finding='+id));
 assert.ok(homepage.includes('Judging six capabilities'),'F44 must render');
-assert.ok(homepage.includes('per-turn interaction quality'),'F14 must render');
+assert.ok(homepage.includes('widen as the interaction continues'),'F14 must render');
 assert.equal(vm.runInContext('findingsIndex()',c),homepage);
 assert.match(vm.runInContext("findingsCards('', 'F44')",c),/Judging six capabilities/);
 assert.match(vm.runInContext("findingsCards('', 'no matching phrase xyz')",c),/No findings match/);
