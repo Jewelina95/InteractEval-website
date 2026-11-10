@@ -12,8 +12,7 @@
     "F19",
     "F28",
     "F26",
-    "F30",
-    "F44"
+    "F30"
   ],
   "reviewed_count": 11,
   "editorial_tiers": {
@@ -1680,7 +1679,7 @@
       "next_finding": "F42",
       "priority_zh": "强烈推荐",
       "clean_permalink_proposed": "https://worldeology.com/InteractionNet/index.html#comparisons?measure=joint-level-judging&finding=F44",
-      "published": true,
+      "published": false,
       "evidence_summary_en": "Single-level probe separation falls from 90% to 61%; agreement between two independent grading runs falls from 0.871 to 0.833.",
       "review_status": "confirmed"
     },
@@ -2705,8 +2704,7 @@
     "F19",
     "F28",
     "F26",
-    "F30",
-    "F44"
+    "F30"
   ],
   "source_review": {
     "url": "https://docs.google.com/spreadsheets/d/1ALnCQklBXagNB87tN8BHyxlfuR50Jl6cZcJpSRDvJ5s/edit?usp=sharing",
