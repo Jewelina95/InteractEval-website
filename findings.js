@@ -3,7 +3,7 @@
 let findingsResearch,findingsEvidence;
 const findingById=id=>findingsResearch?.findings.find(f=>f.id===id);
 const findingCategory=slug=>findingsResearch?.categories.find(c=>c.slug===slug);
-const findingLink=f=>`./index.html#comparisons?measure=${encodeURIComponent(f.measure)}&finding=${f.id}`;
+const findingLink=f=>`./index.html#comparisons?measure=${encodeURIComponent(f.measure)}`;
 const findingCategoryLink=slug=>`./index.html#findings?category=${encodeURIComponent(slug)}`;
 function activeResearchFinding(){
  const id=new URLSearchParams(location.hash.split('?')[1]||'').get('finding'),f=findingById(id);
@@ -18,7 +18,7 @@ function configureFindingMeasures(){
 function informationDefinitions(){return `<aside class="finding-data-explanation"><h4>Information conditions</h4><p><strong>Sufficient:</strong> the information needed to proceed is available.</p><p><strong>Partial:</strong> the brief provides some information but leaves a consequential gap or includes a misleading premise. The model must recognize which details remain unsupported.</p><p><strong>Insufficient:</strong> the brief makes clear that more information is needed before proceeding.</p></aside>`;}
 const publishedFindings=()=> (findingsResearch.published_ids||findingsResearch.homepage_ids).map(findingById).filter(Boolean);
 function findingAnchor(f,content,classes=''){
- return `<a class="${classes}" href="${findingLink(f)}" data-finding-measure="${safe(f.measure)}">${content}</a>`;
+ return `<a class="${classes}" href="${findingLink(f)}">${content}</a>`;
 }
 function findingRows(rows=publishedFindings()){
  return `<ol class="selected-findings">${rows.map((f,i)=>`<li>${findingAnchor(f,`<span class="selected-finding-number">${String(i+1).padStart(2,'0')}</span><h3>${safe(f.title_en)}</h3><span class="selected-finding-arrow" aria-hidden="true">↓</span>`,'selected-finding-link')}</li>`).join('')}</ol>`;

@@ -53,16 +53,16 @@ for(const tag of ['Capability','Context','Trajectory','Partners','Architecture']
 for(const tag of ['Representation','Measurement'])assert.ok(!homepage.includes('>'+tag+'<'),'a category with no published finding must not render a row');
 assert.ok(!homepage.includes('All findings'));
 assert.ok(!homepage.includes('home-finding-search'));
-for(const id of data.homepage_ids)assert.ok(homepage.includes('finding='+id));
-assert.ok(homepage.includes('data-finding-measure="stage-profile"'));
+for(const id of data.homepage_ids)assert.ok(homepage.includes("measure="+encodeURIComponent(data.findings.find(f=>f.id===id).measure)));
+assert.ok(!homepage.includes('data-finding-measure='));
 assert.ok(!homepage.includes('class="finding-category-tag"'));
 assert.ok(!homepage.includes('finding-category-nav'));
 assert.ok(!homepage.includes('finding-data-explanation'));
 assert.ok(!homepage.includes('finding-information-definitions'));
 assert.ok(!fs.existsSync('key-findings-zh.html'),'the Chinese companion page must stay removed');
-assert.match(homepage,/measure=stage-profile&finding=F01/);
-assert.match(homepage,/measure=information&finding=F07/);
-assert.ok(homepage.indexOf('finding=F01')<homepage.indexOf('finding=F07'));
+assert.match(homepage,/measure=stage-profile"/);
+assert.match(homepage,/measure=information"/);
+assert.ok(homepage.indexOf('measure=stage-profile')<homepage.indexOf('measure=information'));
 const approved=['F01','F07','F09','F14','F19','F28','F26','F30'];
 assert.deepEqual(data.published_ids,approved);
 assert.deepEqual(data.homepage_ids,approved);
@@ -94,16 +94,16 @@ assert.ok(!reversal.includes('39.4%')&&!reversal.includes('51.0%'));
 
 // Every evidence panel has one manuscript destination, including archived links.
 const groups=vm.runInContext('mainComparisonGroups',c);
-assert.deepEqual(Array.from(groups,g=>g.number),['4.2','4.3','4.4','4.5','4.5.1','4.5.2','5.1','5.2','5.3','5.4','5.5','5.6']);
+assert.deepEqual(Array.from(groups,g=>g.section),['4.2','4.3','4.4','4.5','5.1','5.2','5.3','5.4','5.5','5.6']);
 const measures=Array.from(groups,g=>Array.from(g.items,i=>i[0])).flat();
 assert.equal(new Set(measures).size,measures.length,'Each measure belongs to exactly one section');
 const destination=id=>groups.find(g=>g.items.some(i=>i[0]===id));
-for(const id of ['repeats','pass-sd','judges','judge-families'])assert.equal(destination(id).number,'4.5');
-assert.equal(destination('group-size').number,'4.4');
-assert.equal(destination('human-audit').number,'4.5.2');
-assert.equal(destination('evaluation-cost').number,'5.6');
-assert.equal(destination('reconstruction-ablation').number,'4.5.1');
-assert.equal(destination('scene-revision').number,'4.5.1');
+for(const id of ['repeats','pass-sd','judges','judge-families'])assert.equal(destination(id).section,'4.5');
+assert.equal(destination('group-size').section,'4.4');
+assert.equal(destination('human-audit').section,'4.5');
+assert.equal(destination('evaluation-cost').section,'5.6');
+assert.equal(destination('reconstruction-ablation').section,'4.5');
+assert.equal(destination('scene-revision').section,'4.5');
 c.atlasMobileScores=()=>'';
 for(const group of groups){
  for(const [id] of group.items){
