@@ -7,14 +7,14 @@
     "F01",
     "F07",
     "F09",
-    "F13",
+    "F16",
     "F19",
-    "F22",
+    "F17",
     "F28",
     "F26",
     "F30",
     "F32",
-    "F35"
+    "F44"
   ],
   "reviewed_count": 11,
   "editorial_tiers": {
@@ -536,7 +536,7 @@
       "evidence_summary_en": "In one case, interest falls to 0.20 at turn 5 without successful closure. The comparison case closes at turn 6.",
       "review_status": "confirmed",
       "website_order": 4,
-      "published": true
+      "published": false
     },
     {
       "id": "F14",
@@ -592,7 +592,7 @@
       "group": "交互轨迹与结果",
       "editorial_tier": "补充证据",
       "title_zh": "交互可能因失去继续交流的价值而结束，而非因为目标已经完成。",
-      "title_en": "Interactions can end through disengagement rather than goal completion.",
+      "title_en": "Most interactions end because interest runs out, not because the goal was met.",
       "clarification": "模拟评估以用户兴趣/耐心和目标达成为终止规则；在非功能性场景，缺少明确闭合目标并非失败。",
       "supporting_data": "各系统兴趣耗尽结束占比 87.6%–99.0%",
       "paper_source": "T9; F10",
@@ -614,8 +614,8 @@
       "next_finding_url_proposed": "https://worldeology.com/InteractionNet/index.html#comparisons?measure=reconstruction-ablation&finding=F36",
       "category_url_proposed": "https://worldeology.com/InteractionNet/index.html#findings?category=trajectory",
       "clean_permalink_proposed": "https://worldeology.com/InteractionNet/index.html#comparisons?measure=termination-outcomes&finding=F16",
-      "summary_en": "The simulated evaluation stops according to user interest or patience and goal completion. In nonfunctional scenes, the absence of a clear closure goal is not a failure.",
-      "limitation_en": "Nonfunctional scenes often have no clear endpoint.",
+      "summary_en": "Across all ten systems, the large majority of episodes stop at the simulated partner’s interest or patience threshold rather than at successful closure.",
+      "limitation_en": "Simulated partners with adaptive stopping. Open-ended scenes often have no concrete endpoint, so exhaustion is a stopping classification, not a measure of human satisfaction.",
       "tier_en": "Supporting evidence",
       "verified_pages": [
         29,
@@ -624,7 +624,7 @@
       "related_ids": [
         "F17"
       ],
-      "evidence_summary_en": "Interest-exhaustion endings account for 87.6%–99.0% across systems.",
+      "evidence_summary_en": "Interest-exhaustion endings account for 87.6%–99.0% of episodes across the ten systems.",
       "copy_source": {
         "workbook": "research/InteractEval_Findings_Research_Taxonomy_v5.xlsx",
         "sheet": "02_34条逐句审校",
@@ -635,7 +635,8 @@
           "J"
         ]
       },
-      "published": false
+      "published": true,
+      "review_status": "confirmed"
     },
     {
       "id": "F17",
@@ -684,7 +685,7 @@
           "J"
         ]
       },
-      "published": false
+      "published": true
     },
     {
       "id": "F18",
@@ -867,7 +868,7 @@
       "evidence_summary_en": "Self-pairing excess: +0.020 (95% CI +0.012 to +0.028). Role-pattern similarity correlates at −0.65 with standard-user score minus self-play score.",
       "review_status": "provisional",
       "website_order": 6,
-      "published": true
+      "published": false
     },
     {
       "id": "F23",
@@ -1370,7 +1371,7 @@
       "evidence_summary_en": "Directions fitted on 297 dialogues; tested in 60 contexts. No reliable signed effect beyond random-direction controls.",
       "review_status": "confirmed",
       "website_order": 11,
-      "published": true
+      "published": false
     },
     {
       "id": "F36",
@@ -1654,15 +1655,15 @@
       "id": "F44",
       "group": "测量效度与稳健性",
       "editorial_tier": "首页核心",
-      "title_en": "Evaluating more capabilities at once can make AI judgments less reliable.",
+      "title_en": "Judging six capabilities in one call makes the judgment less reliable.",
       "title_zh": "同时评估更多能力，反而可能降低 AI 评判的可靠性。",
-      "summary_en": "Combining all six capability grades in one call lowers single-level probe separation from 90% to 61% and repeated-grading agreement from 0.871 to 0.833.",
+      "summary_en": "Asking a judge to grade all six levels at once separates them less sharply and repeats less consistently than grading each level on its own.",
       "clarification": "Combining all six capability grades in one call lowers single-level probe separation from 90% to 61% and repeated-grading agreement from 0.871 to 0.833.",
       "supporting_data": "Single-level probes: 90% → 61%; reliability: 0.871 → 0.833",
       "paper_source": "Table 34; §4.9.3",
       "pdf_pages": "49,50",
       "limitation": "These controlled probes test separation required by the instrument’s definitions. Agreement across grading runs is a reliability measure, not independent objective accuracy.",
-      "limitation_en": "These controlled probes test separation required by the instrument’s definitions. Agreement across grading runs is a reliability measure, not independent objective accuracy.",
+      "limitation_en": "Controlled probes built to the instrument’s definitions. Agreement between grading runs is a reliability measure, not independent objective accuracy.",
       "measure": "joint-level-judging",
       "category_id": "C07",
       "category_slug": "measurement",
@@ -1680,7 +1681,9 @@
       "next_finding": "F42",
       "priority_zh": "强烈推荐",
       "clean_permalink_proposed": "https://worldeology.com/InteractionNet/index.html#comparisons?measure=joint-level-judging&finding=F44",
-      "published": false
+      "published": true,
+      "evidence_summary_en": "Single-level probe separation falls from 90% to 61%; agreement between two independent grading runs falls from 0.871 to 0.833.",
+      "review_status": "confirmed"
     },
     {
       "id": "F45",
@@ -2698,14 +2701,14 @@
     "F01",
     "F07",
     "F09",
-    "F13",
+    "F16",
     "F19",
-    "F22",
+    "F17",
     "F28",
     "F26",
     "F30",
     "F32",
-    "F35"
+    "F44"
   ],
   "source_review": {
     "url": "https://docs.google.com/spreadsheets/d/1ALnCQklBXagNB87tN8BHyxlfuR50Jl6cZcJpSRDvJ5s/edit?usp=sharing",

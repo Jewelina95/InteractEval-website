@@ -46,10 +46,10 @@ for(const f of data.findings){
 }
 c.location.hash='#key-findings';
 const homepage=vm.runInContext('coreFindings()',c);
-assert.equal((homepage.match(/class="finding-column-link/g)||[]).length,11);
-assert.equal((homepage.match(/class="finding-column"/g)||[]).length,6);
-assert.ok(homepage.includes('finding-column-tag'),'columns must carry a category tag');
-for(const tag of ['Capability','Context','Trajectory','Partners','Architecture','Representation'])assert.ok(homepage.includes('>'+tag+'<'),'missing column tag '+tag);
+assert.equal((homepage.match(/class="finding-row-link/g)||[]).length,11);
+assert.equal((homepage.match(/class="finding-row"/g)||[]).length,7);
+assert.ok(homepage.includes('finding-row-tag'),'rows must carry a category tag');
+for(const tag of ['Capability','Context','Trajectory','Partners','Architecture','Measurement'])assert.ok(homepage.includes('>'+tag+'<'),'missing row tag '+tag);
 assert.ok(!homepage.includes('All findings'));
 assert.ok(!homepage.includes('home-finding-search'));
 for(const id of data.homepage_ids)assert.ok(homepage.includes('finding='+id));
@@ -62,14 +62,14 @@ assert.ok(!fs.existsSync('key-findings-zh.html'),'the Chinese companion page mus
 assert.match(homepage,/measure=stage-profile&finding=F01/);
 assert.match(homepage,/measure=information&finding=F07/);
 assert.ok(homepage.indexOf('finding=F01')<homepage.indexOf('finding=F07'));
-const approved=['F01','F07','F09','F13','F19','F22','F28','F26','F30','F32','F35'];
+const approved=['F01','F07','F09','F16','F19','F17','F28','F26','F30','F32','F44'];
 assert.deepEqual(data.published_ids,approved);
 assert.deepEqual(data.homepage_ids,approved);
-assert.equal(data.source_review.confirmed_ids.length,7);
-assert.equal(data.source_review.provisional_ids.length,4);
-for(const id of ['F03','F05','F24','F25','F33','F36','F43'])assert.ok(!homepage.includes('finding='+id));
+for(const id of ['F03','F05','F24','F25','F33','F36','F43','F13','F22','F35'])assert.ok(!homepage.includes('finding='+id));
+assert.ok(homepage.includes('Most interactions end'),'F16 must render');
+assert.ok(homepage.includes('Judging six capabilities'),'F44 must render');
 assert.equal(vm.runInContext('findingsIndex()',c),homepage);
-assert.match(vm.runInContext("findingsCards('', 'F35')",c),/steering its behaviour/);
+assert.match(vm.runInContext("findingsCards('', 'F44')",c),/Judging six capabilities/);
 assert.match(vm.runInContext("findingsCards('', 'no matching phrase xyz')",c),/No findings match/);
 for(const id of ['F43','F44','F45','F46','F47','F48'])assert.ok(ids.has(id));
 assert.equal(c.extra.simulated_users.length,11);

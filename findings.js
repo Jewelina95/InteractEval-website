@@ -25,34 +25,32 @@ function findingAnchor(f,content,classes=''){
 function findingRows(rows=publishedFindings()){
  return `<ol class="selected-findings">${rows.map((f,i)=>`<li>${findingAnchor(f,`<span class="selected-finding-number">${String(i+1).padStart(2,'0')}</span><h3>${safe(f.title_en)}</h3><span class="selected-finding-arrow" aria-hidden="true">↓</span>`,'selected-finding-link')}</li>`).join('')}</ol>`;
 }
-// Column tags stay short enough to head a narrow column; the long category titles
-// above them carry the research question.
-const findingColumnTags={
+// Rows keep one category per line: a tag on the left, its findings on the right.
+const findingRowTags={
  capability:{tag:'Capability',note:'What separates today’s models'},
- context:{tag:'Context',note:'When conditions change behavior'},
+ context:{tag:'Context',note:'When conditions change behaviour'},
  trajectory:{tag:'Trajectory',note:'Why good turns can still fail'},
  partners:{tag:'Partners',note:'Who is interacting, and how many'},
  architectures:{tag:'Architecture',note:'What an added harness changes'},
  representations:{tag:'Representation',note:'What is encoded inside'},
- measurement:{tag:'Measurement',note:'Whether the difference is real'},
- concept:{tag:'Concept',note:'What the instrument is for'}
+ measurement:{tag:'Measurement',note:'Whether the difference is real'}
 };
-function findingColumns(rows=publishedFindings()){
- const columns=[];
+function findingRowsByCategory(rows=publishedFindings()){
+ const groups=[];
  for(const f of rows){
-  let column=columns.find(c=>c.slug===f.category_slug);
-  if(!column){column={slug:f.category_slug,title:f.category_en||f.category_slug,findings:[]};columns.push(column);}
-  column.findings.push(f);
+  let group=groups.find(g=>g.slug===f.category_slug);
+  if(!group){group={slug:f.category_slug,title:f.category_en||f.category_slug,findings:[]};groups.push(group);}
+  group.findings.push(f);
  }
- return columns;
+ return groups;
 }
-function findingColumn(c,startIndex){
- const meta=findingColumnTags[c.slug]||{tag:c.title||c.slug,note:''};
- return `<section class="finding-column" data-finding-category="${safe(c.slug)}" aria-label="${safe(c.title)}"><header><span class="finding-column-tag">${safe(meta.tag)}</span>${meta.note?`<p class="finding-column-note">${safe(meta.note)}</p>`:''}</header><ol class="finding-column-list">${c.findings.map((f,i)=>`<li>${findingAnchor(f,`<span class="finding-column-number">${String(startIndex+i+1).padStart(2,'0')}</span><h3>${safe(f.title_en)}</h3>`,'finding-column-link')}</li>`).join('')}</ol></section>`;
+function findingCategoryRow(group,startIndex){
+ const meta=findingRowTags[group.slug]||{tag:group.title||group.slug,note:''};
+ return `<section class="finding-row" data-finding-category="${safe(group.slug)}" aria-label="${safe(group.title)}"><header class="finding-row-head"><span class="finding-row-tag">${safe(meta.tag)}</span>${meta.note?`<p class="finding-row-note">${safe(meta.note)}</p>`:''}</header><ol class="finding-row-list">${group.findings.map((f,i)=>`<li>${findingAnchor(f,`<span class="finding-row-number">${String(startIndex+i+1).padStart(2,'0')}</span><h3>${safe(f.title_en)}</h3>`,'finding-row-link')}</li>`).join('')}</ol></section>`;
 }
 function findingColumnsMarkup(rows=publishedFindings()){
- const columns=findingColumns(rows);let offset=0;
- return `<div class="finding-columns">${columns.map(c=>{const markup=findingColumn(c,offset);offset+=c.findings.length;return markup;}).join('')}</div>`;
+ const groups=findingRowsByCategory(rows);let offset=0;
+ return `<div class="finding-rows">${groups.map(g=>{const markup=findingCategoryRow(g,offset);offset+=g.findings.length;return markup;}).join('')}</div>`;
 }
 function coreFindings(){
  return `<section id="key-findings" class="article-section atlas-key-findings homepage-findings"><div class="findings-section-heading"><h2>Key Findings</h2></div>${findingColumnsMarkup()}</section>`;

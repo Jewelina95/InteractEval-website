@@ -46,16 +46,16 @@
 
 @media(max-width:600px){.finding-visual svg text{font-size:24px}}
 
-/* Key findings as tagged columns: one column per category, tag at the head. */
-.finding-columns{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:26px 30px;align-items:start;margin:28px 0 12px}
-.finding-column{min-width:0;border-top:2px solid #193b30;padding-top:14px}
-.finding-column>header{display:block;margin:0 0 14px}
-.finding-column-tag{display:inline-block;padding:4px 9px;border-radius:3px;background:#193b30;color:#f4f1e6;font:650 11px/1.4 var(--sans);letter-spacing:.06em;text-transform:uppercase}
-.finding-column-rule{display:block;height:1px;background:#d5ded5;margin:12px 0 0}
-.finding-column-list{list-style:none;margin:0;padding:0}
-.finding-column-list>li{padding:13px 0;border-bottom:1px solid #e2e9e2}
-.finding-column-link{display:grid;grid-template-columns:24px minmax(0,1fr);gap:10px;text-decoration:none;color:#193b30}
-.finding-column-number{color:#7b8e80;font:600 11px/1.9 var(--sans);font-variant-numeric:tabular-nums}
-.finding-column-link h3{margin:0;font:550 14px/1.45 var(--sans);letter-spacing:-.1px}
-.finding-column-link:hover h3,.finding-column-link:focus-visible h3{text-decoration:underline;text-underline-offset:3px}
-@media(max-width:700px){.finding-columns{grid-template-columns:1fr;gap:0}.finding-column{margin-bottom:22px}}
+/* Key findings as tagged rows: category label on the left, findings on the right. */
+.finding-rows{margin:26px 0 8px;border-top:1px solid #cfdad0}
+.finding-row{display:grid;grid-template-columns:190px minmax(0,1fr);gap:0 34px;align-items:start;padding:20px 0;border-bottom:1px solid #e4ebe4}
+.finding-row-head{position:sticky;top:88px}
+.finding-row-tag{display:inline-block;padding:4px 10px;border-radius:3px;background:#193b30;color:#f4f1e6;font:650 11px/1.35 var(--sans);letter-spacing:.07em;text-transform:uppercase}
+.finding-row-note{margin:9px 0 0;color:#6d8173;font:400 12.5px/1.5 var(--sans)}
+.finding-row-list{list-style:none;margin:0;padding:0;display:grid;gap:2px}
+.finding-row-list>li{padding:0}
+.finding-row-link{display:grid;grid-template-columns:26px minmax(0,1fr);gap:12px;align-items:baseline;padding:9px 0;text-decoration:none;color:#193b30;border-radius:3px}
+.finding-row-number{color:#83978a;font:600 11px/1.8 var(--sans);font-variant-numeric:tabular-nums}
+.finding-row-link h3{margin:0;font:500 clamp(15px,1.45vw,18px)/1.45 var(--sans);letter-spacing:-.1px}
+.finding-row-link:hover h3,.finding-row-link:focus-visible h3{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:4px}
+@media(max-width:760px){.finding-row{grid-template-columns:1fr;gap:12px;padding:18px 0}.finding-row-head{position:static}.finding-row-note{margin-top:7px}}
