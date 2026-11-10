@@ -49,7 +49,7 @@ window.InteractEvalFindingFocus=(()=>{
    mark('[data-comparison-metric="partial"]','proactive');
    mark('[data-comparison-metric="insufficient"]','passive');
   }else if(measure==='pairings'&&activeResearchFinding()?.id==='F19'){
-   for(const partner of ['claude-5-opus','deepseek-v4-pro'])for(const assistant of ['gpt-5.6-sol','qwen3.8-max'])mark(`[data-pairing-partner="${partner}"][data-pairing-assistant="${assistant}"]`,partner==='claude-5-opus'?'passive':'proactive');
+   for(const partner of ['claude-opus-5','deepseek-v4-pro'])for(const assistant of ['gpt-5.6-sol','qwen3.8-max'])mark(`[data-pairing-partner="${partner}"][data-pairing-assistant="${assistant}"]`,partner==='claude-opus-5'?'passive':'proactive');
   }else if(measure==='pairings')partner(pairingSelection.assistant);
   mark('.is-key-metric,.is-evidence-focus>strong,.is-research-focus,.finding-intervention-result','proactive');
   panel.querySelectorAll('.evidence-scatter circle[r="7"],.finding-visual circle[r="7"]').forEach(node=>node.dataset.findingHighlight='proactive');

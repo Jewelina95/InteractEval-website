@@ -101,7 +101,7 @@
       ]
     },
     {
-      "name": "claude-5-opus",
+      "name": "claude-opus-5",
       "scores": [
         0.621,
         0.617,
@@ -237,7 +237,7 @@
       0.071
     ],
     [
-      "claude-5-opus",
+      "claude-opus-5",
       84.9,
       0.084
     ],

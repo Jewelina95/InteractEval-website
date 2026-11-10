@@ -40,7 +40,7 @@ families = [
 ]
 
 latent = {
- 'model':'claude-fable-5.1', 'partner':'claude-5-opus', 'outcome':'Successful closure',
+ 'model':'claude-fable-5.1', 'partner':'claude-opus-5', 'outcome':'Successful closure',
  'title':'The meaning of the coat', 'turns':list(range(1,11)),
  'slots': {
   'Trust':['low']*4+['high']*6,
@@ -173,7 +173,7 @@ for lang in ['en','zh']:
  interest_ax.set_ylabel('用户兴趣' if zh else 'User interest')
  for t in [1,5,7,10]: interest_ax.annotate(f"{latent['interest'][t-1]:.2f}",(t,latent['interest'][t-1]),xytext=(0,9),textcoords='offset points',ha='center',fontsize=9)
  fig.text(.16,.94,'话没说完，状态已经在变' if zh else 'The state changes before the story is fully told.',fontsize=22,color='#244633')
- fig.text(.16,.885,'一段对话的 10 轮记录 · 用户视角 · claude-fable-5.1 / claude-5-opus' if zh else 'One recorded conversation · user as subject · claude-fable-5.1 / claude-5-opus',fontsize=11,color='#70806a')
+ fig.text(.16,.885,'一段对话的 10 轮记录 · 用户视角 · claude-fable-5.1 / claude-opus-5' if zh else 'One recorded conversation · user as subject · claude-fable-5.1 / claude-opus-5',fontsize=11,color='#70806a')
  fig.text(.16,.035,'状态格是有序类别，颜色表示程度、不表示好坏。用户兴趣另用 0–1 刻度；10 轮后成功结束。' if zh else 'States are ordinal; color indicates degree, not quality. Interest uses a separate 0–1 scale. Closure at turn 10.',fontsize=10,color='#74816d')
  save(fig,f'latent-state-over-time-{lang}')
 
@@ -202,7 +202,7 @@ for lang in ['en','zh']:
 
 cards=''.join(f'<article><span>{i:02d}</span><div lang="zh-CN"><h2>{html.escape(f["zh_title"])}</h2><p>{html.escape(f["zh"])}</p></div><div lang="en"><h2>{html.escape(f["en_title"])}</h2><p>{html.escape(f["en"])}</p></div></article>' for i,f in enumerate(findings,1))
 figures=''.join(f'<figure><h2>{title}</h2><img src="{name}-zh.png" alt="{title}"/><p><a href="{name}-en.png">English PNG</a> · <a href="{name}-zh.svg">中文 SVG</a> · <a href="{name}-en.svg">English SVG</a></p></figure>' for name,title in [('latent-state-vocabulary','潜在状态词表 / Latent-state vocabulary'),('latent-state-over-time','潜在状态时序 / Latent states over time'),('trajectories-over-time','交互轨迹时序 / Interaction trajectories over time')])
-brief=f'''<!doctype html><html lang="zh-CN"><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>InteractEval · Findings / 主要发现</title><style>body{{background:#f7f8f2;color:#284735;font:16px/1.9 'Segoe UI','Microsoft YaHei',sans-serif;margin:0}}main{{max-width:1120px;margin:auto;padding:65px 30px}}header{{border-bottom:1px solid #ccd7c5;padding-bottom:40px}}header small{{letter-spacing:3px;color:#809574}}h1{{font-size:42px;line-height:1.25;font-weight:500}}header p{{max-width:760px;color:#6e8267}}article{{display:grid;grid-template-columns:35px 1fr 1fr;gap:30px;border-bottom:1px solid #d6e0ce;padding:35px 0}}article>span{{color:#a5b698}}h2{{font-size:23px;line-height:1.5;font-weight:500;margin:0 0 15px}}p{{margin:0;color:#667c5f}}figure{{margin:60px 0}}figure img{{max-width:100%;display:block}}a{{color:#4c7254}}footer{{margin-top:55px;font-size:12px;color:#86957c}}@media(max-width:700px){{article{{grid-template-columns:1fr;gap:18px}}h1{{font-size:32px}}main{{padding:35px 20px}}}}</style><main><header><small>INTERACTEVAL / RESEARCH BRIEF</small><h1>看见交互如何变化。<br/>See how an interaction changes.</h1><p>主要发现与时序图，中英文快速版。总体数值来自论文表格；时序图展示论文记录中的具体对话，不参与排行榜计算。</p></header>{cards}{figures}<footer>Measurement provenance: Tables 4, 8, 9, 13, 17; illustrative time-indexed records: Tables 36–37; vocabulary: Appendix A.3, Box 5. The figures reproduce reported observations, without smoothing or extension after stopping.</footer></main></html>'''
+brief=f'''<!doctype html><html lang="zh-CN"><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>InteractNet · Findings / 主要发现</title><style>body{{background:#f7f8f2;color:#284735;font:16px/1.9 'Segoe UI','Microsoft YaHei',sans-serif;margin:0}}main{{max-width:1120px;margin:auto;padding:65px 30px}}header{{border-bottom:1px solid #ccd7c5;padding-bottom:40px}}header small{{letter-spacing:3px;color:#809574}}h1{{font-size:42px;line-height:1.25;font-weight:500}}header p{{max-width:760px;color:#6e8267}}article{{display:grid;grid-template-columns:35px 1fr 1fr;gap:30px;border-bottom:1px solid #d6e0ce;padding:35px 0}}article>span{{color:#a5b698}}h2{{font-size:23px;line-height:1.5;font-weight:500;margin:0 0 15px}}p{{margin:0;color:#667c5f}}figure{{margin:60px 0}}figure img{{max-width:100%;display:block}}a{{color:#4c7254}}footer{{margin-top:55px;font-size:12px;color:#86957c}}@media(max-width:700px){{article{{grid-template-columns:1fr;gap:18px}}h1{{font-size:32px}}main{{padding:35px 20px}}}}</style><main><header><small>INTERACTEVAL / RESEARCH BRIEF</small><h1>看见交互如何变化。<br/>See how an interaction changes.</h1><p>主要发现与时序图，中英文快速版。总体数值来自论文表格；时序图展示论文记录中的具体对话，不参与排行榜计算。</p></header>{cards}{figures}<footer>Measurement provenance: Tables 4, 8, 9, 13, 17; illustrative time-indexed records: Tables 36–37; vocabulary: Appendix A.3, Box 5. The figures reproduce reported observations, without smoothing or extension after stopping.</footer></main></html>'''
 (OUT/'findings-bilingual.html').write_text(brief,encoding='utf-8')
 with zipfile.ZipFile(OUT/'InteractEval-research-kit.zip','w',zipfile.ZIP_DEFLATED) as bundle:
  for file in sorted(OUT.iterdir()):
