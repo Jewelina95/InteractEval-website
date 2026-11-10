@@ -1,7 +1,7 @@
 /* InteractionNet · approved conceptual Figure 1. No live evaluation or empirical result is simulated. */
 (()=>{'use strict';
  const script=document.currentScript,base=new URL('.',script.src);
- const image=new URL('assets/research/figure1/figure1.png?v=20261110-paper-v13',base).href;
+ const image=new URL('assets/research/figure1/figure1.png?v=20261110-paper-v12',base).href;
  const reduced=matchMedia('(prefers-reduced-motion: reduce)');
  const cues=[
   {at:0,end:3,label:'Responsive intelligence',caption:'The white-and-cyan assistant gives the same refusal twice: once to the initial question and again when the user reports an urgent alien attack.',boxes:[[15,240,330,638]]},
