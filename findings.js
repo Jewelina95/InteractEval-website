@@ -17,6 +17,7 @@ function configureFindingMeasures(){
   for(const item of items)if(!mainComparisonGroups.some(g=>g.items.some(i=>i[0]===item[0])))group.items.push(item);
  }
 }
+function informationDefinitions(){return `<aside class="finding-data-explanation"><h4>Information conditions</h4><p><strong>Sufficient:</strong> the information needed to proceed is available.</p><p><strong>Partial:</strong> the brief provides some information but leaves a consequential gap or includes a misleading premise. The model must recognize which details remain unsupported.</p><p><strong>Insufficient:</strong> the brief makes clear that more information is needed before proceeding.</p></aside>`;}
 const publishedFindings=()=> (findingsResearch.published_ids||findingsResearch.homepage_ids).map(findingById).filter(Boolean);
 function findingAnchor(f,content,classes=''){
  return `<a class="${classes}" href="${findingLink(f)}" data-finding-measure="${safe(f.measure)}">${content}</a>`;
@@ -169,19 +170,9 @@ function findingsMeasureContent(measure){
  }
 }
 function applyResearchFindingFocus(panel){
+ // The finding link scrolls to the evidence; it does not restyle the figures.
  const f=activeResearchFinding();if(!f||!panel)return;
  panel.dataset.researchFinding=f.id;
- const focusModels={F02:['deepseek-v4-pro','claude-opus-5.5'],F03:['deepseek-v4-pro','kimi-k3'],F19:['gpt-5.6-sol','qwen3.8-max'],F05:['claude-opus-5','glm-5.3-flash'],F17:['gemini-3.8-flash'],F21:['gemini-3.8-flash','deepseek-v4-pro'],F22:['deepseek-v4-pro','gemini-3.8-flash'],F23:['gemini-3.8-flash','claude-fable-5.1']};
- for(const name of focusModels[f.id]||[])panel.querySelectorAll(`[data-comparison-model="${name}"]`).forEach(row=>row.classList.add('is-research-focus'));
-
- const values=new Set(primaryFindingMetrics[f.id].flatMap(([,value])=>(value.match(/[−+-]?\d[\d,]*(?:\.\d+)?%?/g)||[]).map(normalizeMetricValue)));
- panel.querySelectorAll('.comparison-content td,.comparison-content dd,.evidence-bar-row>strong,.finding-stage-ranges strong').forEach(cell=>{if(f.id!=='F48'&&values.has(normalizeMetricValue(cell.textContent)))cell.classList.add('is-key-metric');});
- if(f.id==='F48')panel.querySelectorAll('.evidence-data-table tbody td:last-child').forEach(cell=>{if(normalizeMetricValue(cell.textContent).startsWith('-'))cell.classList.add('is-key-metric');});
- if(['F25','F26'].includes(f.id))panel.querySelectorAll('.architecture-comparison-grid article').forEach(article=>{const name=article.querySelector('h4')?.textContent;article.querySelectorAll('.architecture-gain-row').forEach((row,index)=>{if(f.id==='F25'&&name==='Cognizer'&&[0,2].includes(index)||f.id==='F26'&&(name==='MetaMind'&&index===2||name==='Cognizer'&&index===0))row.classList.add('is-research-focus');});});
- if(f.id==='F30')panel.querySelectorAll('.finding-frontier tbody tr:nth-child(2) td').forEach(cell=>cell.classList.add('is-key-metric'));
- if(f.id==='F32')panel.querySelectorAll('.evidence-data-table:first-of-type tbody td:nth-child(3)').forEach(cell=>cell.classList.add('is-key-metric'));
- if(f.id==='F35')panel.querySelector('.finding-intervention-result')?.classList.add('is-research-focus');
- window.InteractEvalFindingFocus?.show(f.measure);
 }
 document.addEventListener('input',event=>{
  if(!['finding-search','home-finding-search'].includes(event.target.id))return;
@@ -274,7 +265,8 @@ const findingDataDefinitions={
  'judge-families':'Own-family lift is the judge’s relative additional score for a model from its own family, compared with the remaining models. The reported shifts are small; evidence of an equivalent preference by the reference judge is weak.',
  'evaluation-cost':'Tokens include both input and output. Generation includes the two participants; evaluation includes all fifteen calls per exchange. Parallel execution can reduce latency but does not remove these token counts.'
 };
-function findingDataExplanation(){
- return '';
+function findingDataExplanation(measure){
+ if(measure==='information'||measure==='gap-behavior')return informationDefinitions();
+ const text=findingDataDefinitions[measure];
+ return text?`<aside class="finding-data-explanation"><h4>Terms & measures</h4><p>${safe(text)}</p></aside>`:'';
 }
-
