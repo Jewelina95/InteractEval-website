@@ -17,7 +17,6 @@ function configureFindingMeasures(){
   for(const item of items)if(!mainComparisonGroups.some(g=>g.items.some(i=>i[0]===item[0])))group.items.push(item);
  }
 }
-function informationDefinitions(){return `<aside class="finding-data-explanation"><h4>Information conditions</h4><p><strong>Sufficient:</strong> the information needed to proceed is available.</p><p><strong>Partial:</strong> the brief provides some information but leaves a consequential gap or includes a misleading premise. The model must recognize which details remain unsupported.</p><p><strong>Insufficient:</strong> the brief makes clear that more information is needed before proceeding.</p></aside>`;}
 const publishedFindings=()=> (findingsResearch.published_ids||findingsResearch.homepage_ids).map(findingById).filter(Boolean);
 function findingAnchor(f,content,classes=''){
  return `<a class="${classes}" href="${findingLink(f)}" data-finding-measure="${safe(f.measure)}">${content}</a>`;
@@ -275,8 +274,7 @@ const findingDataDefinitions={
  'judge-families':'Own-family lift is the judge’s relative additional score for a model from its own family, compared with the remaining models. The reported shifts are small; evidence of an equivalent preference by the reference judge is weak.',
  'evaluation-cost':'Tokens include both input and output. Generation includes the two participants; evaluation includes all fifteen calls per exchange. Parallel execution can reduce latency but does not remove these token counts.'
 };
-function findingDataExplanation(measure){
- if(measure==='information'||measure==='gap-behavior')return informationDefinitions();
- const text=findingDataDefinitions[measure];
- return text?`<aside class="finding-data-explanation"><h4>Terms & measures</h4><p>${safe(text)}</p></aside>`:'';
+function findingDataExplanation(){
+ return '';
 }
+
