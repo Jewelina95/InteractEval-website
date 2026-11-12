@@ -2,7 +2,7 @@
 (() => {
   'use strict';
   const base = new URL('.', document.currentScript.src);
-  const image = new URL('assets/research/figure1/figure1-field-aligned.png?v=figure1-dialogue-size', base).href;
+  const image = new URL('assets/research/figure1/figure1-field-aligned.png?v=figure1-dialogue-polish', base).href;
   window.whyInteractionFigure = () => `
     <section id="response-interaction" class="article-section interaction-opening" aria-labelledby="response-interaction-heading">
       <header class="interaction-heading">
