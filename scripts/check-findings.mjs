@@ -21,7 +21,7 @@ for(const f of data.findings){
 assert.equal(crypto.createHash('sha256').update(fs.readFileSync(data.paper.path.replace('./',''))).digest('hex'),data.paper.sha256);
 const noop=()=>{};
 const c=vm.createContext({console,URLSearchParams,URL,location:{hash:'',pathname:'/index.html'},CSS:{supports:()=>false},document:{addEventListener:noop,querySelector:()=>null},window:{addEventListener:noop},IntersectionObserver:class{observe(){}disconnect(){}},history:{},matchMedia:()=>({matches:true}),setTimeout:noop});
-for(const file of ['explorer.js','navigation.js','metric-guide.js','results-explorer.js','findings.js','paper-site.js']){
+for(const file of ['explorer.js','navigation.js','metric-guide.js','results-explorer.js','findings.js','data-views.js','paper-site.js']){
  let source=fs.readFileSync(file,'utf8');
  if(file==='paper-site.js')source=source.slice(0,source.indexOf("Promise.all(['paper-results.json'"));
  vm.runInContext(source,c,{filename:file});
@@ -94,12 +94,14 @@ assert.ok(!reversal.includes('39.4%')&&!reversal.includes('51.0%'));
 
 // Every evidence panel has one manuscript destination, including archived links.
 const groups=vm.runInContext('mainComparisonGroups',c);
-assert.deepEqual(Array.from(groups,g=>g.section),['4.2','4.3','4.4','4.5','5.1','5.2','5.3','5.4','5.5','5.6']);
+assert.deepEqual(Array.from(groups,g=>g.section),['4.1','4.2','4.3','4.4','4.5','5.1','5.2','5.3','5.4','5.5','5.6']);
 const measures=Array.from(groups,g=>Array.from(g.items,i=>i[0])).flat();
 assert.equal(new Set(measures).size,measures.length,'Each measure belongs to exactly one section');
 const destination=id=>groups.find(g=>g.items.some(i=>i[0]===id));
 for(const id of ['repeats','pass-sd','judges','judge-families'])assert.equal(destination(id).section,'4.5');
 assert.equal(destination('group-size').section,'4.4');
+assert.equal(destination('scenario-coverage').section,'4.1');
+assert.equal(destination('question-vs-agency').section,'5.2');
 assert.equal(destination('human-audit').section,'4.5');
 assert.equal(destination('evaluation-cost').section,'5.6');
 assert.equal(destination('reconstruction-ablation').section,'4.5');

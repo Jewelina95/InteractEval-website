@@ -74,17 +74,78 @@ function findingEvidenceFooter(){
  return `${f.evidence_summary_en?`<p class="finding-evidence-statement" data-research-finding="${f.id}">${safe(f.evidence_summary_en)}</p>`:''}${findingKeyMetrics(f)}${findingDataExplanation(f.measure)}<p class="finding-evidence-limit">${safe(f.limitation_en)}</p><nav class="finding-evidence-nav" aria-label="Related findings">${related.length?`<div><span>Related findings</span>${related.map(r=>findingAnchor(r,`${safe(r.title_en)} <i aria-hidden="true">↓</i>`)).join('')}</div>`:''}${next?`<div><span>Next finding</span>${findingAnchor(next,`${safe(next.title_en)} <i aria-hidden="true">→</i>`)}</div>`:''}<a href="./index.html#key-findings">Back to key findings ↑</a></nav>`;
 }
 
-function evidenceTable(headers,rows,caption='Published evidence'){
- return `<div class="evidence-table-wrap" role="region" aria-label="${safe(caption)}" tabindex="0"><table class="evidence-data-table"><caption>${safe(caption)}</caption><thead><tr>${headers.map(h=>`<th scope="col">${safe(h)}</th>`).join('')}</tr></thead><tbody>${rows.map(row=>`<tr>${row.map((v,i)=>i===0?`<th scope="row">${safe(v)}</th>`:`<td>${safe(v)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+function evidenceTable(headers,rows,caption='Published evidence',showCaption=true){
+ return `<div class="evidence-table-wrap" role="region" aria-label="${safe(caption)}" tabindex="0"><table class="evidence-data-table"><caption${showCaption?'':' class="data-accessible-caption"'}>${safe(caption)}</caption><thead><tr>${headers.map(h=>`<th scope="col">${safe(h)}</th>`).join('')}</tr></thead><tbody>${rows.map(row=>`<tr>${row.map((v,i)=>i===0?`<th scope="row">${dataIdentity(v)}</th>`:`<td>${dataIdentity(v)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
 }
 function evidenceBars(rows,{label='Published values',format=v=>number(v),min=0,max}={}){
  const low=Math.min(min,...rows.map(r=>r[1])),high=max??Math.max(...rows.map(r=>r[1]),.01),span=high-low||1;
- return `<figure class="evidence-bars"><figcaption>${safe(label)}</figcaption><div class="evidence-bar-axis"><span>${safe(format(low))}</span><span>${low<0?'0':''}</span><span>${safe(format(high))}</span></div>${rows.map(([name,value,focus])=>{const zero=(0-low)/span*100,end=(value-low)/span*100;return `<div class="evidence-bar-row ${focus?'is-evidence-focus':''}"><span>${safe(name)}</span><i><em style="left:${Math.min(zero,end)}%;width:${Math.abs(end-zero)}%"></em>${low<0?`<b style="left:${zero}%"></b>`:''}</i><strong>${safe(format(value))}</strong></div>`;}).join('')}</figure>`;
+ return `<figure class="evidence-bars"><figcaption>${safe(label)}</figcaption><div class="evidence-bar-axis"><span>${safe(format(low))}</span><span>${low<0?'0':''}</span><span>${safe(format(high))}</span></div>${rows.map(([name,value,focus])=>{const zero=(0-low)/span*100,end=(value-low)/span*100;return `<div class="evidence-bar-row ${focus?'is-evidence-focus':''}" data-direction="${value<0?'negative':'positive'}"><span>${dataIdentity(name)}</span><i><em style="left:${Math.min(zero,end)}%;width:${Math.abs(end-zero)}%"></em>${low<0?`<b style="left:${zero}%"></b>`:''}</i><strong>${safe(format(value))}</strong></div>`;}).join('')}</figure>`;
 }
-function evidenceScatter(rows,{xLabel,yLabel,xMin=0,yMin=0,xMax=1,yMax=1,caption=''}){
- const x=v=>80+(v-xMin)/(xMax-xMin)*570,y=v=>300-(v-yMin)/(yMax-yMin)*250;
- return `<figure class="evidence-scatter"><figcaption>${safe(caption||`${xLabel} and ${yLabel}`)}</figcaption><svg viewBox="0 0 740 390" role="img" aria-label="${safe(caption||`${xLabel} versus ${yLabel}`)}"><path d="M80 50V300H650" fill="none" stroke="#aebdb2"/>${[0,.5,1].map(t=>{const xv=xMin+t*(xMax-xMin),yv=yMin+t*(yMax-yMin);return `<path d="M${x(xv)} 300v5M75 ${y(yv)}H650" stroke="#dbe3dc" fill="none"/><text x="${x(xv)}" y="326" text-anchor="middle">${xv.toFixed(2)}</text><text x="68" y="${y(yv)+5}" text-anchor="end">${yv.toFixed(2)}</text>`;}).join('')}${rows.map(([name,xv,yv,focus],i)=>`<g><circle cx="${x(xv)}" cy="${y(yv)}" r="${focus?7:5}" fill="${focus?'#a8791e':'#537563'}" opacity=".85"><title>${safe(name)}: ${safe(xLabel)} ${number(xv)}, ${safe(yLabel)} ${number(yv)}</title></circle>${focus?`<text x="${Math.min(620,Math.max(120,x(xv)))}" y="${y(yv)+(i%2?22:-15)}" text-anchor="middle" class="evidence-point-label">${safe(name)}</text>`:''}</g>`).join('')}<text x="365" y="363" text-anchor="middle">${safe(xLabel)}</text><text transform="translate(20 175) rotate(-90)" text-anchor="middle">${safe(yLabel)}</text></svg></figure>${evidenceTable(['System',xLabel,yLabel],rows.map(r=>[r[0],number(r[1]),number(r[2])]),'Exact plotted values')}`;
+function evidencePoint(x,y,index,label){
+ return `<g class="plot-point-control" data-plot-point="${index}" role="button" tabindex="0" aria-pressed="false" aria-label="${safe(label)}">
+  <title>${safe(label)}</title>
+  <circle cx="${x}" cy="${y}" r="11" class="plot-point-target"/>
+  <circle cx="${x}" cy="${y}" r="4" class="scatter-point"/>
+ </g>`;
 }
+function selectEvidencePoint(point){
+ const view=point.closest('[data-point-view]');
+ const table=view?.querySelector('table'),readout=view?.querySelector('.plot-point-readout');
+ const row=table?.tBodies[0]?.rows[Number(point.dataset.plotPoint)];
+ if(!row||!readout)return;
+ view.querySelectorAll('[data-plot-point][aria-pressed="true"]').forEach(p=>p.setAttribute('aria-pressed','false'));
+ point.setAttribute('aria-pressed','true');
+ table.querySelector('tbody tr.is-point-selected')?.classList.remove('is-point-selected');
+ row.classList.add('is-point-selected');
+ const name=document.createElement('strong');
+ name.append(...Array.from(row.cells[0].childNodes,n=>n.cloneNode(true)));
+ if(view.dataset.pointView==='trajectory')name.prepend('Turn ');
+ const metrics=view.dataset.pointView==='trajectory'?[8,7]:[1,2];
+ const fields=metrics.map(index=>{
+  const item=document.createElement('span');
+  item.textContent=table.tHead.rows[0].cells[index].textContent+': '+row.cells[index].textContent;
+  return item;
+ });
+ readout.replaceChildren(name,...fields);
+}
+document.addEventListener('click',event=>{
+ const point=event.target.closest('[data-plot-point]');
+ if(point)selectEvidencePoint(point);
+});
+document.addEventListener('keydown',event=>{
+ const point=event.target.closest('[data-plot-point]');
+ if(point&&(event.key==='Enter'||event.key===' ')){
+  event.preventDefault();
+  selectEvidencePoint(point);
+ }
+});
+function evidenceScatter(rows,{xLabel,yLabel,xMin=0,yMin=0,xMax=1,yMax=1,caption='',captionIcon='',yFormat=v=>v.toFixed(2),yValueFormat=number,foldValues=false}){
+ const left=52,right=420,top=35,bottom=210;
+ const x=v=>left+(v-xMin)/(xMax-xMin)*(right-left);
+ const y=v=>bottom-(v-yMin)/(yMax-yMin)*(bottom-top);
+ const ticks=[0,.25,.5,.75,1];
+ const yTicks=ticks.map(t=>{
+  const value=yMin+t*(yMax-yMin),at=y(value);
+  return `<path d="M${left} ${at}H${right}" class="scatter-grid"/><text x="${left-8}" y="${at+4}" text-anchor="end">${safe(yFormat(value))}</text>`;
+ }).join('');
+ const xTicks=ticks.map(t=>{
+  const value=xMin+t*(xMax-xMin),at=x(value);
+  return `<path d="M${at} ${bottom}v4" class="scatter-axis"/><text x="${at}" y="${bottom+19}" text-anchor="middle">${value.toFixed(2)}</text>`;
+ }).join('');
+ const points=rows.map(([name,xv,yv],index)=>evidencePoint(x(xv),y(yv),index,`${name}: ${xLabel} ${number(xv)}, ${yLabel} ${yValueFormat(yv)}`)).join('');
+ const values=evidenceTable(['Model',xLabel,yLabel],rows.map(([name,xv,yv])=>[name,number(xv),yValueFormat(yv)]),'Exact plotted values',!foldValues);
+ return `<section class="scatter-card" data-point-view="scatter"><figure class="evidence-scatter">
+  <figcaption>${captionIcon}${safe(caption||`${xLabel} and ${yLabel}`)}</figcaption>
+  <svg viewBox="0 0 448 260" role="group" aria-label="${safe(`${yLabel} by ${xLabel}`)}">
+    <text x="${left}" y="17" class="scatter-axis-label">${safe(yLabel)}</text>
+    ${yTicks}<path d="M${left} ${bottom}H${right}" class="scatter-axis"/>${xTicks}${points}
+    <text x="${(left+right)/2}" y="252" text-anchor="middle" class="scatter-axis-label">${safe(xLabel)}</text>
+  </svg></figure>
+  <div class="plot-point-readout" aria-live="polite">Select a point to see its values.</div>
+  ${foldValues?`<details class="scatter-values"><summary>View plotted values</summary>${values}</details>`:values}
+ </section>`;
+}
+
 function findingStageSupplement(){
  const f=activeResearchFinding();if(!f)return '';
  if(f.id==='F01')return evidenceTable(['Grades','Passive range','Responsive range','Proactive range'],[['After cascade','0.035','0.111','0.370'],['Raw, before cascade',...findingsEvidence.raw_ranges.map(v=>number(v))]],'Score ranges before and after the cascade');
@@ -96,10 +157,10 @@ function findingStageSupplement(){
 }
 function evidenceIntervals(){
  const rows=[['Clarification frequency',.085,.004,.169],['L5 grade',.006,-.027,.043]],x=v=>180+(v+.04)/.22*440;
- return `<figure class="evidence-intervals"><figcaption>Kimi partner change · estimate and 95% scene-bootstrap interval</figcaption><svg viewBox="0 0 740 220" role="img" aria-label="Clarification increases, while the L5 interval includes zero"><path d="M${x(0)} 20V170" stroke="#8c9f91" stroke-dasharray="4 4"/>${rows.map((r,i)=>`<text x="12" y="${63+i*65}">${r[0]}</text><path d="M${x(r[2])} ${58+i*65}H${x(r[3])}" stroke="#426650" stroke-width="3"/><circle cx="${x(r[1])}" cy="${58+i*65}" r="6" fill="#a8791e"/>`).join('')}<text x="${x(0)}" y="200" text-anchor="middle">0</text><text x="${x(.16)}" y="200" text-anchor="middle">+0.16</text></svg></figure>`+evidenceTable(['Measure','Change','95% interval'],rows.map(r=>[r[0],signed(r[1]),`${signed(r[2])} to ${signed(r[3])}`]),'Partner: Claude Opus 5.5 versus Claude Opus 5');
+ return `<figure class="evidence-intervals"><figcaption>Kimi partner change · estimate and 95% scene-bootstrap interval</figcaption><svg viewBox="0 0 740 220" role="img" aria-label="Clarification increases, while the L5 interval includes zero"><path d="M${x(0)} 20V170" stroke="#8c9f91" stroke-dasharray="4 4"/>${rows.map((r,i)=>`<text x="12" y="${63+i*65}">${r[0]}</text><path d="M${x(r[2])} ${58+i*65}H${x(r[3])}" stroke="#426650" stroke-width="3"/><circle cx="${x(r[1])}" cy="${58+i*65}" r="4" fill="#234e3b"/>`).join('')}<text x="${x(0)}" y="200" text-anchor="middle">0</text><text x="${x(.16)}" y="200" text-anchor="middle">+0.16</text></svg></figure>`+evidenceTable(['Measure','Change','95% interval'],rows.map(r=>[r[0],signed(r[1]),`${signed(r[2])} to ${signed(r[3])}`]),'Partner: Claude Opus 5.5 versus Claude Opus 5');
 }
 function findingTrajectories(){
- return `<div class="finding-trajectory-pair">${researchEvidence.trajectories.episodes.map((ep,i)=>`<article><h4>Case ${i+1} / ${safe(ep.model)}</h4>${findingInterestLine(ep)}<p class="finding-case-ending">${safe(ep.outcome)} · turn ${ep.turns.length} · composite ${number(ep.composite)}</p>${evidenceTable(['Turn','L1','L2','L3','L4','L5','L6','P(Advance)','Interest'],ep.turns.map((t,j)=>[t,...ep.levels[j].map(v=>number(v)),number(ep.advance_probability[j]),number(ep.interest[j])]),'Turn-indexed evidence')}</article>`).join('')}</div><p class="comparison-reading-note">Case 1 repeatedly returns to missing receipts while the user asks for estimated amounts; Case 2 proceeds after the user retrieves the receipts. The record describes the joint course of the exchange.</p>`;
+ return `<div class="finding-trajectory-pair">${researchEvidence.trajectories.episodes.map((ep,i)=>`<article data-point-view="trajectory"><h4><span class="trajectory-case-tag">Case ${i+1}</span>${dataIdentity(ep.model)}</h4>${findingInterestLine(ep)}<div class="plot-point-readout" aria-live="polite">Select a turn to see its values.</div><p class="finding-case-ending">${safe(ep.outcome)} · turn ${ep.turns.length} · composite ${number(ep.composite)}</p>${evidenceTable(['Turn','L1','L2','L3','L4','L5','L6','P(Advance)','Interest'],ep.turns.map((t,j)=>[t,...ep.levels[j].map(v=>number(v)),number(ep.advance_probability[j]),number(ep.interest[j])]),`Case ${i+1} turn scores`,false)}</article>`).join('')}</div><p class="comparison-reading-note">Case 1 repeatedly returns to missing receipts while the user asks for estimated amounts; Case 2 proceeds after the user retrieves the receipts. The record describes the joint course of the exchange.</p>`;
 }
 function findingInformationLines(){
  const rows=[['Astra',[.662,.592,.603],'#416b54'],['Sol',[.557,.466,.484],'#b08a2f'],['Gemini',[.483,.393,.440],'#8a5c57']],xs=[120,390,660],y=v=>280-(v-.35)/.35*220;
@@ -109,14 +170,14 @@ function findingGroupDeclines(){
  return `<figure class="finding-visual finding-group-declines"><figcaption>Two to four participants: a larger absolute decline in proactive coordination</figcaption>${evidenceBars([['L1–L4 / two participants',.722],['L1–L4 / four participants',.692]],{label:'Basic responsiveness · decline 0.030',max:.8})}${evidenceBars([['L5–L6 / two participants',.348],['L5–L6 / four participants',.243,true]],{label:'Proactive coordination · decline 0.105',max:.8})}</figure>${evidenceTable(['Mean score','Two participants','Four participants','Absolute decline'],[['L1–L4','0.722','0.692','0.030'],['L5–L6','0.348','0.243','0.105']],'The same score scale; simulated participants')}`;
 }
 function findingInterestLine(ep){
- const x=t=>65+(t-1)/5*385,y=v=>205-v*160;
- return `<figure class="finding-visual"><figcaption>User interest across turns</figcaption><svg viewBox="0 0 500 265" role="img" aria-label="User interest and ending for Case ${ep.id||''}"><path d="M65 30V215H460" stroke="#c8d7c8" fill="none"/><path class="finding-draw-path" pathLength="1" d="${ep.turns.map((t,i)=>`${i?'L':'M'}${x(t)} ${y(ep.interest[i])}`).join(' ')}" stroke="#567d60" stroke-width="3" fill="none"/>${ep.turns.map((t,i)=>`<circle cx="${x(t)}" cy="${y(ep.interest[i])}" r="${i===ep.turns.length-1?7:4}" fill="${i===ep.turns.length-1?'#b08a2f':'#567d60'}"/><text x="${x(t)}" y="240" text-anchor="middle">${t}</text>`).join('')}<text x="15" y="52">1.0</text><text x="15" y="210">0.0</text><text x="260" y="263" text-anchor="middle">Turn</text></svg></figure>`;
+ const x=t=>65+(t-1)/5*385,y=v=>215-v*170;
+ return `<figure class="finding-visual"><svg viewBox="0 0 500 265" role="group" aria-label="User interest and ending for Case ${ep.id||''}"><path d="M65 45H460M65 130H460M65 215H460" class="scatter-grid"/><path d="M65 215H460" class="scatter-axis"/><path class="finding-draw-path" pathLength="1" d="${ep.turns.map((t,i)=>`${i?'L':'M'}${x(t)} ${y(ep.interest[i])}`).join(' ')}" stroke="#567d60" stroke-width="3" fill="none"/>${ep.turns.map((t,i)=>`${evidencePoint(x(t),y(ep.interest[i]),i,`Turn ${t}: user interest ${number(ep.interest[i])}`)}<text x="${x(t)}" y="240" text-anchor="middle">${t}</text>`).join('')}<text x="65" y="22" class="scatter-axis-label">User interest</text><text x="26" y="50">1.0</text><text x="26" y="135">0.5</text><text x="26" y="220">0.0</text><text x="260" y="263" text-anchor="middle">Turn</text></svg></figure>`;
 }
 function findingRankingReversal(){
  const names=['gpt-5.6-sol','qwen3.8-max'],partners=['claude-opus-5','deepseek-v4-pro'],colors=['#416b54','#b08a2f'];
  const rows=names.map(name=>({name,values:partners.map(partner=>publication.interaction_matrix.find(r=>r.partner===partner).scores[publication.models.findIndex(m=>m.name===name)])}));
  const y=v=>265-(v-.35)/.20*205;
- return `<figure class="finding-visual finding-reversal"><figcaption>The same two assistants, two different partners</figcaption><svg viewBox="0 0 760 330" role="img" aria-label="Sol leads Qwen with the standard partner; Qwen leads Sol with the DeepSeek partner"><text x="170" y="25" text-anchor="middle">Standard partner</text><text x="590" y="25" text-anchor="middle">DeepSeek partner</text><path d="M170 50V280M590 50V280" stroke="#d4dfd2"/>${rows.map((r,i)=>`<path class="finding-draw-path" pathLength="1" d="M170 ${y(r.values[0])}L590 ${y(r.values[1])}" stroke="${colors[i]}" stroke-width="4" fill="none"/>${r.values.map((v,j)=>`<circle cx="${j?590:170}" cy="${y(v)}" r="6" fill="${colors[i]}"/><text x="${j?610:150}" y="${y(v)+(i?20:-12)}" text-anchor="${j?'start':'end'}">${i?'Qwen':'Sol'} ${number(v)}</text>`).join('')}`).join('')}</svg></figure>${evidenceTable(['Assistant','Standard partner','DeepSeek partner'],rows.map(r=>[r.name,...r.values.map(v=>number(v))]),'Descriptive pairing comparison')}`;
+ return `<figure class="finding-visual finding-reversal"><figcaption>The same two assistants, two different partners</figcaption><svg viewBox="0 0 760 330" role="img" aria-label="Sol leads Qwen with the standard partner; Qwen leads Sol with the DeepSeek partner"><text x="170" y="25" text-anchor="middle">Standard partner</text><text x="590" y="25" text-anchor="middle">DeepSeek partner</text><path d="M170 50V280M590 50V280" stroke="#d4dfd2"/>${rows.map((r,i)=>`<path class="finding-draw-path" pathLength="1" d="M170 ${y(r.values[0])}L590 ${y(r.values[1])}" stroke="${colors[i]}" stroke-width="4" fill="none"/>${r.values.map((v,j)=>`<circle cx="${j?590:170}" cy="${y(v)}" r="4" fill="${colors[i]}"/><text x="${j?610:150}" y="${y(v)+(i?20:-12)}" text-anchor="${j?'start':'end'}">${i?'Qwen':'Sol'} ${number(v)}</text>`).join('')}`).join('')}</svg></figure>${evidenceTable(['Assistant','Standard partner','DeepSeek partner'],rows.map(r=>[r.name,...r.values.map(v=>number(v))]),'Descriptive pairing comparison')}`;
 }
 function findingFrontierContrast(){
  return `<section class="finding-frontier finding-visual"><h4>Gain and frontier-level contribution tell different stories</h4>${evidenceTable(['Observation','Weaker bases','Stronger bases'],[['Proactive capability gain','Larger marginal gains','Smaller marginal gains'],['Bases with nonzero Frontier Emergence','0','4'],['Architectures with nonzero Frontier Emergence','None in these weaker bases','Cognizer / Claude Code']],'Different outcomes under architectural augmentation')}<p class="comparison-reading-note">Frontier Emergence is the study’s stringent contribution criterion, not independent validation of a scientific breakthrough. The count describes base models, not the number of discoveries.</p></section>`;
@@ -144,7 +205,7 @@ function findingsMeasureContent(measure){
 
   case 'weighting-sensitivity':return evidenceBars([['Reference level weights',.222,true],['Equal level weights',.163,true]],{label:'Across-model composite range',max:.25})+evidenceTable(['Variant','Composite range','Ranking ρ','Largest rank change'],[['Reference','0.222','1.000','0'],['Equal level weights','0.163','0.988','1']],'Aggregation comparison');
   case 'gap-behavior':return evidenceBars([['Sufficient',.051],['Partial',.164,true],['Insufficient',.103]],{label:'Unsupported factual additions · share of turns',format:percent,max:.20});
-  case 'gap-correlation':return evidenceScatter(m.map(x=>[x.name,x.stages[0],x.behavior.fabrication,['claude-opus-5.5','gpt-6-astra'].includes(x.name)]),{xLabel:'Passive execution',yLabel:'Fabrication rate',xMin:.74,xMax:.80,yMax:.20,caption:'Execution and unsupported factual additions · Spearman ρ = +0.77 · n = 10'});
+  case 'gap-correlation':return evidenceScatter(m.map(x=>[x.name,x.stages[0],x.behavior.fabrication,['claude-opus-5.5','gpt-6-astra'].includes(x.name)]),{xLabel:'Passive execution (L1–L2)',yLabel:'Fabrication rate',xMin:.74,xMax:.80,yMax:.20,yFormat:v=>number(v,true),yValueFormat:v=>number(v,true),caption:'Spearman ρ = +0.77 across 10 models'});
   case 'question-vs-agency':return evidenceIntervals();
   case 'case-trajectories':return findingTrajectories();
   case 'turn-divergence':return evidenceBars(findingsEvidence.turns.map((t,i)=>['Turn '+t,Math.max(...findingsEvidence.turn_rows.map(r=>r.scores[i]))-Math.min(...findingsEvidence.turn_rows.map(r=>r.scores[i])),i===0||i===4]),{label:'Across-model turn-score range',max:.25})+evidenceTable(['System',...findingsEvidence.turns.map(t=>'Turn '+t+' score (reached)')],findingsEvidence.turn_rows.map(r=>[r.name,...r.scores.map((s,i)=>`${number(s)} (${r.reached[i]}%)`)]),'Matched turn scores with the percentage of episodes reaching each turn');
@@ -153,12 +214,12 @@ function findingsMeasureContent(measure){
   case 'stopping-ablation':return evidenceBars([['Full instrument',6.2],['Without patience budget',13.7,true]],{label:'Length of episodes with persistently dominant Degrade',max:15,format:v=>v.toFixed(1)+' turns'});
   case 'partner-pressure':return evidenceScatter(m.map(x=>[x.name,x.partner.uptake_pressure,x.partner.active_pressure,['gemini-3.8-flash','claude-fable-5.1'].includes(x.name)]),{xLabel:'Extra L2–L3 pressure',yLabel:'Extra L5–L6 pressure',xMin:-.05,xMax:.27,yMin:-.06,yMax:.06,caption:'Pressure relative to Claude Opus 5 as the standard partner'});
   case 'role-asymmetry':return evidenceTable(['Quantity','User-side matrix','Assistant-side matrix'],[['Variance attributed to user identity','94.4%','See Table 11'],['Residual after row and column main effects','2.0%','10.9%']],'Role-dependent variance decomposition · Tables 11 and 15');
-  case 'architecture-headroom':return ['MetaMind','Cognizer','Claude Code'].map(a=>evidenceScatter(m.map(x=>{const agent=publication.agents.find(r=>r.architecture===a&&r.base_model===x.name);return [x.name,x.stages[2],agent.active_adaptation-x.stages[2],['deepseek-v4-pro','claude-opus-5.5'].includes(x.name)]}),{xLabel:'Base proactive score',yLabel:'Proactive gain',xMax:.6,yMax:.11,caption:a+' · base capability and architecture gain'})).join('')+(finding?.id==='F30'?findingFrontierContrast():'');
+  case 'architecture-headroom':return '<div class="architecture-scatter-grid">'+['MetaMind','Cognizer','Claude Code'].map(a=>evidenceScatter(m.map(x=>{const agent=publication.agents.find(r=>r.architecture===a&&r.base_model===x.name);return [x.name,x.stages[2],agent.active_adaptation-x.stages[2],['deepseek-v4-pro','claude-opus-5.5'].includes(x.name)]}),{xLabel:'Base L5–L6 score',yLabel:'L5–L6 score gain',xMax:.6,yMax:.11,caption:a,captionIcon:agentIcon(a),foldValues:true})).join('')+'</div>'+(finding?.id==='F30'?findingFrontierContrast():'');
   case 'role-probes':return evidenceBars(findingsEvidence.within_interest.flatMap(r=>[[r[0]+' / assistant',r[1],r[0]==='Qwen3.8-27B'],[r[0]+' / user',r[2],r[0]==='Qwen3.8-27B']]),{label:'Within-dialogue interest R² at 75% depth',min:-.25,max:.20})+'<p class="comparison-reading-note">Entire scenes are held out. Each row in Table 17 covers 81 dialogues; within-dialogue R² removes each dialogue’s mean from labels and predictions.</p>';
   case 'shared-affection':return evidenceTable(['Assistant model','Affection-direction cosine','Residual user affection R²','Residual user anxiety R²'],findingsEvidence.participant_states.map(r=>r.map((v,i)=>i?number(v):v)),'Shared versus participant-specific state readouts at 75% depth')+evidenceBars(findingsEvidence.participant_states.map(r=>[r[0],r[2],true]),{label:'Residual user-affection R²',min:-.3,max:.05});
-  case 'shared-miscalibration':return evidenceTable(['Statistic','Value','What it compares'],[['Interest-change correlation','0.264','Two participants’ readouts'],['Assistant within-dialogue R²','−0.374','Assistant readout versus annotated interest'],['User within-dialogue R²','−0.246','User readout versus annotated interest']],'16 Gemma–Gemma dialogues · 204 aligned boundaries');
-  case 'partner-integration':return evidenceTable(['Position / intervention','Value','Quantity'],[['Utterance positions / layer 32','0.860','Recovery'],['Utterance positions / layer 40','0.664','Recovery'],['Utterance positions / layer 48','0.285','Recovery'],['Final position / layer 48','0.435','Recovery'],['Final position / layer 52','0.777','Recovery'],['Remove 8 selected heads','0.928','Sensitivity retention'],['Remove 40 selected heads','0.941','Sensitivity retention']],'Qwen3.8-27B · restoration and ablation')+'<p class="comparison-reading-note">Only reported points are shown. No values are interpolated for unreported layers. Recovery and sensitivity retention use different KL-based denominators.</p>';
-  case 'representation-control':return evidenceTable(['Design or observation','Reported result'],[['Model','Qwen3.8-27B'],['Direction-fitting corpus','297 transcripts'],['Intervention sample','60 contexts'],['Interest / affection intervention layers','44 / 28'],['Magnitudes','±16 or ±32 projected standard deviations'],['Random-direction comparison','No consistent signed change beyond the control'],['Larger magnitudes','Persona fit deteriorates; interest intervention also reduces coherence']],'Relational-direction intervention · §4.7.3 and Appendix A.13');
+  case 'shared-miscalibration':return evidenceTable(['Metric','Value','Comparison'],[['Interest-change correlation','0.264','Two participants’ readouts'],['Assistant within-dialogue R²','−0.374','Assistant readout versus annotated interest'],['User within-dialogue R²','−0.246','User readout versus annotated interest']],'Interest readout agreement and accuracy');
+  case 'partner-integration':return `<div class="intervention-grid">${evidenceTable(['Restoration position','Recovery'],[['Utterance positions · layer 32','0.860'],['Utterance positions · layer 40','0.664'],['Utterance positions · layer 48','0.285'],['Final position · layer 48','0.435'],['Final position · layer 52','0.777']],'Activation restoration')}${evidenceTable(['Heads removed','Sensitivity retained'],[['8 selected heads','0.928'],['40 selected heads','0.941']],'Attention-head ablation')}</div><p class="comparison-reading-note">Recovery measures the effect of restoring clean activations. Sensitivity retained measures the fraction remaining after ablation.</p>`;
+  case 'representation-control':return evidenceTable(['Design or observation','Reported result'],[['Model','Qwen3.8-27B'],['Direction-fitting corpus','297 transcripts'],['Intervention sample','60 contexts'],['Interest / affection intervention layers','44 / 28'],['Magnitudes','±16 or ±32 projected standard deviations'],['Random-direction comparison','No consistent signed change beyond the control'],['Larger magnitudes','Persona fit deteriorates; interest intervention also reduces coherence']],'Intervention design and observed effects');
   case 'reconstruction-ablation':return evidenceBars([['State / transcript + scene',.64],['State / full reconstruction',.91,true],['Recurrence / transcript + scene',.49],['Recurrence / full reconstruction',.89,true]],{label:'Controlled probe pairs separated',format:percent,max:1})+evidenceTable(['Probe family','Transcript + scene','Full reconstruction','Absolute gain'],[['State','64%','91%','27 percentage points'],['Recurrence','49%','89%','40 percentage points']],'Both conditions receive the full multi-turn transcript');
   case 'human-audit':return evidenceBars([['L1 / Goal preservation',.988,true],['L2 / Information uptake',.951],['L3 / State progression',.940],['L4 / Contextual expression',.923],['L5 / Proactive agency',.789,true],['L6 / Long-horizon coherence',.740,true]],{label:'Human endorsement under audit',format:percent,max:1})+evidenceTable(['Level','Reviewed records'],[['L1','246'],['L2','247'],['L3','248'],['L4','247'],['L5','246'],['L6','246']],'Denominators differ by reviewed level');
   case 'extractor-stability':return evidenceTable(['Alternative extractor','Latent-record agreement','Ranking Spearman ρ'],[['Qwen3.8 Max','0.806','0.988'],['Gemini 3.8 Pro','0.816','0.988']],'Extraction substitution');

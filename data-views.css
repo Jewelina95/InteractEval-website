@@ -60,3 +60,196 @@
  .data-view-body .evidence-data-table{min-width:500px}
  .data-view-body .evidence-data-table :is(th,td){padding:11px 12px}
 }
+
+
+/* Result charts share the same text scale and subdued measurement palette. */
+.data-view-body :is(.evidence-scatter,.evidence-intervals,.finding-visual) svg text {
+  font: 400 13px var(--sans);
+  fill: var(--data-muted);
+}
+.data-view-body .evidence-scatter svg .evidence-point-label { font-size: 12px; }
+.data-view-body :is(.model-identity,.data-identity) > img {
+  width: 17px;
+  height: 17px;
+  object-fit: contain;
+}
+.data-view-body :is(.evidence-bar-row,.architecture-gain-row) strong {
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+.data-view-body .evidence-bar-row > span { min-width: 0; }
+.data-view-body .evidence-bar-row.is-evidence-focus em { background: #52765b; }
+.data-view-body .interval-comparison figcaption > strong { font-size: 20px; }
+
+.data-view-body .scatter-values { margin: -12px 0 24px; }
+.data-view-body .scatter-values > summary {
+  cursor: pointer;
+  color: var(--data-ink);
+  font-size: 13px;
+}
+.data-view-body .scatter-values > .evidence-table-wrap { margin-top: 10px; }
+
+.data-view-body .evidence-scatter figcaption:has(.agent-symbol) {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--data-ink);
+}
+.data-view-body .evidence-scatter figcaption .agent-symbol { width: 18px; height: 18px; flex: none; margin: 0; }
+
+.data-heading-icon {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  flex: none;
+  border-radius: 8px;
+  background: #edf4ee;
+  color: #315c49;
+}
+.data-heading-icon svg { width: 19px; height: 19px; }
+.data-view-body .architecture-scatter-grid,
+.data-view-body .intervention-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(min(100%,330px),1fr));
+  gap: 16px;
+  align-items: start;
+}
+.data-view-body .scatter-card,
+.data-view-body .finding-trajectory-pair > article {
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid #e0e9e1;
+  border-radius: 10px;
+  background: #fff;
+}
+.data-view-body .scatter-card .evidence-scatter { margin: 0 0 12px; }
+.data-view-body .scatter-card .evidence-scatter figcaption { margin-bottom: 12px; }
+.data-view-body .scatter-card .evidence-scatter svg { max-width: 540px; }
+.data-view-body .scatter-grid { stroke: #e3ebe4; fill: none; }
+.data-view-body .scatter-axis { stroke: #9bac9f; fill: none; }
+.data-view-body .scatter-point { fill: #39765c; stroke: #fff; stroke-width: .9; }
+.data-view-body .evidence-scatter svg .scatter-axis-label { fill: var(--data-ink); font-weight: 550; }
+.data-view-body .scatter-card .scatter-values { margin: 0; }
+.data-view-body .scatter-card .evidence-table-wrap { overflow: auto; }
+.data-view-body .intervention-grid caption { text-align: left; padding: 8px 0 12px; }
+.data-view-body .intervention-grid table { min-width: 0; }
+
+
+/* Shared result surfaces. Keep provider colours in logos and reserve chart
+   colours for measurement encodings such as direction and score intensity. */
+.data-view-body {
+  --plot-fill: #4b8067;
+  --plot-negative: #a16f50;
+  --plot-track: #eaf1ec;
+  --plot-border: #e0e9e1;
+}
+.data-view-body .comparison-bar-track > b { background: var(--plot-fill); }
+.comparison-bar-track > b { background: var(--provider-bar,#4b8067); }
+.data-view-body .comparison-bar-row[data-direction="negative"] b,
+.data-view-body .evidence-bar-row[data-direction="negative"] em { background: var(--plot-negative); }
+.data-view-body :is(.comparison-bar-track,.evidence-bar-row > i,.architecture-gain-row > i) {
+  height: 10px;
+  background: var(--plot-track);
+  border-radius: 3px;
+}
+.data-view-body :is(.evidence-bar-row em,.architecture-gain-row b) { background: var(--plot-fill); }
+.data-view-body :is(.comparison-bar-axis,.evidence-bar-axis) {
+  color: var(--data-muted);
+  font-size: 12px;
+}
+.data-view-body :is(.comparison-bar-row,.evidence-bar-row,.architecture-gain-row) {
+  font-family: var(--sans);
+  font-size: 13px;
+}
+.data-view-body :is(.comparison-model img,.model-identity > img,.data-identity > img) {
+  width: 17px;
+  height: 17px;
+  object-fit: contain;
+  flex: none;
+}
+.data-view-body > :is(.comparison-bars,.evidence-bars),
+.data-view-body .main-behavior-charts > figure,
+.data-view-body .architecture-comparison-grid > article,
+.data-view-body .interval-comparison > figure {
+  min-width: 0;
+  border: 1px solid var(--plot-border);
+  border-radius: 10px;
+  padding: 16px;
+  background: #fff;
+}
+.data-view-body :is(.comparison-table-wrap,.evidence-table-wrap,.pairing-matrix-wrap,.heatmap-wrap) {
+  max-width: 100%;
+  overflow: auto;
+  border: 1px solid var(--plot-border);
+  border-radius: 8px;
+  scrollbar-width: thin;
+}
+.data-view-body .scatter-card .evidence-table-wrap { margin-bottom: 0; }
+.data-view-body :is(.comparison-data-table,.evidence-data-table,.pairing-matrix) {
+  font-family: var(--sans);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+.data-view-body :is(.comparison-data-table,.evidence-data-table,.pairing-matrix) thead th {
+  color: var(--data-ink);
+  background: #edf3ee;
+}
+.data-view-body :is(.chart-topline strong,.architecture-comparison-grid h4,.finding-trajectory-pair h4) {
+  color: var(--data-ink);
+  font: 550 16px/1.4 var(--sans);
+}
+.data-view-body .chart-topline { margin-bottom: 12px; }
+.data-view-body .architecture-comparison-grid h4 { margin-bottom: 16px; }
+.data-view-body .architecture-comparison-grid h4 > svg { width: 18px; height: 18px; }
+.data-view-body .trajectory-case-tag {
+  padding: 3px 8px;
+  border-radius: 4px;
+  background: #edf4ee;
+  color: #315c49;
+  font: 550 12px/1.5 var(--sans);
+}
+.data-view-body .finding-trajectory-pair .finding-visual { margin: 12px 0 16px; }
+.data-view-body .atlas-comparison-cards > article { border-radius: 8px; border-color: var(--plot-border); }
+@media(max-width:700px) {
+  .data-view-body > :is(.comparison-bars,.evidence-bars),
+  .data-view-body .main-behavior-charts > figure,
+  .data-view-body .architecture-comparison-grid > article,
+  .data-view-body .interval-comparison > figure { padding: 12px; }
+}
+
+.results-page .data-view-body .main-behavior-charts > .research-figure { padding: 16px; }
+.data-view-body .intervention-grid caption { padding: 12px 14px; }
+@media(max-width:700px) {
+  .results-page .data-view-body .main-behavior-charts > .research-figure { padding: 12px; }
+}
+
+.data-view-body .plot-point-control { cursor: pointer; outline: none; }
+.data-view-body .plot-point-target { fill: transparent; pointer-events: all; }
+.data-view-body .plot-point-control:is(:hover,:focus-visible,[aria-pressed="true"]) .scatter-point {
+  fill: #193b30;
+  stroke: #8fbea6;
+  stroke-width: 2.5;
+}
+.data-view-body .plot-point-readout {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  min-height: 38px;
+  margin: 0 0 12px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  background: #edf4ee;
+  color: var(--data-muted);
+  font: 400 13px/1.5 var(--sans);
+  font-variant-numeric: tabular-nums;
+}
+.data-view-body .plot-point-readout strong { color: var(--data-ink); }
+.data-view-body .evidence-data-table tr.is-point-selected > :is(th,td) { background: #e4f1e8; }
+
+.data-view-metadata { display: flex; flex-wrap: wrap; gap: 8px 18px; margin: 12px 0 0; }
+.data-view-metadata > div { display: flex; align-items: baseline; gap: 6px; }
+.data-view-metadata dt { color: #315c49; font: 600 12px/1.5 var(--sans); }
+.data-view-metadata dd { margin: 0; color: var(--data-muted,#52645b); font: 400 13px/1.5 var(--sans); }
+.data-view-body .evidence-data-table caption { text-align: left; padding-inline: 14px; }

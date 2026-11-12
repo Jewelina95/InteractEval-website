@@ -1,6 +1,11 @@
 'use strict';
 
 const navigationIcons={
+  scatter:'<path d="M4 4v16h16"/><circle cx="8" cy="15" r="1"/><circle cx="12" cy="11" r="1"/><circle cx="16" cy="13" r="1"/><circle cx="19" cy="6" r="1"/>',
+  trajectory:'<path d="M3 17l5-7 5 3 8-8M3 10l5 3 5 5 8-2"/>',
+  computation:'<rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 2v4m6-4v4M9 18v4m6-4v4M2 9h4m-4 6h4m12-6h4m-4 6h4m-9 2 3-4h-3l2-4"/>',
+  pressure:'<path d="M12 3v17m-7-2h14M4 7h16M6 7l-3 6h6L6 7Zm12 0-3 6h6l-3-6Z"/>',
+
   stages:'<path d="M3 20h6v-5h6v-5h6V4M3 20V9m0 11h18"/>',
   architecture:'<rect x="8" y="2" width="8" height="6" rx="1"/><rect x="2" y="16" width="7" height="6" rx="1"/><rect x="15" y="16" width="7" height="6" rx="1"/><path d="M12 8v4H5.5v4M12 12h6.5v4"/>',
   overview:'<path d="M4 17V9m8 8V4m8 13v-6M3 21h18"/>',

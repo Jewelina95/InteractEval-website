@@ -6,7 +6,7 @@ function interactionFigure(kind) {
   return `<section id="system-overview" class="article-section interaction-opening" aria-labelledby="system-overview-heading">
     <header class="interaction-heading">
       <h2 id="system-overview-heading">How InteractNet works</h2>
-      <p>InteractNet reconstructs the evolving interaction world from dialogue evidence, assesses six levels of capability in context, and uses task progress and user interest to guide continuation or termination.</p>
+      <p>InteractNet reconstructs the scene, latent state, and event chain from dialogue, scores six capability levels, and checks task progress and user interest to decide when to stop.</p>
     </header>
     <figure class="interaction-figure pipeline-static">
       <div class="interaction-picture pipeline-picture" tabindex="0" role="region" aria-label="Evaluation pipeline; scroll horizontally on smaller screens">

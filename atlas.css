@@ -341,3 +341,56 @@ html[data-ui-input=keyboard] select,html[data-ui-input=keyboard] select::picker-
 .research-feature .rubric-ladder{align-content:start}
 .research-feature .rubric-ladder>button{min-height:70px;padding:16px 14px}
 @media(max-width:700px){.research-feature .research-rubric{grid-template-columns:minmax(0,1fr)}}
+
+
+/* The results rail is the single place for switching measures. */
+.main-rail-comparisons .main-rail-group,
+.main-rail-comparisons .main-rail-group[open] {
+  border: 0;
+  background: transparent;
+  margin: 2px 0;
+}
+.main-rail-comparisons .main-rail-group summary { min-height: 38px; }
+.main-rail-comparisons .main-rail-group[open] summary { font-weight: 600; }
+.main-rail-comparisons .main-rail-group > div {
+  margin-left: 16px;
+  padding-left: 8px;
+}
+.main-rail-comparisons .main-rail-group button[aria-current="true"] {
+  background: #eef4ef;
+  box-shadow: inset 2px 0 #347f69;
+}
+
+.main-rail-comparisons > .paper-chapter-label {
+  color: #526b5e;
+  border-bottom: 1px solid #e1e9e3;
+  margin: 16px 8px 5px;
+  padding: 0 0 6px;
+}
+.main-rail-comparisons .main-rail-group:has([aria-current="true"]) > summary {
+  color: #193b30;
+  font-weight: 650;
+}
+.main-rail-comparisons > .main-rail-direct {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 38px;
+  text-align: left;
+  border: 0;
+  border-radius: 5px;
+  background: transparent;
+  padding: 7px 8px;
+  color: #43584c;
+  font: 500 13px/1.35 var(--sans);
+  cursor: pointer;
+}
+.main-rail-comparisons > .main-rail-direct:hover,
+.main-rail-comparisons > .main-rail-direct[aria-current="true"] { background: #eef4ef; }
+.main-rail-comparisons > .main-rail-direct[aria-current="true"] {
+  color: #193b30;
+  box-shadow: inset 2px 0 #347f69;
+}
+@media (max-width: 600px) {
+  .main-rail-comparisons > .main-rail-direct { min-height: 44px; }
+}
