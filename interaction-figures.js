@@ -40,18 +40,23 @@ function setupInteractionFigures() {
   const events = new AbortController();
   let frame = 0;
   let previousProgress;
+  let previousExit;
 
   function update() {
     frame = 0;
     if (!motion.matches) return;
     const stickyTop = parseFloat(getComputedStyle(layout).top) || 0;
     const travel = sequence.offsetHeight - layout.offsetHeight;
-    const progress = travel > 0
-      ? Math.min(1, Math.max(0, (stickyTop - sequence.getBoundingClientRect().top) / travel))
-      : 1;
+    const passed = stickyTop - sequence.getBoundingClientRect().top;
+    const progress = travel > 0 ? Math.min(1, Math.max(0, passed / travel)) : 1;
+    const exit = Math.min(1, Math.max(0, (passed - travel) / (window.innerHeight * .35)));
     if (progress !== previousProgress) {
       sequence.style.setProperty('--method-progress', progress);
       previousProgress = progress;
+    }
+    if (exit !== previousExit) {
+      sequence.style.setProperty('--method-exit', exit);
+      previousExit = exit;
     }
   }
 

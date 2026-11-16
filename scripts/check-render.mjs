@@ -40,6 +40,7 @@ assert.match(home, /href="[^"]*interactnet-pipeline-v168\.svg/);
 assert.match(home, /src="[^"]*interactnet-pipeline-v168\.svg[^"]*" width="2265" height="925"/);
 assert.doesNotMatch(home, /interactnet-world-architecture-v168/);
 assert.doesNotMatch(home, /interactnet-pipeline-v168-black-gold/);
+assert.doesNotMatch(home, /id="evaluation-results-heading"/);
 assert.match(home, /<div id="comparisons" data-initial-topic="main-results"/);
 assert.doesNotMatch(home, /result-carousel|result-library/);
 assert.doesNotMatch(home, /§|04 · Experiments|05 · Discussion/);

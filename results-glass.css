@@ -6,7 +6,6 @@
     radial-gradient(ellipse at 88% 0%, #2c1e10 0, transparent 35rem),
     radial-gradient(ellipse at 5% 13%, #191522 0, transparent 25rem),
     #090807;
-  border-top: 1px solid #513b25;
   scroll-margin-top: calc(var(--header-height, 82px) + 12px);
   --muted: #bfb0a0;
   --divider: rgb(229 196 146 / 23%);
@@ -16,15 +15,7 @@
 .zip-results button, .zip-results select { font: inherit; }
 .zip-results button { color: inherit; cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
 .zip-results :focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
-.zip-results .results { width: min(1176px, calc(100% - 72px)); margin-inline: auto; padding: 76px 0 110px; }
-.zip-results .page-heading { padding-block: 0 29px; }
-.zip-results .page-heading h2 {
-  margin: 0;
-  font-size: clamp(34px, 5vw, 64px);
-  font-weight: 700;
-  line-height: 1.02;
-  letter-spacing: -.075em;
-}
+.zip-results .results { width: min(1176px, calc(100% - 72px)); margin-inline: auto; padding: clamp(22px, 3vw, 42px) 0 110px; }
 .zip-results .result-section:not([hidden]) + .result-section:not([hidden]) { margin-top: 52px; }
 .zip-results .result-section h2 {
   margin: 0 0 16px;

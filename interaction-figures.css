@@ -122,9 +122,10 @@
     --method-zoom: clamp(0, (var(--method-progress, 0) - .17) / .63, 1);
     justify-self: end;
     width: calc(62% + 38% * var(--method-zoom));
+    opacity: calc(1 - var(--method-exit, 0));
   }
   .method-sequence.is-scroll-animated:focus-within .method-intro { visibility: hidden; }
-  .method-sequence.is-scroll-animated:focus-within .method-diagram { --method-zoom: 1; }
+  .method-sequence.is-scroll-animated:focus-within .method-diagram { --method-zoom: 1; opacity: 1; }
   .method-sequence.is-scroll-animated:focus-within::before { opacity: 1; }
 }
 
@@ -138,7 +139,7 @@
   --section-tracking: -.05em;
 }
 .results-page :is(.why-heading h2, .theory-heading h2, #findings-story-title,
-  #system-overview-heading, #method-why-heading, #evaluation-results-heading),
+  #system-overview-heading, #method-why-heading),
 .interaction-only #system-overview-heading {
   font: var(--section-title);
   letter-spacing: var(--section-tracking);
@@ -146,9 +147,9 @@
 
 .method-why {
   overflow: hidden;
-  background: linear-gradient(180deg, #fff 0%, #f4f2ed 42%, #090807 100%);
+  background: linear-gradient(180deg, #fff 0%, #f0ede6 48%, #8e8270 72%, #090807 100%);
   color: #222426;
-  padding: clamp(34px, 6vw, 80px) clamp(20px, 5vw, 72px) clamp(100px, 13vw, 180px);
+  padding: clamp(36px, 7vw, 92px) clamp(20px, 5vw, 72px) clamp(124px, 15vw, 220px);
 }
 .method-why-content {
   max-width: 1260px;
@@ -165,11 +166,11 @@
   @supports (animation-timeline: view()) {
     .method-why-content {
       animation: method-why-enter ease-out both;
-      animation-timeline: view();
-      animation-range: entry 0% entry 95%;
+      animation-timeline: view(block 0% 16%);
+      animation-range: entry 5% entry 100%;
     }
     @keyframes method-why-enter {
-      from { opacity: .25; translate: 0 24px; }
+      from { opacity: 0; translate: 0 24px; }
       to { opacity: 1; translate: 0 0; }
     }
   }

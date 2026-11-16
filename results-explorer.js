@@ -42,9 +42,8 @@ function resultResources(){
   const params=new URLSearchParams(location.hash.split('?')[1]||'');
   const topic=params.get('topic');
   const initialTopic=Object.values(topicByGroup).includes(topic)?topic:topicByGroup[mainComparisonGroup];
-  return `<section id="resources" class="zip-results" aria-labelledby="evaluation-results-heading">
+  return `<section id="resources" class="zip-results" aria-label="Evaluation results">
     <div class="results">
-      <header class="page-heading"><h2 id="evaluation-results-heading">Evaluation results</h2></header>
       <div id="comparisons" data-initial-topic="${initialTopic}" aria-busy="true">
         <p role="status">Loading evaluation data…</p>
       </div>
