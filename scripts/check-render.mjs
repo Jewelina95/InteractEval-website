@@ -1,43 +1,55 @@
 import fs from 'node:fs';
 import vm from 'node:vm';
 import assert from 'node:assert/strict';
-const source=fs.readFileSync('results-explorer.js','utf8');
-const start=source.indexOf('function resultsHomeV2()');
-const end=source.indexOf('function comparisonDataTable(',start);
-const makeContext=()=>{
- const c={location:{hash:''},selectedMainLevel:null,lastMainComparisonHash:'',mainComparisonGroups:[],mainComparisonGroup:'',URLSearchParams,console};
- for(const name of ['atlasHero','motivationFigure','mainRail','atlasKeyFindings','capabilityMatrix','mainBehaviorSection','mainComparisonPanel','proactivityOpening'])c[name]=()=>`<p>${name}</p>`;
- c.interactionFigure=kind=>kind==='motivation'?'<p>motivationFigure</p>':'<p>pipeline-v168.svg</p>';
- c.journalSection=(id,index,kicker,title,deck,body)=>`<section id="${id}"><h2>${title}</h2>${body}</section>`;
- c.navigationIcon=()=>'';c.paperSectionLabel=g=>`${g.section||''} ${g.title||''}`;return vm.createContext(c);
+
+const context = vm.createContext({
+  document: {
+    addEventListener() {},
+    currentScript: { src: 'https://worldeology.com/InteractNet/why-interaction.js' },
+    body: { hasAttribute: () => false }
+  },
+  window: {},
+  location: { hash: '' },
+  URL, URLSearchParams,
+  safe: value => String(value),
+  atlasHero: () => '<header id="main-hero"></header>',
+  mainComparisonPanel: () => '<p>Selected comparison</p>'
+});
+const read = file => fs.readFileSync(new URL('../' + file, import.meta.url), 'utf8');
+vm.runInContext(read('why-interaction.js'), context);
+context.interactionFigure = kind => {
+  assert.equal(kind, 'motivation');
+  return context.window.whyInteractionFigure();
 };
-const c=makeContext();
-const fallback=source.indexOf('function renderSystemOverview(');
-if(fallback>=0)vm.runInContext(source.slice(fallback,source.indexOf('function resultsHomeV2()',fallback)),c);
-vm.runInContext(source.slice(start,end),c);
-const html=vm.runInContext('resultsHomeV2()',c);
-assert.match(html,/atlasHero/);assert.match(html,/atlasKeyFindings/);assert.ok(!html.includes('theory-v5.png'), 'Removed theory illustration must stay absent');
-assert.match(html,/pipeline-v168.svg/);
-assert.ok(!html.includes('id="illustrations"'), 'The bottom Conversations section is removed');
-c.systemFigure=()=>'<section>animated-system</section>';
-if(!source.includes("${interactionFigure("))assert.ok(!vm.runInContext('resultsHomeV2()',c).includes('animated-system'));
-console.log('Main orchestration renders the figures and core content with the current figure renderer.');
+const source = read('results-explorer.js');
+const start = source.indexOf('function resultsHomeV2()');
+const end = source.indexOf('function comparisonDataTable(', start);
+vm.runInContext(source.slice(source.indexOf('const mainComparisonGroups='), source.indexOf('const leaderboardGroups=')), context);
+vm.runInContext(source.slice(source.indexOf('function resultResources('), source.indexOf('function capabilityMatrix(')), context);
+vm.runInContext(source.slice(start, end), context);
 
-const order=['atlasHero','mainRail','motivationFigure','pipeline-v168.svg','atlasKeyFindings'];
-for(let i=1;i<order.length;i++)assert.ok(html.indexOf(order[i-1])<html.indexOf(order[i]),`${order[i-1]} must precede ${order[i]}`);
-assert.ok(!html.includes('data-main-panel'));
-console.log('Original opening precedes the shared sidebar, response figure, and findings.');
+const home = vm.runInContext('resultsHomeV2()', context);
+const order = ['id="main-hero"', 'id="response-interaction"', 'id="why-response-heading"', 'id="why-situation-a"', 'id="why-situation-b"', 'class="why-definitions"', 'id="resources"'];
+assert.ok(order.every(id => home.includes(id)));
+for (let i = 1; i < order.length; i++) assert.ok(home.indexOf(order[i - 1]) < home.indexOf(order[i]), order[i]);
+assert.doesNotMatch(home, /main-results-rail|id="system-overview"|id="key-findings"|figure1-field-aligned/);
+assert.match(home, /<details id="comparisons" class="why-resources"\s*>/);
+assert.equal((home.match(/class="why-frame"/g) || []).length, 6);
 
-// Direct measure URLs remain available independently of the findings list.
-c.mainComparisonGroups=[
- {id:'stages',items:[['stage-profile','All three stages']]},
- {id:'scenarios',items:[['information','Information gaps']]},
- {id:'partners',items:[['pairings','All 100 pairings']]}
-];
-for(const [measure,group] of [['stage-profile','stages'],['information','scenarios'],['pairings','partners']]){
- c.location.hash='#comparisons?measure='+measure;
- vm.runInContext('resultsHomeV2()',c);
- assert.equal(c.mainComparisonGroup,group);
- assert.equal(c.mainComparisonMeasure,measure);
+for (const [, path] of home.matchAll(/(?:src|poster)="https:\/\/worldeology\.com\/InteractNet\/(assets\/why-interact\/[^"]+)"/g)) {
+  assert.ok(fs.statSync(new URL('../' + path, import.meta.url)).size > 0, path);
 }
-console.log('Direct measure URLs select their data independently of findings.');
+
+for (const [hash, group, measure] of [
+  ['#comparisons?measure=stage-profile', 'stages', 'stage-profile'],
+  ['#comparisons?measure=information', 'scenarios', 'information'],
+  ['#comparisons?measure=pairings', 'partners', 'pairings'],
+  ['#coverage', 'setup', 'scenario-coverage']
+]) {
+  context.location.hash = hash;
+  const result = vm.runInContext('resultsHomeV2()', context);
+  assert.match(result, /<details id="comparisons" class="why-resources" open>/);
+  assert.equal(vm.runInContext('mainComparisonGroup', context), group);
+  assert.equal(vm.runInContext('mainComparisonMeasure', context), measure);
+}
+console.log('Main renders both videos and the Siri-style demo, six timeline frames, relocated definitions, and Resources. Direct comparison links still open the selected measure.');

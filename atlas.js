@@ -18,7 +18,7 @@ const atlasSymbols={
   agency:'<path d="M12 61V42h18V27h18V12h19v12H58v15H40v15H22v7Z" fill="currentColor" opacity=".22"/><path d="M12 61h12V49h18V34h18V19h7" stroke="currentColor" stroke-width="6" stroke-linejoin="round"/><circle cx="65" cy="18" r="7" fill="currentColor"/>'
 };
 function atlasSymbol(name){return `<svg viewBox="0 0 80 80" fill="none" aria-hidden="true">${atlasSymbols[name]}</svg>`;}
-function atlasHero(){return `<section class="atlas-hero"><div><h1>The measure of intelligence is the ability to change</h1><div class="atlas-intelligence-definitions"><p><strong>Responsive intelligence</strong> is the ability to respond appropriately within a direction set by the partner, following instructions and adapting to new information.</p><p><strong>Interactive intelligence</strong> additionally involves understanding the evolving situation, initiating justified new directions, and following through coherently across turns.</p><p>InteractNet evaluates this progression across six capability levels.</p></div><a href="#response-interaction" data-research-section="response-interaction">Why interact <span aria-hidden="true">&#8595;</span></a></div>${atlasWorldFigure()}</section>`;}
+function atlasHero(){return `<section class="atlas-hero"><div><h1>The measure of intelligence is the ability to change</h1><a href="#response-interaction" data-research-section="response-interaction">Why interact <span aria-hidden="true">&#8595;</span></a></div>${atlasWorldFigure()}</section>`;}
 const atlasWorldLayers = [
   {name:'galaxy', hit:11.3},
   {name:'mountain', hit:30},
@@ -140,8 +140,6 @@ function setupAtlasWorld(){
   else art.addEventListener('load', begin, {once:true});
 }
 
-function atlasKeyFindings(){return coreFindings();}
-
 function atlasMobileScores(){
  const columns=[[0,5,6],[1,2,3],[4,5,6]][atlasMobileGroup],names=['Overall','L1','L2','L3','L4','L5','L6'];
  return `<div class="atlas-mobile-switch" role="group" aria-label="Displayed capability levels">${['Overview','L1–L3','L4–L6'].map((label,i)=>`<button type="button" data-atlas-mobile="${i}" aria-pressed="${atlasMobileGroup===i}">${label}</button>`).join('')}</div><div>${publication.models.map(m=>`<div class="atlas-mobile-model"><a href="#model/${encodeURIComponent(m.name)}">${modelIdentity(m.name)}</a><div>${columns.map(i=>{const v=[m.composite,...m.levels][i];return `<button type="button" data-main-level="${i?'L'+i:'composite'}" style="--score-fill:${.06+v*.4}"><span>${names[i]}</span><b>${number(v)}</b></button>`;}).join('')}</div></div>`).join('')}</div>`;
@@ -149,10 +147,10 @@ function atlasMobileScores(){
 function syncAtlasLayout(){
  setupAtlasWorld();
  setupInteractionFigures();
+ window.setupWhyInteraction?.();
  window.InteractEvalMotion?.unmountAll();window.InteractEvalMotion?.scan();
  const header=document.querySelector('.masthead');
  if(header){const size=()=>document.documentElement.style.setProperty('--header-height',Math.ceil(header.getBoundingClientRect().height)+'px');size();if(!header.atlasResize){header.atlasResize=new ResizeObserver(size);header.atlasResize.observe(header);}}
- syncAtlasActiveSection();
  atlasResponsiveTables();
 }
 function atlasResponsiveTables(){
@@ -179,17 +177,6 @@ function atlasScrollTo(element){
 }
 document.addEventListener('keydown',()=>{document.documentElement.dataset.uiInput='keyboard'},{capture:true});
 document.addEventListener('pointerdown',()=>{document.documentElement.dataset.uiInput='pointer'},{capture:true,passive:true});
-function syncAtlasActiveSection(){
- const sections=[...document.querySelectorAll('.results-page .article-body>.article-section')];if(!sections.length)return;
- const edge=(document.querySelector('.masthead')?.getBoundingClientRect().bottom||0)+85;
- let current=sections[0];for(const section of sections)if(section.getBoundingClientRect().top<=edge)current=section;
- document.querySelectorAll('.main-rail-content [data-research-section]').forEach(a=>a.classList.toggle('active',a.dataset.researchSection===current.id));
-}
-let atlasScrollPending=false;
-window.addEventListener('scroll',()=>{if(!atlasScrollPending){atlasScrollPending=true;requestAnimationFrame(()=>{atlasScrollPending=false;syncAtlasActiveSection()});}},{passive:true});
 document.addEventListener('click',event=>{
- const toggle=event.target.closest('[data-atlas-contents]');
- if(toggle){const expanded=toggle.getAttribute('aria-expanded')!=='true';toggle.setAttribute('aria-expanded',String(expanded));document.querySelector('.main-results-rail').classList.toggle('is-open',expanded);}
  const group=event.target.closest('[data-atlas-mobile]');if(group){atlasMobileGroup=Number(group.dataset.atlasMobile);document.querySelector('.atlas-mobile-scores').innerHTML=atlasMobileScores();}
- if(event.target.closest('.main-rail-content [data-research-section],.main-rail-content [data-main-comparison]')){document.querySelector('.main-results-rail')?.classList.remove('is-open');document.querySelector('[data-atlas-contents]')?.setAttribute('aria-expanded','false');}
 });

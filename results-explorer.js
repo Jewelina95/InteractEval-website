@@ -15,12 +15,7 @@ const mainComparisonGroups=[
  {id:'cost',section:'5.6',title:'Cost',icon:'overview',items:[['evaluation-cost','Evaluation cost']]}
 ];
 let mainComparisonGroup='stages',mainComparisonMeasure='capability-profile';
-function paperSectionLabel(group){return group.title;}
 function paperSubsection(group,id){return group.subsections?.find(section=>section.items.includes(id));}
-function paperMeasureGroups(group){
- const nested=new Set((group.subsections||[]).flatMap(section=>section.items));
- return [{title:'',items:group.items.filter(([id])=>!nested.has(id))},...(group.subsections||[]).map(section=>({...section,items:group.items.filter(([id])=>section.items.includes(id))}))];
-}
 let mainInformationView='conditions',mainGroupMeasure='active';
 let pairingSelection={partner:'claude-opus-5',assistant:'claude-opus-5.5'};
 let selectedMainLevel=null;
@@ -36,22 +31,23 @@ const leaderboardGroups=[
 const leaderboardIds=()=>leaderboardGroups.flatMap(group=>group.items);
 function modelNameMarkup(name){return safe(name).replace(/-/g,'-<wbr>');}
 function modelIdentity(name){return `<span class="model-identity"><img src="${assets(name)}" alt=""/><span>${modelNameMarkup(name)}</span></span>`;}
-function railResultGroup(group){
- const chapter=({stages:'Results',scenarios:'Analysis'})[group.id];
- const heading=chapter?`<p class="paper-chapter-label">${chapter}</p>`:'';
- const label=`<span class="main-rail-family-label">${navigationIcon(group.icon)}<span>${paperSectionLabel(group)}</span></span>`;
- if(group.items.length===1){
-  const [id]=group.items[0];
-  return heading+`<button type="button" class="main-rail-direct" data-main-comparison="${id}" ${mainComparisonMeasure===id?'aria-current="true"':''}>${label}</button>`;
- }
- const items=paperMeasureGroups(group).map(section=>{
-  const title=section.title?`<p class="paper-subsection-label">${section.title}</p>`:'';
-  return title+section.items.map(([id,label])=>`<button type="button" data-main-comparison="${id}" ${mainComparisonMeasure===id?'aria-current="true"':''}>${railMeasureLabel(id,label)}</button>`).join('');
- }).join('');
- return heading+`<details class="main-rail-group" name="main-measure-groups" data-main-rail-group="${group.id}" ${group.id===mainComparisonGroup?'open':''}><summary>${label}</summary><div>${items}</div></details>`;
-}
-function mainRail(){
- return `<aside class="article-rail main-results-rail" aria-label="Section navigation"><button type="button" class="main-rail-toggle" data-atlas-contents aria-expanded="false" aria-controls="main-rail-content">Contents <span aria-hidden="true">⌄</span></button><div id="main-rail-content" class="main-rail-content"><a href="#response-interaction" data-research-section="response-interaction">${navigationIcon('conversation')}<span>Why interact</span></a><a href="#system-overview" data-research-section="system-overview">${navigationIcon('architecture')}<span>How InteractNet works</span></a><a href="#key-findings" data-research-section="key-findings" class="active">${navigationIcon('theory')}<span>Key Findings</span></a><a class="main-mobile-compare-link" href="#comparisons" data-research-section="comparisons">Results & Analysis</a><div class="main-rail-comparisons">${mainComparisonGroups.filter(group=>group.id!=='setup').map(railResultGroup).join('')}</div></div></aside>`;
+function resultResources(open) {
+  const choices = mainComparisonGroups.map(group => `<optgroup label="${safe(group.title)}">${group.items.map(([id,label]) =>
+    `<option value="${id}" ${id===mainComparisonMeasure?'selected':''}>${safe(label)}</option>`
+  ).join('')}</optgroup>`).join('');
+  return `<section id="resources" class="article-section" aria-labelledby="resources-heading">
+    <header class="section-head-row journal-section-heading"><h2 id="resources-heading">Resources</h2></header>
+    <nav class="result-next-links" aria-label="InteractNet resources">
+      <a href="#leaderboards"><b>Leaderboards</b></a>
+      <a href="./research.html"><b>Research</b></a>
+      <a href="./showcase.html"><b>Showcase</b></a>
+    </nav>
+    <details id="comparisons" class="why-resources" ${open?'open':''}>
+      <summary>Results &amp; analysis</summary>
+      <label class="why-resource-measure">Compare by<select id="main-resource-measure">${choices}</select></label>
+      <div id="main-comparison-body" tabindex="-1" role="region" aria-label="Selected comparison">${mainComparisonPanel()}</div>
+    </details>
+  </section>`;
 }
 function capabilityMatrix(){
   const columns=['composite',...levelNames.map((_,index)=>'L'+(index+1))];
@@ -79,16 +75,18 @@ function mainBehaviorContent(){
 }
 function resultsHomeV2(){
   selectedMainLevel=null;
+  const anchor = location.hash.slice(1).split('?')[0];
+  const aliases={duration:'duration',architectures:'architectures',partners:'partners',coverage:'setup',stages:'stages',scenarios:'scenarios',reliability:'reliability','multi-party':'multi-party',behavior:'behavior',representations:'representations',cost:'cost','model-readout':'stages',capability:'stages',process:'behavior',outcomes:'duration'};
   if(lastMainComparisonHash!==location.hash){
     lastMainComparisonHash=location.hash;
-    const aliases={duration:'duration',architectures:'architectures',partners:'partners',coverage:'setup',stages:'stages',scenarios:'scenarios',reliability:'reliability','multi-party':'multi-party',behavior:'behavior',representations:'representations',cost:'cost','model-readout':'stages',capability:'stages',process:'behavior',outcomes:'duration'};
-    const group=mainComparisonGroups.find(group=>group.id===aliases[location.hash.slice(1).split('?')[0]]);
+    const group=mainComparisonGroups.find(group=>group.id===aliases[anchor]);
     if(group){mainComparisonGroup=group.id;mainComparisonMeasure=group.items[0][0];}
     const measure=new URLSearchParams(location.hash.split('?')[1]||'').get('measure');
     const requestedGroup=mainComparisonGroups.find(group=>group.items.some(item=>item[0]===measure));
     if(requestedGroup){mainComparisonGroup=requestedGroup.id;mainComparisonMeasure=measure;if(measure==='information')mainInformationView='conditions';}
   }
-  return `<div class="research-restored results-page">${atlasHero()}<div class="article-shell">${mainRail()}<article class="article-body">${interactionFigure('motivation')}${interactionFigure('system')}${atlasKeyFindings()}${journalSection('comparisons','','','Results & analysis','',`<div id="main-comparison-body" tabindex="-1" role="region" aria-label="Selected comparison">${mainComparisonPanel()}</div>`)}<nav class="result-next-links" aria-label="Explore InteractNet"><a href="#leaderboards"><b>Leaderboards</b></a><a href="./research.html"><b>Research</b></a><a href="./showcase.html"><b>Showcase</b></a></nav></article></div></div>`;
+  const showResults = anchor === 'comparisons' || Object.hasOwn(aliases, anchor);
+  return `<div class="research-restored results-page">${atlasHero()}<div class="article-shell"><article class="article-body">${interactionFigure('motivation')}${resultResources(showResults)}</article></div></div>`;
 }
 function comparisonDataTable(ids,labels=ids.map(id=>metricOf(id).label),rows=publication.models,headerModels=[]){
   return `<div class="comparison-table-wrap" role="region" aria-label="Published comparison values" tabindex="0"><table class="comparison-data-table"><thead><tr><th scope="col">Model</th>${labels.map((label,index)=>`<th scope="col" data-comparison-metric="${ids[index]}">${headerModels[index]?modelIdentity(headerModels[index]):safe(label)}</th>`).join('')}</tr></thead><tbody>${rows.map(model=>`<tr data-comparison-model="${model.name}"><th scope="row"><a href="#model/${encodeURIComponent(model.name)}">${modelIdentity(model.name)}</a></th>${ids.map(id=>`<td data-comparison-metric="${id}">${publishedFormat(metricOf(id).get(model),metricOf(id))}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
@@ -106,7 +104,6 @@ function metricComparison(id){
 }
 const stageCodes={stage0:'L1&ndash;L2',stage1:'L3&ndash;L4',stage2:'L5&ndash;L6',coherence:'Ratio'};
 const measureHints={stage0:'Keep the goal and use available information',stage1:'Make progress and respond in context',stage2:'Choose a direction and sustain it',coherence:'Follow-through relative to initiative',pairings:'Inspect every assistant and partner combination','pairing-summary':'Compare the mean and spread across assistants','architecture-purpose':'Task-oriented, mixed and open-ended settings','architecture-stages':'Compare gains across the three stages',information:'Sufficient, partial and insufficient information',repeats:'The same study repeated three times',judges:'The same interactions, different judges'};
-function railMeasureLabel(id,label){return `<span class="rail-measure-marker ${stageCodes[id]?'has-code':''}" aria-hidden="true">${stageCodes[id]||''}</span><span class="rail-measure-name">${label}</span>`;}
 function mainComparisonPanel(){
  return `<div class="comparison-content">${renderDataView()}</div>`;
 }
@@ -151,21 +148,20 @@ function groupSizeComparison(){
   const labels={active:'Proactive promotion · L5–L6',coherence:'L6 / L5',passive_responsive:'Passive & responsive · L1–L4'};
   return `<header class="comparison-reading"><h4>More participants</h4><p>Each model is scored in a group; all other participants are played by claude-opus-5.</p></header><div class="comparison-switch" role="group" aria-label="Group-size measure">${Object.entries(labels).map(([id,label])=>`<button data-group-size-measure="${id}" aria-pressed="${mainGroupMeasure===id}">${label}</button>`).join('')}</div><div class="comparison-table-wrap"><table class="comparison-data-table"><thead><tr><th scope="col">Scored model</th>${[2,3,4].map(size=>`<th scope="col">${size} participants</th>`).join('')}</tr></thead><tbody>${publication.models.map(model=>`<tr><th scope="row">${modelIdentity(model.name)}</th>${model.group_size[mainGroupMeasure].map(value=>`<td>${number(value)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
 }
-function refreshMainComparison(scroll=false){
+function refreshMainComparison(){
   const body=document.getElementById('main-comparison-body');if(!body)return;
   window.InteractEvalFindingFocus?.clear();
   body.innerHTML=mainComparisonPanel();
-  document.querySelectorAll('[data-main-comparison]').forEach(button=>{if(button.dataset.mainComparison===mainComparisonMeasure)button.setAttribute('aria-current','true');else button.removeAttribute('aria-current');});
-  document.querySelectorAll('[data-main-rail-group]').forEach(detail=>detail.open=detail.dataset.mainRailGroup===mainComparisonGroup);
+  const measure=document.getElementById('main-resource-measure');
+  if(measure)measure.value=mainComparisonMeasure;
   atlasResponsiveTables();
-  if(scroll)atlasScrollTo(document.getElementById('comparisons'));
 }
-function selectMainComparison(id,scroll=false){
+function selectMainComparison(id){
   const group=mainComparisonGroups.find(group=>group.items.some(item=>item[0]===id));if(!group)return;
   mainComparisonGroup=group.id;mainComparisonMeasure=id;
   const params=new URLSearchParams(location.hash.split('?')[1]||''),f=findingById(params.get('finding'));
   if(f&&f.measure!==id){params.delete('finding');params.set('measure',id);history.replaceState(null,'','#comparisons?'+params);}
-  refreshMainComparison(scroll);
+  refreshMainComparison();
 }
 function leaderboardMetricSelect(){
  const rich=CSS.supports('appearance','base-select'),icons=['stages','scenario','scenario','partner'];
@@ -182,13 +178,13 @@ document.addEventListener('click',event=>{
 
   if(level){const id=level.dataset.mainLevel,note=document.getElementById('main-level-note');selectedMainLevel=selectedMainLevel===id?null:id;readMainLevels.add(id);document.querySelectorAll('[data-main-level]').forEach(button=>{button.setAttribute('aria-expanded',String(button.dataset.mainLevel===selectedMainLevel));button.querySelector('i')?.classList.toggle('is-read',readMainLevels.has(button.dataset.mainLevel));});note.hidden=!selectedMainLevel;document.querySelectorAll('.main-capability-table [data-score-level]').forEach(cell=>cell.classList.toggle('is-level-selected',cell.dataset.scoreLevel===selectedMainLevel));if(selectedMainLevel){note.innerHTML=mainLevelExplanation(id);if(level.closest('.level-explanation-tabs'))note.querySelector(`[data-main-level="${id}"]`)?.focus();if(matchMedia('(max-width:600px)').matches&&note.getBoundingClientRect().top<document.querySelector('.masthead').getBoundingClientRect().bottom)atlasScrollTo(note);}}
   if(event.target.closest('[data-close-main-level]')){selectedMainLevel=null;document.querySelectorAll('.is-level-selected').forEach(cell=>cell.classList.remove('is-level-selected'));document.getElementById('main-level-note').hidden=true;document.querySelectorAll('[data-main-level]').forEach(button=>button.setAttribute('aria-expanded','false'));}
-  const item=event.target.closest('[data-main-comparison]');if(item)selectMainComparison(item.dataset.mainComparison,true);
   const pair=event.target.closest('[data-pairing-partner]');if(pair){pairingSelection={partner:pair.dataset.pairingPartner,assistant:pair.dataset.pairingAssistant};document.getElementById('pairing-readout').innerHTML=pairingReadout();document.querySelectorAll('[data-pairing-partner]').forEach(button=>button.setAttribute('aria-pressed',String(button===pair)));}
   const information=event.target.closest('[data-information-view]');if(information){mainInformationView=information.dataset.informationView;refreshMainComparison();}
   const group=event.target.closest('[data-group-size-measure]');if(group){mainGroupMeasure=group.dataset.groupSizeMeasure;refreshMainComparison();}
   const board=event.target.closest('[data-leaderboard-view]');if(board){view=board.dataset.leaderboardView;render();}
 });
 document.addEventListener('change',event=>{
+  if(event.target.id==='main-resource-measure')selectMainComparison(event.target.value);
   if(event.target.id==='leaderboard-measure'){metric=event.target.value;render();}
 });
 document.addEventListener('keydown',event=>{if(event.key==='Escape'&&selectedMainLevel){selectedMainLevel=null;document.querySelectorAll('.is-level-selected').forEach(cell=>cell.classList.remove('is-level-selected'));document.getElementById('main-level-note')?.setAttribute('hidden','');document.querySelectorAll('[data-main-level]').forEach(button=>button.setAttribute('aria-expanded','false'));}});
