@@ -45,7 +45,10 @@ function atlasWorldFigure(){
   const waveform = `<span class="atlas-world-waveform">${bars.map((height, index) =>
     `<i style="--bar-height:${height}%;--bar-delay:${index * -73}ms"></i>`
   ).join('')}</span>`;
-  const pedestrians = '<img class="atlas-world-pedestrians" src="./assets/hero/city-pedestrians.webp" alt="" decoding="async"/>'.repeat(4);
+  const pedestrianGroups = ['walkers', 'pedestrians', 'walkers', 'pedestrians', 'walkers', 'pedestrians'];
+  const pedestrians = pedestrianGroups.map(group =>
+    `<img class="atlas-world-pedestrians atlas-world-pedestrians--${group}" src="./assets/hero/city-${group}.webp" alt="" decoding="async"/>`
+  ).join('');
   return `<figure class="atlas-world" style="--world-image:url('${art}')">
     <div class="atlas-world-stage" role="img" aria-label="A beam from a voice waveform lights four floating layers. Particles ripple across the third layer before the beam reaches a city with pedestrians.">
       <img class="atlas-world-art" src="${art}" width="1280" height="853" alt="" fetchpriority="high" decoding="async"/>
