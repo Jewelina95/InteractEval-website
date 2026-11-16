@@ -34,6 +34,7 @@ for (let i = 1; i < order.length; i++) assert.ok(home.indexOf(order[i - 1]) < ho
 assert.doesNotMatch(home, /main-results-rail|figure1-field-aligned|why-teardown|home-destinations|href="[^"]*(?:research\.html|showcase\.html|#leaderboards)/);
 assert.doesNotMatch(home, /class="method-steps?"/);
 assert.match(home, /<figure id="evaluation-diagram" class="method-diagram"/);
+assert.match(home, /<h3 id="evaluation-diagram-heading">Architecture<\/h3>/);
 assert.ok(home.indexOf('id="system-overview-heading"') < home.indexOf('id="evaluation-diagram"'));
 assert.match(home, /href="[^"]*interactnet-pipeline-v168\.svg/);
 assert.match(home, /src="[^"]*interactnet-pipeline-v168\.svg[^"]*" width="2265" height="925"/);

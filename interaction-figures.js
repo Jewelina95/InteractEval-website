@@ -13,9 +13,9 @@ function interactionFigure(kind) {
         </header>
         <figure id="evaluation-diagram" class="method-diagram" aria-labelledby="evaluation-diagram-heading">
           <figcaption>
-            <h3 id="evaluation-diagram-heading">Evaluation Diagram</h3>
+            <h3 id="evaluation-diagram-heading">Architecture</h3>
             <a class="method-full-image" href="${systemImage}" target="_blank" rel="noopener"
-              aria-label="Open the full evaluation diagram in a new tab">Full diagram <span aria-hidden="true">↗</span></a>
+              aria-label="Open the full architecture in a new tab">Full size <span aria-hidden="true">↗</span></a>
           </figcaption>
           <div class="interaction-picture pipeline-picture" tabindex="0" role="region" aria-label="Full evaluation pipeline">
             <img src="${systemImage}" width="2265" height="925" loading="lazy" decoding="async"
