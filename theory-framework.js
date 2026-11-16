@@ -56,25 +56,39 @@ window.interactNetTheory = (() => {
               <p class="theory-mobile-bridge">State understanding</p>
               <div class="theory-row-title"><h3 id="theory-iceberg">Interaction-world reconstruction</h3></div>
               <div class="theory-state-flow">
-                <div class="theory-node theory-node--acts"><span>Transcript <var>O<sub>1:t</sub></var></span><strong>Visible action <var>O<sub>t</sub></var></strong></div>
-                <i class="theory-branch" aria-hidden="true"></i>
-                <div class="theory-state-inputs">
-                  <div class="theory-node theory-node--scene"><strong>Scene <var>S<sub>t</sub></var></strong><span>Persona · Objective · World mechanism</span></div>
-                  <div class="theory-node theory-node--latent"><strong>Latent state <var>Ψ<sub>t</sub></var></strong><span>Trust · Emotional stability · Intimacy</span></div>
+                <div class="theory-node theory-node--acts">
+                  <strong>Evidence record <var>D<sub>t</sub></var></strong>
+                  <span>Authorized scenario and transcript <var>O<sub>1:t</sub></var></span>
                 </div>
-                <i class="theory-branch theory-branch--join" aria-hidden="true"></i>
+                <i class="theory-reconstruction-link" aria-hidden="true"></i>
+                <ol class="theory-state-inputs" aria-label="Reconstruction update order">
+                  <li class="theory-node theory-node--latent">
+                    <strong>Operational latent state <var>Ψ<sub>t</sub></var></strong>
+                    <span>Evidence-linked estimates for both participants</span>
+                  </li>
+                  <li class="theory-node theory-node--event">
+                    <strong>Event chain <var>E<sub>t</sub></var></strong>
+                    <span><var>E<sub>t</sub> = (P<sub>t</sub>, C<sub>t</sub>, F<sub>t</sub>)</var></span>
+                  </li>
+                  <li class="theory-node theory-node--scene">
+                    <strong>Effective scene <var>S<sub>t</sub></var></strong>
+                    <span>Previous scene with any admissible amendments</span>
+                  </li>
+                </ol>
+                <i class="theory-reconstruction-link" aria-hidden="true"></i>
                 <div class="theory-node theory-node--outcome">
-                  <strong>World model <var>W<sub>t</sub></var></strong>
+                  <strong>World reconstruction <var>W<sub>t</sub></var></strong>
                   <span><var>W<sub>t</sub> = (S<sub>t</sub>, Ψ<sub>t</sub>, E<sub>t</sub>)</var></span>
                 </div>
               </div>
               <details class="theory-details">
                 <summary>What do the symbols mean?</summary>
                 <dl>
-                  <dt>Externally visible action <var>O<sub>t</sub></var></dt><dd>The observed action at exchange <var>t</var>. The transcript through that exchange is <var>O<sub>1:t</sub></var>.</dd>
-                  <dt>Scene <var>S<sub>t</sub></var></dt><dd>The roles, goals, rules and constraints of the interaction at that turn.</dd>
-                  <dt>Latent state <var>Ψ<sub>t</sub></var></dt><dd>What the evidence suggests about beliefs, emotions, relationships and intentions.</dd>
-                  <dt>World model <var>W<sub>t</sub></var></dt><dd>The previous world <var>W<sub>t−1</sub></var> updated using new evidence. <var>W<sub>t</sub> = (S<sub>t</sub>, Ψ<sub>t</sub>, E<sub>t</sub>)</var>, where <var>E<sub>t</sub></var> is the event chain.</dd>
+                  <dt>Evidence record <var>D<sub>t</sub></var></dt><dd>The authorized scenario specification <var>C<sub>eval</sub></var> and the transcript <var>O<sub>1:t</sub></var>. <var>O<sub>t</sub></var> denotes the externally visible action at exchange <var>t</var>.</dd>
+                  <dt>Operational latent state <var>Ψ<sub>t</sub></var></dt><dd>The evaluator’s estimates of internal, relational, world-mechanism and goal states for the user and the assistant’s character. Each interpretation retains the evidence that supports it.</dd>
+                  <dt>Event chain <var>E<sub>t</sub></var></dt><dd>Prior events and premises <var>P<sub>t</sub></var>, the present event or conflict <var>C<sub>t</sub></var>, and conditional future paths <var>F<sub>t</sub></var>.</dd>
+                  <dt>Effective scene <var>S<sub>t</sub></var></dt><dd>The persona, hidden constraints, world mechanism, interaction boundary, objective and initial situation. The scene carries forward unless a proposed amendment is admitted.</dd>
+                  <dt>World reconstruction <var>W<sub>t</sub></var></dt><dd>The effective scene, operational latent state and event chain assembled for capability adjudication.</dd>
                 </dl>
               </details>
             </section>
