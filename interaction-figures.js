@@ -1,6 +1,6 @@
 "use strict";
 
-const systemImage = './assets/research/pipeline/interactnet-pipeline-v168.svg';
+const systemImage = './assets/research/pipeline/interactnet-pipeline-v168.svg?v=larger-labels';
 function interactionFigure(kind) {
   if (kind === 'motivation') return window.whyInteractionFigure();
   const directToDiagram = location.hash === '#evaluation-diagram';
@@ -11,7 +11,11 @@ function interactionFigure(kind) {
           <h2 id="system-overview-heading">How InteractNet works</h2>
         </header>
         <figure id="evaluation-diagram" class="method-diagram" aria-labelledby="evaluation-diagram-heading">
-          <figcaption><h3 id="evaluation-diagram-heading">Evaluation Diagram</h3></figcaption>
+          <figcaption>
+            <h3 id="evaluation-diagram-heading">Evaluation Diagram</h3>
+            <a class="method-full-image" href="${systemImage}" target="_blank" rel="noopener"
+              aria-label="View the evaluation diagram at full size in a new tab">View full size <span aria-hidden="true">↗</span></a>
+          </figcaption>
           <div class="interaction-picture pipeline-picture" tabindex="0" role="region" aria-label="Evaluation pipeline; scroll horizontally on smaller screens">
             <img src="${systemImage}" width="2265" height="925" loading="lazy" decoding="async"
               alt="Evaluation pipeline: the dialogue and background inform interaction-world reconstruction, including the scene, latent-state inference, previous world, and event chain. The reconstructed world informs capability adjudication from L1 to L6. Task and interest terminal decisions feed dialogue control."/>
