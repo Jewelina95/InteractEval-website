@@ -142,7 +142,9 @@
   color: #fafafa;
 }
 .why-turn.is-speaking p { outline: 2px solid #646464; outline-offset: 2px; }
-.why-assistant-control { align-self: start; border-color: #d9d9d9; background: #fff; }
+.why-dialogue-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; }
+.why-dialogue-controls small { color: var(--why-muted); font: 500 12px/1.3 var(--sans); }
+.why-assistant-control { border-color: #d9d9d9; background: #fff; }
 
 .why-situations {
   --next-preview: clamp(24px, 4vw, 54px);
