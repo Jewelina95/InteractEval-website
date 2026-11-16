@@ -102,21 +102,71 @@ function animateAtlasWorldImpact(layer, delay, width, layerIndex){
   return [haze, ring, ...drift];
 }
 
-function playAtlasWorldChime(context, output, time, layer){
-  const pitch = [784, 988, 880, 740, 330][layer];
+function createAtlasWorldAmbience(context){
+  const frames = Math.ceil(context.sampleRate * 2.35);
+  const impulse = context.createBuffer(2, frames, context.sampleRate);
+  for(let channel = 0; channel < impulse.numberOfChannels; channel++){
+    const samples = impulse.getChannelData(channel);
+    let softened = 0;
+    for(let frame = 0; frame < frames; frame++){
+      softened = softened * .58 + (Math.random() * 2 - 1) * .42;
+      const onset = Math.min(1, frame / (context.sampleRate * .025));
+      samples[frame] = softened * onset * (1 - frame / frames) ** 3.1;
+    }
+  }
+  return impulse;
+}
+
+function scheduleAtlasWorldTone(context, output, time, {
+  frequency, gain, length, pan = 0, attack = .008, type = 'sine', ambience
+}){
+  const oscillator = context.createOscillator();
+  const envelope = context.createGain();
+  oscillator.type = type;
+  oscillator.frequency.value = frequency;
+  envelope.gain.setValueAtTime(.0001, time);
+  envelope.gain.exponentialRampToValueAtTime(gain, time + attack);
+  envelope.gain.exponentialRampToValueAtTime(.0001, time + length);
+  oscillator.connect(envelope);
+  if(pan && typeof context.createStereoPanner === 'function'){
+    const position = context.createStereoPanner();
+    position.pan.value = pan;
+    envelope.connect(position).connect(output);
+  }else{
+    envelope.connect(output);
+  }
+  if(ambience) envelope.connect(ambience);
+  oscillator.start(time);
+  oscillator.stop(time + length + .02);
+}
+
+function playAtlasWorldImpact(context, output, ambience, time, layer){
+  const pitch = [392, 440, 349.23, 329.63, 261.63][layer];
   const city = layer === atlasWorldLayers.length - 1;
-  const tones = [[pitch, .115, city ? .52 : .29], [pitch * 2.01, .035, .18]];
-  if(city) tones.push([pitch * .5, .055, .34]);
-  for(const [frequency, volume, length] of tones){
-    const oscillator = context.createOscillator();
-    const envelope = context.createGain();
-    oscillator.frequency.value = frequency;
-    envelope.gain.setValueAtTime(.0001, time);
-    envelope.gain.exponentialRampToValueAtTime(volume, time + .014);
-    envelope.gain.exponentialRampToValueAtTime(.0001, time + length);
-    oscillator.connect(envelope).connect(output);
-    oscillator.start(time);
-    oscillator.stop(time + length + .02);
+  const strikes = city ? [0, .12, .25] : [0, .10, .215];
+  scheduleAtlasWorldTone(context, output, time + strikes[0], {
+    frequency:pitch, gain:.15, length:.112, pan:-.16, type:'triangle'
+  });
+  scheduleAtlasWorldTone(context, output, time + strikes[1], {
+    frequency:pitch * 1.5, gain:.13, length:.15, pan:.19, type:'triangle'
+  });
+  const bloom = time + strikes[2];
+  scheduleAtlasWorldTone(context, output, bloom, {
+    frequency:pitch * 2, gain:.17, length:city ? .74 : .37, attack:.013, ambience
+  });
+  scheduleAtlasWorldTone(context, output, bloom, {
+    frequency:pitch / (city ? 4 : 2), gain:city ? .16 : .08,
+    length:city ? 1.2 : .34, attack:city ? .055 : .022
+  });
+  if(!city) return;
+
+  for(const [delay, ratio, pan, gain] of [
+    [.12, 3, -.47, .038], [.24, 2.5, .5, .029],
+    [.43, 2, -.84, .025], [.62, 1.5, .88, .018]
+  ]){
+    scheduleAtlasWorldTone(context, output, bloom + delay, {
+      frequency:pitch * ratio, gain, length:.78, pan, attack:.065, ambience
+    });
   }
 }
 
@@ -148,6 +198,7 @@ function setupAtlasWorld(){
   let started = false;
   let audio;
   let output;
+  let roomImpulse;
   let soundEnabled = false;
   let observer;
 
@@ -182,16 +233,23 @@ function setupAtlasWorld(){
     const width = stage.clientWidth;
     const audible = soundEnabled && audio?.state === 'running' && !document.hidden;
     const soundStart = audible ? audio.currentTime : 0;
+    let ambience;
     if(audible){
       output = audio.createGain();
-      output.gain.value = .7;
+      output.gain.value = .76;
       output.connect(audio.destination);
+      roomImpulse ??= createAtlasWorldAmbience(audio);
+      ambience = audio.createConvolver();
+      ambience.buffer = roomImpulse;
+      const wet = audio.createGain();
+      wet.gain.value = .42;
+      ambience.connect(wet).connect(output);
     }
 
     animations = layers.flatMap((layer, index) => {
       const {hit} = atlasWorldLayers[index];
       const delay = leadIn + duration * (hit - start) / (end - start);
-      if(output) playAtlasWorldChime(audio, output, soundStart + delay / 1000, index);
+      if(output) playAtlasWorldImpact(audio, output, ambience, soundStart + delay / 1000, index);
       const reveal = layer.querySelector('.atlas-world-ink').animate([
         {opacity:0}, {opacity:1}
       ], {duration:760, delay, fill:'forwards', easing:'ease-out'});
