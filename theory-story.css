@@ -286,8 +286,8 @@
 
 .theory-transitions {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 5px 8px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 5px;
   margin: 11px 0 0;
   padding: 0;
   list-style: none;
@@ -296,19 +296,19 @@
 .theory-transitions li {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 7px 9px;
-  border: 1px solid color-mix(in srgb, var(--transition-color) 38%, white);
+  gap: 4px;
+  padding: 6px 5px;
+  border: 1px solid color-mix(in srgb, var(--transition-color) 36%, white);
   border-radius: 6px;
   background: color-mix(in srgb, var(--transition-color) 12%, white);
   color: var(--panel-text);
-  font: 650 14px/1.28 var(--sans);
+  font: 650 clamp(11px, 1.1vw, 14px)/1.28 var(--sans);
 }
-.theory-transitions span { color: var(--panel-gold); font-size: 16px; }
-.theory-transitions li:nth-child(1) { --transition-color: #c58a38; }
-.theory-transitions li:nth-child(2) { --transition-color: #7b99bd; }
-.theory-transitions li:nth-child(3) { --transition-color: #a186bd; }
-.theory-transitions li:nth-child(4) { --transition-color: #a38d82; }
+.theory-transitions span { color: var(--transition-color); font-size: 15px; }
+.theory-transitions li:nth-child(1) { --transition-color: #517739; }
+.theory-transitions li:nth-child(2) { --transition-color: #4b709d; }
+.theory-transitions li:nth-child(3) { --transition-color: #77598d; }
+.theory-transitions li:nth-child(4) { --transition-color: #786377; }
 
 .theory-details { margin-top: 14px; font: 500 15px/1.45 var(--sans); }
 .theory-details summary { width: fit-content; color: var(--panel-gold); font-weight: 650; cursor: pointer; }
@@ -376,8 +376,37 @@
 }
 .theory-timeline::before { top: 5px; }
 .theory-timeline::after { bottom: 5px; }
-.theory-timeline .theory-node { background: linear-gradient(150deg, #e7e6e5, #fcfbfa 82%); }
-.theory-timeline .theory-node:nth-child(2) { background: linear-gradient(145deg, #f1dec0, #fff9ee); border-color: #e4bb79; }
+.theory-timeline .theory-node {
+  --still-x: 20%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: 76px;
+  gap: 0;
+  padding: 0;
+  border: 1px solid #c5c0b7;
+  background: #f6f5f2;
+  text-align: center;
+  font-size: clamp(12px, 1.18vw, 16px);
+}
+.theory-timeline .theory-node:nth-child(2) {
+  --still-x: 51%;
+  background: #fff4df;
+  border-color: #e9ba70;
+  box-shadow: 0 0 10px #eab85c7a;
+}
+.theory-timeline .theory-node:nth-child(3) { --still-x: 83%; }
+.theory-timeline .theory-node::after {
+  content: "";
+  order: -1;
+  flex: auto;
+  min-height: 35px;
+  border-radius: 6px 6px 0 0;
+  background: url("./assets/theory-story/trajectory.webp") var(--still-x) 47% / 410% auto;
+  filter: grayscale(1) contrast(.86) brightness(1.2);
+}
+.theory-timeline .theory-node:nth-child(2)::after { filter: grayscale(1) sepia(.55) brightness(1.2); }
+.theory-timeline .theory-node strong { padding: 4px 3px; }
 
 .theory-levels {
   display: grid;
@@ -396,6 +425,7 @@
   color: var(--panel-muted);
   font: 550 12px/1.2 var(--sans);
   overflow-wrap: anywhere;
+  position: relative;
 }
 .theory-levels strong {
   display: grid;
@@ -413,6 +443,20 @@
   background: #fae9c5;
   box-shadow: 0 0 10px #f0c47865;
   color: var(--panel-gold);
+}
+
+@media (min-width: 821px) {
+  .theory-levels li:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    top: 14px;
+    left: calc(50% + 18px);
+    width: calc(100% - 30px);
+    height: 7px;
+    background: linear-gradient(90deg, #d0b487, #987044);
+    clip-path: polygon(0 43%, 79% 43%, 73% 0, 100% 50%, 73% 100%, 79% 57%, 0 57%);
+  }
+  .theory-levels li:nth-child(n+4)::after { background: linear-gradient(90deg, #e5bc72, #be8936); }
 }
 
 .theory-node {
@@ -434,6 +478,8 @@
 .theory-node--scene { background: #f9f3e6; border-color: #e7d8b6; color: #5c451f; }
 .theory-node--event { background: #eef3f3; border-color: #cedddd; color: #294b4c; }
 .theory-node--latent { background: #f4eff8; border-color: #ded1eb; color: #4f3b62; }
+.theory-capabilities .theory-node:nth-child(1) { background: #eef3f9; border-color: #c7d8eb; }
+.theory-capabilities .theory-node:nth-child(2) { background: #f3edf7; border-color: #ddcde8; }
 .theory-node--outcome, .theory-capabilities .theory-node:last-child {
   border-color: #e0ccaa;
   background: #fbf4e7;
@@ -474,10 +520,10 @@
     background: linear-gradient(#d0c6b9 45%, #ffc461 49%, #ffe7a4 51%, #d0c6b9 55%) 50% 100% / 100% 250%;
     animation: theory-down 3.6s calc(4.55s + var(--beat)) linear infinite;
   }
-  .theory-playing .theory-visual--state .theory-art {
-    animation: theory-unroll .82s 3.73s cubic-bezier(.25,.65,.25,1) both;
+  .theory-playing .theory-art {
+    animation: theory-unroll .82s calc(3.73s + var(--beat)) cubic-bezier(.25,.65,.25,1) both;
   }
-  .theory-playing .theory-visual--state .theory-art::before {
+  .theory-playing .theory-art::before {
     content: "";
     position: absolute;
     z-index: 1;
@@ -485,7 +531,7 @@
     width: 4%;
     background: radial-gradient(ellipse at right, #fff6d5, #d5a86090 48%, transparent 75%);
     pointer-events: none;
-    animation: theory-roll-edge .82s 3.73s cubic-bezier(.25,.65,.25,1) both;
+    animation: theory-roll-edge .82s calc(3.73s + var(--beat)) cubic-bezier(.25,.65,.25,1) both;
   }
   .theory-playing .theory-row {
     animation: theory-unroll var(--panel-unroll) calc(4.78s + var(--beat)) cubic-bezier(.25,.65,.25,1) both;
