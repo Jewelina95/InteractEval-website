@@ -413,50 +413,33 @@ html[data-ui-input=keyboard] select,html[data-ui-input=keyboard] select::picker-
   .main-rail-comparisons > .main-rail-direct { min-height: 44px; }
 }
 
-.atlas-hero.atlas-hero--gallery {
+.atlas-hero.atlas-hero--animated {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   align-content: center;
   justify-items: center;
-  grid-template-columns: minmax(0, 1fr);
-  gap: clamp(22px, 4.7svh, 46px);
-  width: min(1296px, calc(100% - 64px));
-  min-height: max(520px, calc(100svh - var(--header-height, 80px)));
-  padding: clamp(36px, 7svh, 80px) 0;
+  gap: clamp(10px, 2svh, 24px);
+  width: min(1296px, calc(100% - 48px));
+  min-height: calc(100svh - var(--header-height, 80px));
+  padding: clamp(22px, 3.5svh, 45px) 0;
   border: 0;
   text-align: center;
 }
-.atlas-hero--gallery h1 {
+
+.atlas-hero--animated h1 {
   margin: 0;
   color: #14231c;
-  font-size: clamp(40px, 6vw, 88px);
-  line-height: .99;
-  letter-spacing: -.064em;
+  font-size: clamp(38px, min(5.8vw, 9svh), 82px);
+  line-height: 1;
+  letter-spacing: -.06em;
 }
-.atlas-hero-panels {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: clamp(8px, 1.25vw, 18px);
-  width: 100%;
-}
-.atlas-hero .atlas-hero-panels img {
-  width: 100%;
-  height: auto;
-  min-width: 0;
-  aspect-ratio: 2.4;
-  object-fit: contain;
-  background: #e3efe2;
-  border: 1px solid #17291e12;
-  border-radius: clamp(8px, 1.7vw, 21px);
-  box-shadow: 0 13px 26px #17291e13;
-}
-.atlas-hero-actions { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 12px 20px; }
-.atlas-hero--gallery .atlas-hero-actions a,
-.atlas-hero-actions button {
+
+.atlas-hero--animated .atlas-hero-actions a {
   display: inline-flex;
   justify-content: center;
   align-items: center;
   gap: 8px;
-  min-height: 42px;
+  min-height: 40px;
   margin: 0;
   padding: 0 15px;
   border: 1px solid #cadad1;
@@ -465,34 +448,15 @@ html[data-ui-input=keyboard] select,html[data-ui-input=keyboard] select::picker-
   color: #183527;
   font: 650 13px/1.2 var(--sans);
   text-decoration: none;
-  cursor: pointer;
 }
-.atlas-hero-actions button { background: #193b30; border-color: #193b30; color: #fff; }
-.atlas-hero-actions button:hover { background: #285345; }
-.atlas-hero--gallery .atlas-hero-actions a:hover { background: #eef5ef; }
-.atlas-world-dialog {
-  box-sizing: border-box;
-  width: min(830px, calc(100% - 32px));
-  max-height: calc(100dvh - 28px);
-  padding: clamp(12px, 2vw, 26px);
-  border: 1px solid #cddbd2;
-  border-radius: 24px;
-  background: #fff;
-  box-shadow: 0 28px 110px #0b1b1855;
+
+.atlas-hero--animated .atlas-hero-actions a:hover { background: #eef5ef; }
+
+.atlas-hero .atlas-world {
+  position: relative;
+  width: min(100%, 80svh, 790px);
+  margin: 0;
 }
-.atlas-world-dialog::backdrop { background: #101b17bd; }
-.atlas-world-dialog form { display: flex; justify-content: end; }
-.atlas-world-dialog form button {
-  width: 40px;
-  height: 40px;
-  font: 500 24px/1 var(--sans);
-  color: #17332a;
-  border: 0;
-  border-radius: 50%;
-  background: #eef3ef;
-  cursor: pointer;
-}
-.atlas-hero .atlas-world { position: relative; width: min(100%, 108dvh); max-width: none; margin-inline: auto; }
 
 .atlas-world-stage {
   position: relative;
@@ -525,12 +489,12 @@ html[data-ui-input=keyboard] select,html[data-ui-input=keyboard] select::picker-
 
 .atlas-world-slice::before {
   content: "";
-  filter: grayscale(1) brightness(1.11) blur(.45px);
+  filter: saturate(.55) brightness(1.13) blur(.45px);
   opacity: .17;
 }
 
 .atlas-world-ink {
-  filter: grayscale(1) brightness(1.1);
+  filter: saturate(.95) brightness(1.13) contrast(1.12);
   opacity: 0;
 }
 
@@ -549,7 +513,7 @@ html[data-ui-input=keyboard] select,html[data-ui-input=keyboard] select::picker-
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .atlas-world-dialog[open] .atlas-world-layer--city {
+  .atlas-world.is-in-view .atlas-world-layer--city {
     animation: atlas-world-city-hover 8.9s ease-in-out infinite;
   }
 
@@ -596,7 +560,7 @@ html[data-ui-input=keyboard] select,html[data-ui-input=keyboard] select::picker-
   width: 60%;
   aspect-ratio: 6.8;
   border-radius: 50%;
-  border: 1px solid #96969691;
+  border: 1px solid #72aaa075;
   box-shadow: 0 0 8px #fff, inset 0 0 9px #fff;
   filter: blur(.45px);
 }
@@ -606,7 +570,7 @@ html[data-ui-input=keyboard] select,html[data-ui-input=keyboard] select::picker-
   aspect-ratio: 1;
   background: #fff;
   border-radius: 50%;
-  box-shadow: 0 0 2px 1px #848484b3, 0 0 7px 2px #d0d0d0cc;
+  box-shadow: 0 0 2px 1px #b38e5fba, 0 0 7px 2px #efd99dc4;
 }
 
 .atlas-world-dust:nth-child(3n) {
@@ -628,8 +592,8 @@ html[data-ui-input=keyboard] select,html[data-ui-input=keyboard] select::picker-
   height: 81.7%;
   translate: -50% 0;
   transform-origin: center top;
-  background: linear-gradient(90deg, transparent, #d0d0d046 23%, #b9b9b95c 39%,
-    #eeeeeead 50%, #b9b9b95c 61%, #d0d0d046 77%, transparent);
+  background: linear-gradient(90deg, transparent, #abcab44a 23%, #b0a38666 39%,
+    #fff5d5ad 50%, #b0a38666 61%, #abcab44a 77%, transparent);
   clip-path: polygon(31% 0, 69% 0, 100% 100%, 0 100%);
   mask-image: linear-gradient(transparent, #000 12%, #000 84%, transparent);
   filter: blur(2px);
@@ -643,8 +607,8 @@ html[data-ui-input=keyboard] select,html[data-ui-input=keyboard] select::picker-
 }
 
 .atlas-world-beam::before {
-  background: linear-gradient(90deg, transparent 15%, #e4e4e43d 29%, #a5a5a56b 41%,
-    #f8f8f8ed 46%, #fff 50%, #f8f8f8ed 54%, #a5a5a56b 59%, #e4e4e43d 71%, transparent 85%);
+  background: linear-gradient(90deg, transparent 15%, #e4e4e43d 29%, #b1946c70 41%,
+    #fff7e3ed 46%, #fff 50%, #fff7e3ed 54%, #b1946c70 59%, #e4e4e43d 71%, transparent 85%);
 }
 
 .atlas-world-beam::after {
@@ -681,7 +645,7 @@ html[data-ui-input=keyboard] select,html[data-ui-input=keyboard] select::picker-
   aspect-ratio: .65;
   border-radius: 50%;
   background: #fff;
-  box-shadow: 0 0 4px 1px #989898, 0 0 13px 5px #b4b4b495, 0 0 26px 10px #d6d6d688;
+  box-shadow: 0 0 4px 1px #ad8758, 0 0 13px 5px #e8c98b95, 0 0 26px 10px #b5d8be88;
 }
 
 .atlas-world-replay {
@@ -714,14 +678,13 @@ html[data-ui-input=keyboard] select,html[data-ui-input=keyboard] select::picker-
 }
 
 @media (max-width: 650px) {
-  .atlas-hero.atlas-hero--gallery {
-    min-height: max(470px, calc(100svh - var(--header-height, 70px)));
-    width: calc(100% - 36px);
-    gap: 27px;
+  .atlas-hero.atlas-hero--animated {
+    width: calc(100% - 32px);
+    min-height: min(570px, calc(100svh - var(--header-height, 70px)));
+    gap: 16px;
   }
-  .atlas-hero--gallery h1 { font-size: clamp(36px, 8.7vw, 56px); }
-  .atlas-hero--gallery h1 br { display: none; }
-  .atlas-hero .atlas-hero-panels img { aspect-ratio: 1.65; }
+  .atlas-hero--animated h1 { font-size: clamp(34px, 8.1vw, 52px); }
+  .atlas-hero--animated h1 br { display: none; }
   .results-page .article-shell { padding-top: 24px; }
 }
 

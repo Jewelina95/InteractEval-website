@@ -19,21 +19,12 @@ const atlasSymbols={
 };
 function atlasSymbol(name){return `<svg viewBox="0 0 80 80" fill="none" aria-hidden="true">${atlasSymbols[name]}</svg>`;}
 function atlasHero(){
-  return `<section class="atlas-hero atlas-hero--gallery" aria-labelledby="atlas-hero-title">
+  return `<section class="atlas-hero atlas-hero--animated" aria-labelledby="atlas-hero-title">
     <h1 id="atlas-hero-title">The measurement of intelligence<br/> is the ability to change</h1>
-    <div class="atlas-hero-panels">
-      <img src="./assets/hero/landscape.webp" width="720" height="300" alt="A galaxy above a mountain landscape" fetchpriority="high"/>
-      <img src="./assets/hero/dynamics.webp" width="900" height="300" alt="An illuminated timeline and shifting waves" decoding="async"/>
-      <img src="./assets/hero/city.webp" width="1160" height="300" alt="A city suspended in a ring of light" decoding="async"/>
-    </div>
+    ${atlasWorldFigure()}
     <div class="atlas-hero-actions">
-      <button type="button" data-open-atlas-world>Play animation</button>
       <a href="#response-interaction" data-research-section="response-interaction">Why interact <span aria-hidden="true">&#8595;</span></a>
     </div>
-    <dialog class="atlas-world-dialog" aria-label="InteractNet layer animation">
-      <form method="dialog"><button type="submit" aria-label="Close animation">&times;</button></form>
-      ${atlasWorldFigure()}
-    </dialog>
   </section>`;
 }
 const atlasWorldLayers = [
@@ -51,7 +42,7 @@ function atlasWorldFigure(){
   const dust = '<span class="atlas-world-dust"></span>'.repeat(atlasWorldDustCount);
   return `<figure class="atlas-world" style="--world-image:url('${art}')">
     <div class="atlas-world-stage" role="img" aria-label="A beam descends from a galaxy through four floating layers, revealing each in a cloud of light.">
-      <img class="atlas-world-art" src="${art}" width="1280" height="854" alt="" decoding="async"/>
+      <img class="atlas-world-art" src="${art}" width="1280" height="854" alt="" fetchpriority="high" decoding="async"/>
       ${atlasWorldLayers.map(({name,hit}) => `
         <span aria-hidden="true" class="atlas-world-layer atlas-world-layer--${name}" style="--hit:${hit}%">
           <span class="atlas-world-slice"><span class="atlas-world-ink"></span></span>
@@ -106,9 +97,12 @@ function animateAtlasWorldImpact(layer, delay, width, layerIndex){
   return [haze, ring, ...drift];
 }
 
+let atlasWorldObserver;
+
 function setupAtlasWorld(){
   const figure = document.querySelector('.atlas-world');
   if(figure?.dataset.ready) return;
+  atlasWorldObserver?.disconnect();
   if(!figure) return;
   figure.dataset.ready = 'true';
 
@@ -119,16 +113,16 @@ function setupAtlasWorld(){
   const core = signal.querySelector('.atlas-world-core');
   const trail = signal.querySelector('.atlas-world-trail');
   const replay = figure.querySelector('button');
-  const dialog = figure.closest('dialog');
-  const opener = dialog.closest('.atlas-hero').querySelector('[data-open-atlas-world]');
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
   const start = atlasWorldLayers[0].hit;
   const end = 93;
   const leadIn = 480;
   const duration = 6200;
   let animations = [];
+  let started = false;
 
   function play(){
+    started = true;
     animations.forEach(animation => animation.cancel());
     animations = [];
     const still = reducedMotion.matches || typeof stage.animate !== 'function';
@@ -173,16 +167,19 @@ function setupAtlasWorld(){
     );
   }
 
-  if(reducedMotion.matches || typeof stage.animate !== 'function') opener.textContent = 'View illustration';
-  opener.addEventListener('click', () => {
-    dialog.showModal();
-    play();
-  });
   replay.addEventListener('click', play);
-  dialog.addEventListener('close', () => {
-    animations.forEach(animation => animation.cancel());
-    animations = [];
-  });
+  if(reducedMotion.matches || !('IntersectionObserver' in window)){
+    figure.classList.add('is-in-view');
+    play();
+    return;
+  }
+
+  atlasWorldObserver = new IntersectionObserver(([entry]) => {
+    const visible = entry.intersectionRatio >= .25;
+    figure.classList.toggle('is-in-view', visible);
+    if(visible && !started) play();
+  }, {threshold:.25});
+  atlasWorldObserver.observe(stage);
 }
 
 function atlasMobileScores(){
