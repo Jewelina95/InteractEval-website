@@ -41,9 +41,9 @@
         <details class="why-storyboard">
           <summary><span>T1–T3</span> <span class="why-summary-description">Latent state and event chain</span></summary>
           <ol class="why-frames" aria-label="${title} key frames">
-            ${frames.map(({ start, seek, state, event, alt }, index) => `
+            ${frames.map(({ seek, state, event, alt }, index) => `
               <li>
-                <button type="button" class="why-frame" data-start="${start}" data-seek="${seek}" aria-label="T${index + 1}, ${event} Jump to this moment.">
+                <button type="button" class="why-frame" data-seek="${seek}" aria-label="T${index + 1}, ${event} Jump to this moment.">
                   <span class="why-frame-image"><img src="${media}${id}-t${index + 1}.webp" alt="${alt}" width="840" height="470" decoding="async"/><span>T${index + 1}</span></span>
                 </button>
                 <dl class="why-frame-notes">
@@ -63,6 +63,49 @@
     return `<li class="why-turn" data-speaker="${speaker.toLowerCase()}" data-start="${start}">
       <span class="why-speaker">${avatar}${speaker}</span><p>${line}</p>
     </li>`;
+  }
+
+  const teardownLayers = [
+    { id: 'scene', label: 'Scene' },
+    { id: 'state', label: 'Latent state' },
+    { id: 'event', label: 'Event chain' }
+  ];
+
+  function teardownMarkup() {
+    return `
+      <section id="teardown" class="article-section why-teardown" aria-labelledby="why-teardown-heading">
+        <div class="why-teardown-entry">
+          <div><h2 id="why-teardown-heading">Teardown</h2>
+            <p>Inspect the scene, Tony’s inferred state, and what changes at each turn.</p></div>
+          <button type="button" data-open-teardown aria-haspopup="dialog">Open teardown <span aria-hidden="true">↗</span></button>
+        </div>
+        <dialog class="why-teardown-dialog" aria-labelledby="teardown-dialog-heading">
+          <header class="teardown-header">
+            <h2 id="teardown-dialog-heading">Interaction teardown</h2>
+            <form method="dialog"><button type="submit" class="teardown-close" aria-label="Close teardown" autofocus>&times;</button></form>
+          </header>
+          <div class="teardown-scenes" role="group" aria-label="Situation">
+            ${situations.map(({id, title}) => `<button type="button" data-teardown-scene="${id}" aria-pressed="${id === 'a'}">${title}</button>`).join('')}
+          </div>
+          <div class="teardown-grid">
+            <div class="teardown-media">
+              <video controls playsinline preload="metadata"></video>
+              <div class="teardown-moments" role="group" aria-label="Timeline moments">
+                ${situations[0].frames.map((_, index) => `<button type="button" data-teardown-moment="${index}" aria-label="Jump to T${index + 1}"><img width="320" height="180" alt=""/><span>T${index + 1}</span></button>`).join('')}
+              </div>
+            </div>
+            <div class="teardown-readout">
+              <div class="teardown-layers" role="group" aria-label="Explanation layers">
+                <button type="button" data-teardown-layer="all" aria-pressed="true">All</button>
+                ${teardownLayers.map(({id, label}) => `<button type="button" data-teardown-layer="${id}" aria-pressed="false">${label}</button>`).join('')}
+              </div>
+              <dl class="teardown-notes">
+                ${teardownLayers.map(({id, label}) => `<div data-teardown-note="${id}"><dt>${label}</dt><dd></dd></div>`).join('')}
+              </dl>
+            </div>
+          </div>
+        </dialog>
+      </section>`;
   }
 
   window.whyInteractionFigure = () => `
@@ -91,15 +134,84 @@
         </section>
       </div>
       <p class="why-status" role="status"></p>
-    </section>`;
+    </section>${teardownMarkup()}`;
+
+  function frameAtTime(frames, time) {
+    return frames.findLastIndex(frame => time >= frame.start);
+  }
+
+  function setupTeardown(section, pauseDemo) {
+    const dialog = section.querySelector('dialog');
+    const video = dialog.querySelector('video');
+    const scenes = [...dialog.querySelectorAll('[data-teardown-scene]')];
+    const moments = [...dialog.querySelectorAll('[data-teardown-moment]')];
+    const layers = [...dialog.querySelectorAll('[data-teardown-layer]')];
+    const notes = [...dialog.querySelectorAll('[data-teardown-note]')];
+    let situation;
+    let activeMoment = -1;
+
+    function showMoment(index) {
+      if (index === activeMoment) return;
+      activeMoment = index;
+      const frame = situation.frames[index];
+      const content = { scene: frame.alt + '.', state: frame.state, event: frame.event };
+      notes.forEach(note => {
+        note.querySelector('dd').textContent = content[note.dataset.teardownNote];
+      });
+      moments.forEach((button, moment) => {
+        if (moment === index) button.setAttribute('aria-current', 'step');
+        else button.removeAttribute('aria-current');
+      });
+    }
+
+    function selectScene(id) {
+      if (situation?.id === id) return;
+      situation = situations.find(scene => scene.id === id);
+      activeMoment = -1;
+      video.pause();
+      video.poster = media + id + '-poster.webp';
+      video.src = media + 'situation-' + id + '.mp4';
+      video.setAttribute('aria-label', situation.title + ' video');
+      scenes.forEach(button => button.setAttribute('aria-pressed', String(button.dataset.teardownScene === id)));
+      moments.forEach((button, index) => {
+        button.querySelector('img').src = media + id + '-t' + (index + 1) + '.webp';
+      });
+      showMoment(0);
+    }
+
+    section.querySelector('[data-open-teardown]').addEventListener('click', () => {
+      pauseDemo();
+      if (!situation) selectScene('a');
+      dialog.showModal();
+    });
+    dialog.addEventListener('close', () => video.pause());
+    scenes.forEach(button => button.addEventListener('click', () => selectScene(button.dataset.teardownScene)));
+    moments.forEach((button, index) => button.addEventListener('click', () => {
+      video.currentTime = situation.frames[index].seek;
+      showMoment(index);
+    }));
+    layers.forEach(button => button.addEventListener('click', () => {
+      const selected = button.dataset.teardownLayer;
+      layers.forEach(item => item.setAttribute('aria-pressed', String(item === button)));
+      notes.forEach(note => { note.hidden = selected !== 'all' && note.dataset.teardownNote !== selected; });
+    }));
+    ['timeupdate', 'seeking', 'seeked'].forEach(event => video.addEventListener(event, () => {
+      showMoment(frameAtTime(situation.frames, video.currentTime));
+    }));
+    return () => {
+      video.pause();
+      if (dialog.open) dialog.close();
+    };
+  }
 
   function setupSituation(situation) {
     const video = situation.querySelector('video');
     const storyboard = situation.querySelector('details');
     const frames = [...situation.querySelectorAll('.why-frame')];
+    const reference = situations.find(scene => scene.id === situation.dataset.situation);
 
     function syncTimeline() {
-      const current = frames.findLast(frame => video.currentTime >= Number(frame.dataset.start));
+      const current = frames[frameAtTime(reference.frames, video.currentTime)];
       frames.forEach(frame => {
         if (frame === current) frame.setAttribute('aria-current', 'step');
         else frame.removeAttribute('aria-current');
@@ -231,7 +343,12 @@
 
     ['play', 'pause', 'timeupdate', 'ended'].forEach(event => audio.addEventListener(event, syncDialogue));
     syncDialogue();
-    return () => mediaSteps.forEach(item => item.pause());
+    const pauseDemo = () => mediaSteps.forEach(item => item.pause());
+    const stopTeardown = setupTeardown(demo.nextElementSibling, pauseDemo);
+    return () => {
+      pauseDemo();
+      stopTeardown();
+    };
   }
 
   let currentDemo;
