@@ -56,10 +56,6 @@ window.interactNetTheory = (() => {
               <p class="theory-mobile-bridge">State understanding</p>
               <div class="theory-row-title"><h3 id="theory-iceberg">Interaction-world reconstruction</h3></div>
               <div class="theory-state-flow">
-                <div class="theory-node theory-node--acts">
-                  <strong>Evidence record <var>D<sub>t</sub></var></strong>
-                </div>
-                <i class="theory-reconstruction-link" aria-hidden="true"></i>
                 <ol class="theory-state-inputs" aria-label="Reconstruction update order">
                   <li class="theory-node theory-node--latent">
                     <strong>Latent state <var>Ψ<sub>t</sub></var></strong>

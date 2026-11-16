@@ -327,7 +327,7 @@
 }
 
 .theory-state-flow {
-  grid-template-columns: minmax(0, 1fr) 19px minmax(0, 1.21fr) 19px minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1.12fr) 19px minmax(0, 1fr);
   align-items: center;
   gap: 0;
 }
@@ -431,7 +431,6 @@
 }
 
 .theory-node > span { color: var(--panel-muted); font-size: .91em; }
-.theory-node--acts { background: #eef4fc; border-color: #ccd9eb; color: #253d58; }
 .theory-node--scene { background: #f9f3e6; border-color: #e7d8b6; color: #5c451f; }
 .theory-node--event { background: #eef3f3; border-color: #cedddd; color: #294b4c; }
 .theory-node--latent { background: #f4eff8; border-color: #ded1eb; color: #4f3b62; }
