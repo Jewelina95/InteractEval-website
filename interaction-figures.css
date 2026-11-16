@@ -22,166 +22,91 @@
 @media(max-width:800px){.pipeline-picture{overflow-x:auto}.pipeline-picture img{width:1200px;max-width:none}}
 
 .interaction-method {
-  --method-ink: #191919;
-  --method-muted: #555;
-  --method-line: #d8d8d8;
-  --method-surface: #f3f3f3;
   background: #fff;
-  color: var(--method-ink);
+  color: #191919;
   font-family: var(--sans);
-  padding: clamp(58px, 8vw, 116px) 0 clamp(48px, 7vw, 96px);
+  padding: clamp(44px, 6vw, 88px) 0 clamp(48px, 7vw, 96px);
 }
 .method-layout {
-  display: grid;
-  grid-template-columns: minmax(0, .85fr) minmax(0, 1fr);
-  align-items: start;
-  gap: clamp(24px, 8vw, 116px);
-  width: min(1160px, calc(100% - 2 * clamp(22px, 6vw, 88px)));
+  width: min(1680px, calc(100% - 2 * clamp(16px, 2.4vw, 40px)));
   margin-inline: auto;
 }
 .method-intro {
-  position: sticky;
-  top: calc(var(--header-height, 0px) + clamp(28px, 10vh, 100px));
+  padding-inline: clamp(4px, 3vw, 48px);
+  margin-bottom: clamp(24px, 4vw, 56px);
 }
 .method-intro h2 {
-  max-width: 10ch;
   margin: 0;
-  font: 650 clamp(42px, 6.1vw, 86px)/.99 var(--sans);
+  font: 650 clamp(38px, 5.7vw, 82px)/.99 var(--sans);
   letter-spacing: -.07em;
-  text-wrap: balance;
 }
-.method-intro p {
-  max-width: 34ch;
-  margin: 22px 0 0;
-  color: var(--method-muted);
-  font-size: clamp(16px, 2vw, 22px);
-  line-height: 1.45;
-}
-.method-steps {
-  --method-gap: clamp(14px, 2.8vh, 24px);
-  display: grid;
-  gap: var(--method-gap);
-  margin: 0;
-  padding: 0 0 0 24px;
-  list-style: none;
-}
-.method-step {
-  position: relative;
-  min-width: 0;
-  padding: clamp(16px, 2vw, 24px);
-  border: 1px solid #e1e1e1;
-  border-radius: 16px;
-  background: var(--method-surface);
-}
-.method-step::before {
-  content: "";
-  position: absolute;
-  inset-inline-start: -24px;
-  top: 24px;
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  background: #555;
-  transform: translateX(-50%);
-}
-.method-step:not(:last-child)::after {
-  content: "";
-  position: absolute;
-  inset-inline-start: -24px;
-  top: 37px;
-  width: 1px;
-  height: calc(100% + var(--method-gap) - 27px);
-  background: linear-gradient(#555, #555) left top / 100% 0% no-repeat, var(--method-line);
-}
-.method-step h3 {
-  margin: 0;
-  font: 650 clamp(20px, 2.15vw, 28px)/1.12 var(--sans);
-  letter-spacing: -.045em;
-}
-.method-step p {
-  max-width: 45ch;
-  margin: 7px 0 13px;
-  color: var(--method-muted);
-  font-size: clamp(14px, 1.3vw, 16px);
-  line-height: 1.55;
-}
-.method-graphic {
-  display: grid;
-  gap: 6px;
-  font: 600 12px/1.25 var(--sans);
-}
-.method-graphic span {
-  min-width: 0;
-  display: grid;
-  place-items: center;
-  min-height: 32px;
-  padding: 5px 3px;
-  border: 1px solid #d0d0d0;
-  border-radius: 7px;
-  background: #fff;
-  text-align: center;
-}
-.method-world { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-.method-levels { grid-template-columns: repeat(6, minmax(0, 1fr)); }
-.method-decision { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-.method-decision span { display: flex; align-items: center; justify-content: space-between; padding-inline: 12px; }
-.method-decision b { font-size: 11px; }
-
 .method-diagram {
-  width: min(1680px, calc(100% - 2 * clamp(16px, 2.4vw, 40px)));
-  margin: clamp(42px, 6.5vw, 96px) auto 0;
+  width: 100%;
+  margin: 0;
 }
 .method-diagram h3 {
-  margin: 0 0 clamp(14px, 2vw, 27px);
-  font: 650 clamp(24px, 3.7vw, 54px)/1.07 var(--sans);
-  letter-spacing: -.05em;
+  margin: 0 0 clamp(12px, 1.5vw, 20px);
+  font: 650 clamp(21px, 3vw, 44px)/1.07 var(--sans);
+  letter-spacing: -.045em;
 }
 .method-diagram .pipeline-picture {
-  border-color: var(--method-line);
+  border-color: #d8d8d8;
   border-radius: clamp(8px, 1.3vw, 18px);
 }
 .method-diagram :focus-visible { outline: 2px solid #333; outline-offset: 4px; }
 
-@media (min-width: 801px) and (prefers-reduced-motion: no-preference) {
+@media (min-width: 801px) and (min-height: 480px) and (prefers-reduced-motion: no-preference) {
   @supports (animation-timeline: view()) {
-    .method-diagram { view-timeline-name: --evaluation-diagram; }
-    .method-diagram .pipeline-picture {
-      animation: method-diagram-expand linear both;
-      animation-timeline: --evaluation-diagram;
-      animation-range: entry 0% entry 90%;
+    .method-sequence:not(.is-static, :has(.method-diagram:target)) {
+      view-timeline: --method-sequence block;
+      view-timeline-inset: var(--header-height, 0px) 0px;
     }
-    .method-diagram:focus-within .pipeline-picture { animation: none; }
+    .method-sequence:not(.is-static, :has(.method-diagram:target))::after {
+      content: "";
+      display: block;
+      height: clamp(320px, 65svh, 560px);
+    }
+    .method-sequence:not(.is-static, :has(.method-diagram:target)) .method-layout {
+      position: sticky;
+      top: var(--header-height, 0px);
+      display: grid;
+      align-items: center;
+      min-height: calc(100svh - var(--header-height, 0px));
+      padding-block: 18px;
+    }
+    .method-sequence:not(.is-static, :has(.method-diagram:target)) .method-intro,
+    .method-sequence:not(.is-static, :has(.method-diagram:target)) .method-diagram {
+      grid-area: 1 / 1;
+    }
+    .method-sequence:not(.is-static, :has(.method-diagram:target)) .method-intro {
+      width: 34%;
+      margin: 0;
+      animation: method-title-exit linear both;
+      animation-timeline: --method-sequence;
+      animation-range: contain 8% contain 36%;
+    }
+    .method-sequence:not(.is-static, :has(.method-diagram:target)) .method-diagram {
+      transform-origin: right center;
+      animation: method-diagram-arrive linear both, method-diagram-expand linear forwards;
+      animation-timeline: --method-sequence, --method-sequence;
+      animation-range: entry 12% contain 8%, contain 16% contain 74%;
+    }
+    .method-sequence:not(.is-static, :has(.method-diagram:target)):focus-within .method-intro { visibility: hidden; }
+    .method-sequence:not(.is-static, :has(.method-diagram:target)):focus-within .method-diagram { animation: none; }
+
+    @keyframes method-title-exit {
+      from { opacity: 1; }
+      to { opacity: 0; }
+    }
+    @keyframes method-diagram-arrive {
+      from { transform: translateY(56px) scale(.62); }
+      to { transform: scale(.62); }
+    }
     @keyframes method-diagram-expand {
-      from { transform: translateY(16px) scale(.82); }
+      from { transform: scale(.62); }
       to { transform: none; }
     }
   }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .method-step::after { transition: background-size .65s ease; }
-  .method-step.is-revealed::after { background-size: 100% 100%; }
-  .method-step.is-revealed .method-graphic span {
-    animation: method-signal .48s ease both;
-    animation-delay: calc(var(--signal-order, 0) * 90ms);
-  }
-  .method-graphic span:nth-child(2) { --signal-order: 1; }
-  .method-graphic span:nth-child(3) { --signal-order: 2; }
-  .method-graphic span:nth-child(4) { --signal-order: 3; }
-  .method-graphic span:nth-child(5) { --signal-order: 4; }
-  .method-graphic span:nth-child(6) { --signal-order: 5; }
-  @keyframes method-signal {
-    0% { transform: translateY(5px); }
-    48% { background-color: #242424; color: #fff; }
-    100% { transform: translateY(0); }
-  }
-}
-@media (max-width: 760px) {
-  .method-layout { grid-template-columns: minmax(0, 1fr); gap: 32px; }
-  .method-intro { position: static; }
-  .method-intro p { margin-top: 14px; }
-  .method-steps { padding-inline-start: 17px; }
-  .method-step::before, .method-step:not(:last-child)::after { inset-inline-start: -17px; }
 }
 
 .method-results { background: #f4f4f4; }

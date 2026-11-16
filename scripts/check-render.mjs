@@ -32,9 +32,9 @@ const order = ['id="main-hero"', 'id="response-interaction"', 'data-definition="
 assert.ok(order.every(id => home.includes(id)));
 for (let i = 1; i < order.length; i++) assert.ok(home.indexOf(order[i - 1]) < home.indexOf(order[i]), order[i]);
 assert.doesNotMatch(home, /main-results-rail|figure1-field-aligned|why-teardown|home-destinations|href="[^"]*(?:research\.html|showcase\.html|#leaderboards)/);
-assert.equal((home.match(/<li class="method-step">/g) || []).length, 3);
+assert.doesNotMatch(home, /class="method-steps?"/);
 assert.match(home, /<figure id="evaluation-diagram" class="method-diagram"/);
-assert.ok(home.lastIndexOf('class="method-step"') < home.indexOf('id="evaluation-diagram"'));
+assert.ok(home.indexOf('id="system-overview-heading"') < home.indexOf('id="evaluation-diagram"'));
 assert.match(home, /interactnet-pipeline-v168\.svg/);
 assert.match(home, /<details id="comparisons" class="why-resources"\s*>/);
 assert.doesNotMatch(home, /Full demo progress|Play full demo/);
@@ -56,4 +56,4 @@ for (const [hash, group, measure] of [
   assert.equal(vm.runInContext('mainComparisonGroup', context), group);
   assert.equal(vm.runInContext('mainComparisonMeasure', context), measure);
 }
-console.log('Main renders both videos and the chat dialogue, six timeline frames, definitions, findings, and the three-step evaluation walkthrough. Direct comparison links still open the selected measure.');
+console.log('Main renders both videos and the chat dialogue, six timeline frames, definitions, findings, and the full evaluation diagram. Direct comparison links still open the selected measure.');
