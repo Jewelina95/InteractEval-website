@@ -97,7 +97,14 @@
           </section>
           <section class="why-interactive" aria-labelledby="why-interactive-heading">
             <h3 id="why-interactive-heading">Interactive Intelligence</h3>
-            <div class="why-situations">${situations.map(situationMarkup).join('')}</div>
+            <div class="why-situations" id="why-situations" role="region" aria-label="Swipe between Situation A and Situation B">${situations.map(situationMarkup).join('')}</div>
+            <div class="why-situation-navigation" role="group" aria-label="Browse situations">
+              <div class="why-situation-indicators">
+                ${situations.map(({title}, index) => `<button type="button" data-situation-page="${index}" aria-label="Show ${title}" aria-controls="why-situations"${index === 0 ? ' aria-current="true"' : ''}></button>`).join('')}
+              </div>
+              <button type="button" data-situation-prev aria-label="Previous situation" aria-controls="why-situations" disabled><span aria-hidden="true">‹</span></button>
+              <button type="button" data-situation-next aria-label="Next situation" aria-controls="why-situations"><span aria-hidden="true">›</span></button>
+            </div>
             <div class="why-definition" data-definition="interactive" hidden>
               <p>The ability to understand an evolving situation, initiate a justified new direction, and follow through across turns.</p>
               <p>In A, curiosity calls for an explanation. In B, the immediate threat calls for protection and follow-through.</p>
@@ -131,6 +138,11 @@
       stateLabel: element.querySelector('[data-frame-state]'),
       eventLabel: element.querySelector('[data-frame-event]')
     }));
+    const carousel = demo.querySelector('.why-situations');
+    const indicators = [...demo.querySelectorAll('[data-situation-page]')];
+    const previous = demo.querySelector('[data-situation-prev]');
+    const next = demo.querySelector('[data-situation-next]');
+    const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
     const tracks = [audio, ...clips.map(clip => clip.video)];
     const durations = chapters.map(({ duration }) => duration);
     const reachedEnd = new Set();
@@ -138,6 +150,39 @@
     let continuous = false;
     let complete = false;
     let scrubResume = null;
+    let visibleSituation = 0;
+    let scrollTimer;
+
+    function slidePosition(index) {
+      return clips[index].element.offsetLeft - clips[0].element.offsetLeft;
+    }
+
+    function syncCarousel() {
+      clips.forEach((clip, index) => { clip.element.inert = index !== visibleSituation; });
+      indicators.forEach((button, index) => {
+        if (index === visibleSituation) button.setAttribute('aria-current', 'true');
+        else button.removeAttribute('aria-current');
+      });
+      previous.disabled = visibleSituation === 0;
+      next.disabled = visibleSituation === clips.length - 1;
+    }
+
+    function showSituation(index, smooth) {
+      if (visibleSituation === index) return;
+      visibleSituation = index;
+      syncCarousel();
+      carousel.scrollTo({ left: slidePosition(index), behavior: smooth && !reducedMotion.matches ? 'smooth' : 'instant' });
+    }
+
+    function browseSituation(index) {
+      if (index === visibleSituation) return;
+      continuous = false;
+      complete = false;
+      tracks.forEach(track => track.pause());
+      active = index + 1;
+      showSituation(index, true);
+      updateUI();
+    }
 
     function chapterStart(index) {
       return durations.slice(0, index).reduce((sum, duration) => sum + duration, 0);
@@ -202,6 +247,7 @@
       active = index;
       tracks[index].currentTime = localTime;
       if (index > 0) {
+        showSituation(index - 1, scrubResume === null);
         clips[index - 1].storyboard.open = true;
         updateClip(index - 1, localTime);
       }
@@ -217,6 +263,7 @@
       if (complete || (!continuous && !Number(range.value))) {
         complete = false;
         continuous = true;
+        showSituation(0, true);
         seek(0, 0, true);
       } else {
         continuous = true;
@@ -246,6 +293,23 @@
       if (scrubResume && !complete) play(tracks[active]);
       scrubResume = null;
     });
+
+    indicators.forEach((button, index) => button.addEventListener('click', () => browseSituation(index)));
+    previous.addEventListener('click', () => {
+      browseSituation(visibleSituation - 1);
+      if (previous.disabled) indicators[visibleSituation].focus({ preventScroll: true });
+    });
+    next.addEventListener('click', () => {
+      browseSituation(visibleSituation + 1);
+      if (next.disabled) indicators[visibleSituation].focus({ preventScroll: true });
+    });
+    carousel.addEventListener('scroll', () => {
+      clearTimeout(scrollTimer);
+      scrollTimer = setTimeout(() => {
+        const index = clips.findIndex((_, position) => Math.abs(carousel.scrollLeft - slidePosition(position)) < 3);
+        if (index >= 0) browseSituation(index);
+      }, 130);
+    }, { passive: true });
 
     chapterButtons.forEach((button, index) => button.addEventListener('click', () => {
       complete = false;
@@ -294,8 +358,12 @@
       });
     });
 
+    syncCarousel();
     updateUI();
-    return () => tracks.forEach(track => track.pause());
+    return () => {
+      clearTimeout(scrollTimer);
+      tracks.forEach(track => track.pause());
+    };
   }
 
   let currentDemo;
