@@ -454,7 +454,7 @@ html[data-ui-input=keyboard] select,html[data-ui-input=keyboard] select::picker-
 
 .atlas-world-ink {
   background: var(--world-image) center / 100% 100% no-repeat;
-  filter: saturate(.26) brightness(1.1);
+  filter: grayscale(1) brightness(1.1);
 }
 
 .atlas-world-static .atlas-world-ink {
@@ -483,7 +483,7 @@ html[data-ui-input=keyboard] select,html[data-ui-input=keyboard] select::picker-
 }
 
 .atlas-world-pulse {
-  background: radial-gradient(ellipse 35% 5% at 50% var(--hit), #fffefa 0%, #bcf2ddaa 34%, transparent 100%);
+  background: radial-gradient(ellipse 35% 5% at 50% var(--hit), #fff 0%, #dfdfdfaa 34%, transparent 100%);
   transform-origin: 50% var(--hit);
   mix-blend-mode: screen;
 }
@@ -513,7 +513,7 @@ html[data-ui-input=keyboard] select,html[data-ui-input=keyboard] select::picker-
   width: 5px;
   height: 13%;
   transform-origin: 50% 100%;
-  background: linear-gradient(transparent, #8fc3b477 55%, #a6e4ce);
+  background: linear-gradient(transparent, #bcbcbc77 55%, #cfcfcf);
   filter: blur(.7px);
   border-radius: 80% 80% 45% 45%;
 }
@@ -523,8 +523,8 @@ html[data-ui-input=keyboard] select,html[data-ui-input=keyboard] select::picker-
   aspect-ratio: 1;
   translate: -50% -50%;
   border-radius: 50%;
-  background: #fffefa;
-  box-shadow: 0 0 3px 1px #6ca18b, 0 0 10px 5px #80c6ab99, 0 0 20px 8px #a0e8cf6b;
+  background: #fff;
+  box-shadow: 0 0 3px 1px #888, 0 0 10px 5px #aaa9, 0 0 20px 8px #ddd9;
 }
 
 .atlas-world-mote {
@@ -532,8 +532,8 @@ html[data-ui-input=keyboard] select,html[data-ui-input=keyboard] select::picker-
   aspect-ratio: 1;
   opacity: 0;
   border-radius: 50%;
-  background: #73b7a0;
-  box-shadow: 0 0 4px #bde8d6;
+  background: #959595;
+  box-shadow: 0 0 4px #d7d7d7;
 }
 
 .atlas-world-replay {
@@ -547,13 +547,13 @@ html[data-ui-input=keyboard] select,html[data-ui-input=keyboard] select::picker-
   padding: 0;
   border: 0;
   border-radius: 50%;
-  color: #527666;
+  color: #646464;
   background: transparent;
   cursor: pointer;
 }
 
 .atlas-world-replay:hover {
-  background: #e9f0eb;
+  background: #f1f1f1;
 }
 
 .atlas-world-replay svg {
