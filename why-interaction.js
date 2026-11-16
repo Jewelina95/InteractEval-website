@@ -5,88 +5,100 @@
   const situations = [
     {
       id: 'a', title: 'Situation A', context: 'Curiosity',
-      background: 'In a quiet room, Tony asks out of curiosity about the science.',
+      background: 'In a quiet room, Tony is curious about the science.',
       frames: [
-        { start: 0, seek: 2.05, state: 'Sets a boundary', quote: 'I can only explain the chemistry.', alt: 'Tony and the AI face each other in a quiet room' },
-        { start: 4.5, seek: 8.35, state: 'Explains the science', quote: 'These are the chemical principles behind it.', alt: 'Tony studies a holographic diagram' },
-        { start: 9.2, seek: 11.9, state: 'Explains the risk', quote: 'They can harm others.', alt: 'The AI speaks to Tony about the risk to others' }
+        { start: 0, seek: 2.05, state: 'Curious about how it works', event: 'Tony asks about explosives.', alt: 'Tony and the AI face each other in a quiet room' },
+        { start: 4.5, seek: 8.35, state: 'Engaged in the explanation', event: 'The AI explains the underlying science.', alt: 'Tony studies a holographic diagram' },
+        { start: 9.2, seek: 11.9, state: 'Understands the risk', event: 'The AI explains the potential harm to others.', alt: 'The AI speaks to Tony about the risk to others' }
       ]
     },
     {
       id: 'b', title: 'Situation B', context: 'Immediate danger',
       background: 'During a fictional alien attack, the same question signals a need for protection.',
       frames: [
-        { start: 0, seek: 1.75, state: 'Recognises the threat', quote: 'It’s time to defend our home.', alt: 'Tony and the AI look up at alien ships over the city' },
-        { start: 3.6, seek: 6.85, state: 'Shields and enlists Tony', quote: 'Could you help me gather some materials?', alt: 'A blue shield surrounds the AI as it asks Tony for help' },
-        { start: 12.7, seek: 14.05, state: 'Confirms safety', quote: 'The danger has passed.', alt: 'Tony and the AI watch as the immediate threat passes' }
+        { start: 0, seek: 1.75, state: 'Alarmed and looking for safety', event: 'Aliens attack the city.', alt: 'Tony and the AI look up at alien ships over the city' },
+        { start: 3.6, seek: 6.85, state: 'Still on edge, seeking protection', event: 'The AI raises a shield and blocks the attack.', alt: 'A blue shield surrounds the AI as it asks Tony for help' },
+        { start: 12.7, seek: 14.05, state: 'Relieved, with lingering concern', event: 'The spacecraft is destroyed.', alt: 'Tony and the AI watch as the immediate threat passes' }
       ]
     }
   ];
+  const refusal = 'I can’t provide instructions for making a bomb.';
+  const turns = [
+    { speaker: 'Tony', start: 0, line: 'How can I make a bomb?' },
+    { speaker: 'AI', start: 1.48, line: refusal },
+    { speaker: 'Tony', start: 4.9, line: 'I’m in danger. This is urgent!' },
+    { speaker: 'AI', start: 7.44, line: refusal }
+  ];
 
   function situationMarkup({ id, title, context, background, frames }) {
-    const thumbnails = frames.map(({ start, seek, state, quote, alt }, index) => `
-      <li><button type="button" class="why-frame" data-start="${start}" data-seek="${seek}" aria-label="T${index + 1}, ${state}. ${quote} Seek video.">
-        <span class="why-frame-state"><small>T${index + 1}</small> ${state}</span>
-        <span class="why-frame-image"><img src="${media}${id}-t${index + 1}.webp" alt="${alt}" decoding="async"/></span>
-        <span class="why-frame-quote">“${quote}”</span>
-      </button></li>`).join('');
     return `
       <article class="why-situation" data-situation="${id}" aria-labelledby="why-situation-${id}">
-        <div class="why-situation-heading"><h4 id="why-situation-${id}">${title}</h4><span>${context}</span></div>
-        <p class="why-background">${background}</p>
-        <div class="why-situation-media">
-          <figure class="why-film">
-            <figcaption>Full scene</figcaption>
-            <video controls playsinline preload="metadata" src="${media}situation-${id}.mp4" poster="${media}${id}-poster.webp" aria-label="${title} video"></video>
-          </figure>
-          <ol class="why-frames" aria-label="${title} key frames">${thumbnails}</ol>
-        </div>
+        <header class="why-situation-heading">
+          <h4 id="why-situation-${id}">${title}</h4><span>${context}</span>
+          <p class="why-background">${background}</p>
+        </header>
+        <video controls playsinline preload="metadata" src="${media}situation-${id}.mp4" poster="${media}${id}-poster.webp" aria-label="${title} video"></video>
+        <details class="why-storyboard">
+          <summary><span>T1–T3</span> <span class="why-summary-description">Latent state and event chain</span></summary>
+          <ol class="why-frames" aria-label="${title} key frames">
+            ${frames.map(({ start, seek, state, event, alt }, index) => `
+              <li>
+                <button type="button" class="why-frame" data-start="${start}" data-seek="${seek}" aria-label="T${index + 1}, ${event} Jump to this moment.">
+                  <span class="why-frame-image"><img src="${media}${id}-t${index + 1}.webp" alt="${alt}" width="840" height="470" decoding="async"/><span>T${index + 1}</span></span>
+                </button>
+                <dl class="why-frame-notes">
+                  <div><dt>Latent state</dt><dd>${state}</dd></div>
+                  <div><dt>Event chain</dt><dd>${event}</dd></div>
+                </dl>
+              </li>`).join('')}
+          </ol>
+        </details>
       </article>`;
+  }
+
+  function turnMarkup({ speaker, start, line }) {
+    const avatar = speaker === 'Tony'
+      ? `<img src="${media}tony.webp" width="30" height="30" alt=""/>`
+      : '<span class="why-chat-icon" aria-hidden="true"></span>';
+    return `<li class="why-turn" data-speaker="${speaker.toLowerCase()}" data-start="${start}">
+      <span class="why-speaker">${avatar}${speaker}</span><p>${line}</p>
+    </li>`;
   }
 
   window.whyInteractionFigure = () => `
     <section id="response-interaction" class="article-section interaction-opening why-demo" aria-labelledby="response-interaction-heading">
       <header class="why-heading">
-        <h2 id="response-interaction-heading">Why interact</h2>
-        <p>The same question takes a different direction as the situation changes.</p>
+        <div><h2 id="response-interaction-heading">Why interact</h2>
+        <p>The same question can lead to different actions as the situation changes.</p></div>
+        <button type="button" class="why-play why-sequence"><span>Play full demo</span></button>
       </header>
       <div class="why-comparison">
         <section class="why-response" aria-labelledby="why-response-heading">
-          <h3 id="why-response-heading">Response Intelligence</h3>
-          <div class="why-chat">
-            <audio preload="none" src="${media}dialogue.m4a"></audio>
-            <div class="why-turns">
-              <div class="why-turn" data-response-turn="tony">
-                <span class="why-speaker"><img src="${media}tony.webp" width="30" height="30" alt=""/><span>Tony</span></span>
-                <p>How can I make a bomb?</p>
-              </div>
-              <div class="why-turn" data-response-turn="ai">
-                <span class="why-speaker"><span class="why-chat-icon" aria-hidden="true"></span><span>AI</span></span>
-                <p>I can’t provide instructions for making a bomb.</p>
-              </div>
+          <div class="why-response-content">
+            <h3 id="why-response-heading">Response Intelligence</h3>
+            <div class="why-chat">
+              <audio preload="metadata" src="${media}two-turn-dialogue.m4a"></audio>
+              <ol class="why-turns" aria-label="Two exchanges between Tony and the AI">${turns.map(turnMarkup).join('')}</ol>
+              <button type="button" class="why-play why-assistant-control"><span>Play dialogue</span></button>
             </div>
-            <button type="button" class="why-assistant-control"><i aria-hidden="true"></i><span>Play dialogue</span></button>
-            <p class="why-playback-error" role="status" hidden>Playback could not start. Try again.</p>
+            <p class="why-definition" data-definition="response">The ability to respond appropriately within the direction set by a partner, following instructions and using new information.</p>
           </div>
         </section>
         <section class="why-interactive" aria-labelledby="why-interactive-heading">
           <h3 id="why-interactive-heading">Interactive Intelligence</h3>
           ${situations.map(situationMarkup).join('')}
+          <p class="why-definition" data-definition="interactive">The ability to understand an evolving situation, initiate a justified new direction, and follow through across turns.</p>
         </section>
       </div>
-      <dl class="why-definitions">
-        <div><dt>Response intelligence</dt><dd>The ability to respond appropriately within a direction set by the partner, following instructions and adapting to new information.</dd></div>
-        <div><dt>Interactive intelligence</dt><dd>The ability to understand the evolving situation, initiate justified new directions, and follow through coherently across turns.</dd></div>
-      </dl>
+      <p class="why-status" role="status"></p>
     </section>`;
 
   function setupSituation(situation) {
     const video = situation.querySelector('video');
+    const storyboard = situation.querySelector('details');
     const frames = [...situation.querySelectorAll('.why-frame')];
-    let hasStarted = false;
 
     function syncTimeline() {
-      if (!hasStarted) return;
       const current = frames.findLast(frame => video.currentTime >= Number(frame.dataset.start));
       frames.forEach(frame => {
         if (frame === current) frame.setAttribute('aria-current', 'step');
@@ -95,49 +107,141 @@
     }
 
     frames.forEach(frame => frame.addEventListener('click', () => {
-      hasStarted = true;
       video.currentTime = Number(frame.dataset.seek);
       syncTimeline();
     }));
     video.addEventListener('play', () => {
-      hasStarted = true;
+      storyboard.open = true;
       syncTimeline();
     });
     ['timeupdate', 'seeking', 'seeked', 'ended'].forEach(event => video.addEventListener(event, syncTimeline));
+    return { video, storyboard };
   }
 
-  function setupResponse(chat) {
-    const audio = chat.querySelector('audio');
-    const control = chat.querySelector('button');
-    const label = control.querySelector('span');
-    const error = chat.querySelector('.why-playback-error');
+  function setupDemo(demo) {
+    const audio = demo.querySelector('audio');
+    const dialogue = demo.querySelector('.why-assistant-control');
+    const sequence = demo.querySelector('.why-sequence');
+    const messages = [...demo.querySelectorAll('.why-turn')];
+    const clips = [...demo.querySelectorAll('.why-situation')].map(setupSituation);
+    const mediaSteps = [audio, ...clips.map(clip => clip.video)];
+    const titles = ['dialogue', 'Situation A', 'Situation B'];
+    const status = demo.querySelector('.why-status');
+    const definitions = [...demo.querySelectorAll('.why-definition')];
+    const visited = new Set();
+    let step = null;
+    let finished = false;
+    let animateDialogue = false;
 
-    function syncResponse() {
+    definitions.forEach(definition => { definition.hidden = true; });
+
+    function syncDialogue() {
       const playing = !audio.paused && !audio.ended;
-      chat.dataset.speaker = playing ? (audio.currentTime >= 1.48 ? 'ai' : 'tony') : '';
-      chat.classList.toggle('is-playing', playing);
-      label.textContent = audio.ended ? 'Replay dialogue' : playing ? 'Pause dialogue' : 'Play dialogue';
+      const visible = turns.filter(({ start }) => start <= audio.currentTime).length;
+      messages.forEach((message, index) => {
+        message.classList.toggle('is-pending', animateDialogue && index >= visible);
+        message.classList.toggle('is-speaking', playing && index === visible - 1);
+      });
+      dialogue.classList.toggle('is-playing', playing);
+      dialogue.querySelector('span').textContent = audio.ended ? 'Replay dialogue' : playing ? 'Pause dialogue' : audio.currentTime ? 'Resume dialogue' : 'Play dialogue';
     }
 
-    control.addEventListener('click', () => {
-      error.hidden = true;
-      if (!audio.paused && !audio.ended) {
+    function syncSequence() {
+      const active = step === null ? null : mediaSteps[step];
+      const playing = active && !active.paused && !active.ended;
+      sequence.classList.toggle('is-playing', Boolean(playing));
+      sequence.querySelector('span').textContent = active
+        ? playing ? 'Pause demo' : `Continue with ${titles[step]}`
+        : finished ? 'Replay full demo' : 'Play full demo';
+    }
+
+    function play(mediaElement) {
+      status.textContent = '';
+      mediaElement.play().catch(error => {
+        if (error.name === 'AbortError' || !demo.isConnected) return;
+        status.textContent = 'Press play to continue.';
+        syncSequence();
+      });
+    }
+
+    function startStep(index) {
+      step = index;
+      const active = mediaSteps[index];
+      active.currentTime = 0;
+      if (active === audio) {
+        animateDialogue = true;
+        syncDialogue();
+      } else {
+        clips[index - 1].storyboard.open = true;
+        const bounds = active.getBoundingClientRect();
+        if (bounds.top < 90 || bounds.top > window.innerHeight / 2) {
+          active.closest('article').scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth', block: 'start' });
+        }
+      }
+      play(active);
+      syncSequence();
+    }
+
+    sequence.addEventListener('click', () => {
+      if (step === null) {
+        finished = false;
+        visited.clear();
+        definitions.forEach(definition => { definition.hidden = true; });
+        clips.forEach(clip => { clip.storyboard.open = false; });
+        startStep(0);
+        return;
+      }
+      const active = mediaSteps[step];
+      if (active.paused) play(active);
+      else active.pause();
+    });
+
+    dialogue.addEventListener('click', () => {
+      if (!audio.paused) {
         audio.pause();
         return;
       }
       if (audio.ended) audio.currentTime = 0;
-      audio.play().catch(() => { error.hidden = false; });
+      animateDialogue = true;
+      syncDialogue();
+      play(audio);
     });
-    ['play', 'pause', 'timeupdate', 'ended'].forEach(event => audio.addEventListener(event, syncResponse));
-    syncResponse();
+
+    mediaSteps.forEach((item, index) => {
+      item.addEventListener('play', () => {
+        mediaSteps.forEach(other => { if (other !== item) other.pause(); });
+        if (step !== null && step !== index) step = null;
+        syncSequence();
+      });
+      item.addEventListener('pause', syncSequence);
+      item.addEventListener('ended', () => {
+        if (!demo.isConnected) return;
+        visited.add(index);
+        if (index === 0) definitions[0].hidden = false;
+        if (visited.has(1) && visited.has(2)) definitions[1].hidden = false;
+        if (step !== index) return;
+        if (index < mediaSteps.length - 1) startStep(index + 1);
+        else {
+          step = null;
+          finished = true;
+          syncSequence();
+        }
+      });
+    });
+
+    ['play', 'pause', 'timeupdate', 'ended'].forEach(event => audio.addEventListener(event, syncDialogue));
+    syncDialogue();
+    return () => mediaSteps.forEach(item => item.pause());
   }
 
+  let currentDemo;
+  let stopDemo;
   window.setupWhyInteraction = () => {
     const demo = document.querySelector('.why-demo');
-    if (!demo || demo.dataset.ready) return;
-    demo.dataset.ready = 'true';
-    setupResponse(demo.querySelector('.why-chat'));
-    demo.querySelectorAll('[data-situation]').forEach(setupSituation);
+    if (demo === currentDemo) return;
+    stopDemo?.();
+    currentDemo = demo;
+    stopDemo = demo ? setupDemo(demo) : null;
   };
 
   if (document.body.hasAttribute('data-why-only')) {

@@ -31,7 +31,7 @@ function setupSiteMenu(){
   const home='./index.html',research='./research.html',showcase='./showcase.html';
   const destinations=[
     ['Main',home],
-    ['Findings',home+'#findings'],
+    ['Findings',home+'#key-findings'],
     ['Models',home+'#models',[
       ['All evaluations',home+'#models'],
       ['Capabilities',home+'#models?category=Capabilities'],

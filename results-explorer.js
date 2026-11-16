@@ -35,12 +35,11 @@ function resultResources(open) {
   const choices = mainComparisonGroups.map(group => `<optgroup label="${safe(group.title)}">${group.items.map(([id,label]) =>
     `<option value="${id}" ${id===mainComparisonMeasure?'selected':''}>${safe(label)}</option>`
   ).join('')}</optgroup>`).join('');
-  return `<section id="resources" class="article-section" aria-labelledby="resources-heading">
-    <header class="section-head-row journal-section-heading"><h2 id="resources-heading">Resources</h2></header>
-    <nav class="result-next-links" aria-label="InteractNet resources">
-      <a href="#leaderboards"><b>Leaderboards</b></a>
-      <a href="./research.html"><b>Research</b></a>
-      <a href="./showcase.html"><b>Showcase</b></a>
+  return `<section id="resources" class="article-section" aria-label="Explore InteractNet">
+    <nav class="result-next-links home-destinations" aria-label="Explore InteractNet">
+      <a href="./research.html"><b>Research</b><span aria-hidden="true">↗</span></a>
+      <a href="#leaderboards"><b>Leaderboards</b><span aria-hidden="true">↗</span></a>
+      <a href="./showcase.html"><b>Showcase</b><span aria-hidden="true">↗</span></a>
     </nav>
     <details id="comparisons" class="why-resources" ${open?'open':''}>
       <summary>Results &amp; analysis</summary>
@@ -86,7 +85,7 @@ function resultsHomeV2(){
     if(requestedGroup){mainComparisonGroup=requestedGroup.id;mainComparisonMeasure=measure;if(measure==='information')mainInformationView='conditions';}
   }
   const showResults = anchor === 'comparisons' || Object.hasOwn(aliases, anchor);
-  return `<div class="research-restored results-page">${atlasHero()}<div class="article-shell"><article class="article-body">${interactionFigure('motivation')}${resultResources(showResults)}</article></div></div>`;
+  return `<div class="research-restored results-page">${atlasHero()}<div class="article-shell"><article class="article-body">${interactionFigure('motivation')}${coreFindings()}${interactionFigure('system')}${resultResources(showResults)}</article></div></div>`;
 }
 function comparisonDataTable(ids,labels=ids.map(id=>metricOf(id).label),rows=publication.models,headerModels=[]){
   return `<div class="comparison-table-wrap" role="region" aria-label="Published comparison values" tabindex="0"><table class="comparison-data-table"><thead><tr><th scope="col">Model</th>${labels.map((label,index)=>`<th scope="col" data-comparison-metric="${ids[index]}">${headerModels[index]?modelIdentity(headerModels[index]):safe(label)}</th>`).join('')}</tr></thead><tbody>${rows.map(model=>`<tr data-comparison-model="${model.name}"><th scope="row"><a href="#model/${encodeURIComponent(model.name)}">${modelIdentity(model.name)}</a></th>${ids.map(id=>`<td data-comparison-metric="${id}">${publishedFormat(metricOf(id).get(model),metricOf(id))}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;

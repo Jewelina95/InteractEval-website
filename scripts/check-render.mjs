@@ -13,13 +13,13 @@ const context = vm.createContext({
   URL, URLSearchParams,
   safe: value => String(value),
   atlasHero: () => '<header id="main-hero"></header>',
+  coreFindings: () => '<section id="key-findings"></section>',
   mainComparisonPanel: () => '<p>Selected comparison</p>'
 });
 const read = file => fs.readFileSync(new URL('../' + file, import.meta.url), 'utf8');
 vm.runInContext(read('why-interaction.js'), context);
 context.interactionFigure = kind => {
-  assert.equal(kind, 'motivation');
-  return context.window.whyInteractionFigure();
+  return kind === 'motivation' ? context.window.whyInteractionFigure() : '<section id="system-overview"></section>';
 };
 const source = read('results-explorer.js');
 const start = source.indexOf('function resultsHomeV2()');
@@ -29,10 +29,10 @@ vm.runInContext(source.slice(source.indexOf('function resultResources('), source
 vm.runInContext(source.slice(start, end), context);
 
 const home = vm.runInContext('resultsHomeV2()', context);
-const order = ['id="main-hero"', 'id="response-interaction"', 'id="why-response-heading"', 'id="why-situation-a"', 'id="why-situation-b"', 'class="why-definitions"', 'id="resources"'];
+const order = ['id="main-hero"', 'id="response-interaction"', 'id="why-response-heading"', 'id="why-situation-a"', 'id="why-situation-b"', 'data-definition="interactive"', 'id="key-findings"', 'id="system-overview"', 'id="resources"'];
 assert.ok(order.every(id => home.includes(id)));
 for (let i = 1; i < order.length; i++) assert.ok(home.indexOf(order[i - 1]) < home.indexOf(order[i]), order[i]);
-assert.doesNotMatch(home, /main-results-rail|id="system-overview"|id="key-findings"|figure1-field-aligned/);
+assert.doesNotMatch(home, /main-results-rail|figure1-field-aligned/);
 assert.match(home, /<details id="comparisons" class="why-resources"\s*>/);
 assert.equal((home.match(/class="why-frame"/g) || []).length, 6);
 
@@ -52,4 +52,4 @@ for (const [hash, group, measure] of [
   assert.equal(vm.runInContext('mainComparisonGroup', context), group);
   assert.equal(vm.runInContext('mainComparisonMeasure', context), measure);
 }
-console.log('Main renders both videos and the chat dialogue, six timeline frames, relocated definitions, and Resources. Direct comparison links still open the selected measure.');
+console.log('Main renders both videos and the chat dialogue, six timeline frames, definitions, findings, and the vertical resource links. Direct comparison links still open the selected measure.');

@@ -417,7 +417,7 @@ html[data-ui-input=keyboard] select,html[data-ui-input=keyboard] select::picker-
   grid-template-columns: minmax(0, 1fr) minmax(350px, 1.1fr);
   gap: clamp(18px, 4vw, 60px);
   padding-block: 18px 23px;
-  border-bottom-color: #e4e4e7;
+  border-bottom: 0;
 }
 
 .atlas-hero .atlas-world {
