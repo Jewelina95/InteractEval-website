@@ -29,12 +29,12 @@ vm.runInContext(source.slice(source.indexOf('function resultResources('), source
 vm.runInContext(source.slice(start, end), context);
 
 const home = vm.runInContext('resultsHomeV2()', context);
-const order = ['id="main-hero"', 'id="response-interaction"', 'id="why-response-heading"', 'id="why-situation-a"', 'id="why-situation-b"', 'data-definition="interactive"', 'id="theoretical-framework"', 'id="key-findings"', 'id="system-overview"', 'id="resources"'];
+const order = ['id="main-hero"', 'id="response-interaction"', 'id="why-response-heading"', 'data-definition="response"', 'id="why-interactive-heading"', 'data-definition="interactive"', 'id="why-situation-a"', 'id="why-situation-b"', 'id="theoretical-framework"', 'id="key-findings"', 'id="system-overview"', 'id="resources"'];
 assert.ok(order.every(id => home.includes(id)));
 for (let i = 1; i < order.length; i++) assert.ok(home.indexOf(order[i - 1]) < home.indexOf(order[i]), order[i]);
 assert.doesNotMatch(home, /main-results-rail|figure1-field-aligned|why-teardown/);
 assert.match(home, /<details id="comparisons" class="why-resources"\s*>/);
-assert.match(home, /aria-label="Full demo progress"/);
+assert.doesNotMatch(home, /Full demo progress|Play full demo/);
 assert.equal((home.match(/class="why-frame"/g) || []).length, 6);
 
 for (const [, path] of home.matchAll(/(?:src|poster)="https:\/\/worldeology\.com\/InteractNet\/(assets\/why-interact\/[^"]+)"/g)) {
