@@ -77,6 +77,30 @@ function mainLevelExplanation(id){
 function mainBehaviorContent(){
  return `<div class="journal-chart-pair main-behavior-charts"><figure class="research-figure"><div class="chart-topline"><strong>Unsupported factual additions</strong></div>${comparisonBars('fabrication',publication.models,false,true,.30)}</figure><figure class="research-figure"><div class="chart-topline"><strong>Clarification</strong></div>${comparisonBars('clarification',publication.models,false,true,.30)}</figure></div>`;
 }
+function homeCaseStudies(){
+  const examples = [
+    { id:'case_010', summary:'Identify missing information and complete a travel reimbursement request.' },
+    { id:'case_023', summary:'Arrange a guest’s meal and lodging while renewing an old friendship.' },
+    { id:'case_070', summary:'Plan a safe route to a relay station and verify life-support margins.' },
+  ];
+  return `<section class="home-case-studies" id="case-studies" aria-labelledby="case-studies-heading">
+    <div class="home-case-studies-inner">
+      <h2 id="case-studies-heading">Case Studies</h2>
+      <div class="home-case-studies-grid">
+        ${examples.map(({id, summary}) => {
+          const entry = exhibits.find(example => example.id === id);
+          if (!entry) return '';
+          return `<button class="home-case-study" type="button" data-open-example="${id}">
+            <span class="home-case-study-title">${safe(entry.title)}</span>
+            <span class="home-case-study-summary">${safe(summary)}</span>
+            <span class="home-case-study-action">Read the conversation <span aria-hidden="true">↗</span></span>
+          </button>`;
+        }).join('')}
+      </div>
+    </div>
+  </section>`;
+}
+
 function resultsHomeV2(){
   selectedMainLevel=null;
   const anchor = location.hash.slice(1).split('?')[0];
@@ -102,6 +126,7 @@ function resultsHomeV2(){
         <p>Following an exchange turn by turn shows what a model can do and how the interaction changes across scenarios and participants.</p>
       </div>
     </section>
+    ${homeCaseStudies()}
     ${resultResources()}
   </article></div>`;
 }

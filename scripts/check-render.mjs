@@ -11,6 +11,7 @@ const context = vm.createContext({
   window: { interactNetTheory: { render: () => '<section id="theoretical-framework"></section>' } },
   location: { hash: '' },
   URL, URLSearchParams,
+  exhibits: JSON.parse(fs.readFileSync(new URL('../data/cases.json', import.meta.url), 'utf8')),
   safe: value => String(value),
   atlasHero: () => '<header id="main-hero"></header>',
   coreFindings: () => '<section id="key-findings"></section>',
@@ -21,17 +22,18 @@ vm.runInContext(read('why-interaction.js'), context);
 context.document.body.dataset = {};
 vm.runInContext(read('interaction-figures.js'), context);
 const source = read('results-explorer.js');
-const start = source.indexOf('function resultsHomeV2()');
+const start = source.indexOf('function homeCaseStudies()');
 const end = source.indexOf('function comparisonDataTable(', start);
 vm.runInContext(source.slice(source.indexOf('const representationMeasures='), source.indexOf('const leaderboardGroups=')), context);
 vm.runInContext(source.slice(source.indexOf('function resultResources('), source.indexOf('function capabilityMatrix(')), context);
 vm.runInContext(source.slice(start, end), context);
 
 const home = vm.runInContext('resultsHomeV2()', context);
-const order = ['id="main-hero"', 'id="response-interaction"', 'data-definition="response"', 'class="why-comparison"', 'id="why-response-heading"', 'id="why-interactive-heading"', 'id="why-situation-a"', 'id="why-situation-b"', 'data-definition="interactive"', 'id="theoretical-framework"', 'id="key-findings"', 'id="system-overview"', 'id="evaluation-diagram"', 'id="method-why-heading"', 'id="resources"'];
+const order = ['id="main-hero"', 'id="response-interaction"', 'data-definition="response"', 'class="why-comparison"', 'id="why-response-heading"', 'id="why-interactive-heading"', 'id="why-situation-a"', 'id="why-situation-b"', 'data-definition="interactive"', 'id="theoretical-framework"', 'id="key-findings"', 'id="system-overview"', 'id="evaluation-diagram"', 'id="method-why-heading"', 'id="case-studies"', 'id="resources"'];
 assert.ok(order.every(id => home.includes(id)));
 for (let i = 1; i < order.length; i++) assert.ok(home.indexOf(order[i - 1]) < home.indexOf(order[i]), order[i]);
 assert.doesNotMatch(home, /main-results-rail|figure1-field-aligned|why-teardown|home-destinations|href="[^"]*(?:research\.html|showcase\.html|#leaderboards)/);
+assert.equal((home.match(/class="home-case-study" type="button" data-open-example=/g) || []).length, 3);
 assert.doesNotMatch(home, /class="method-steps?"/);
 assert.match(home, /<figure id="evaluation-diagram" class="method-diagram"/);
 assert.match(home, /<h3 id="evaluation-diagram-heading">Architecture<\/h3>/);

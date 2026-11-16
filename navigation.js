@@ -32,38 +32,12 @@ function setupSiteMenu(){
   const destinations=[
     ['Main',home],
     ['Findings',home+'#key-findings'],
-    ['How InteractNet works',home+'#system-overview'],
-    ['Models',home+'#models',[
-      ['All evaluations',home+'#models'],
-      ['Capabilities',home+'#models?category=Capabilities'],
-      ['Scenario conditions',home+'#models?category=Scenarios'],
-      ['Behavior',home+'#models?category=Behavior'],
-      ['Outcomes',home+'#models?category=Outcomes'],
-      ['Conversation length',home+'#models?category=Duration'],
-      ['Partners &amp; roles',home+'#models?category=Partners'],
-      ['Repeatability',home+'#models?category=Reliability']
-    ]],
-    ['Agents',home+'#agents',[
-      ['Compare architectures',home+'#agents'],
-      ...['MetaMind','Cognizer','Claude Code'].map(name=>[name,home+'#agents?architecture='+encodeURIComponent(name)])
-    ]],
-    ['Image, Speech, Video',home+'#multimodal'],
+    ['How InteractNet Works',home+'#system-overview'],
   ];
-  const link=([label,href])=>`<a href="${href}">${label}</a>`;
-  panel.innerHTML=destinations.map(([label,href,items],index)=>{
-    const id='site-menu-group-'+index;
-    const children=items?`<button type="button" aria-label="${label} links" aria-expanded="false" aria-controls="${id}"></button><ul id="${id}" hidden>${items.map(item=>`<li>${link(item)}</li>`).join('')}</ul>`:'';
-    return `<div class="site-menu-row">${link([label,href])}${children}</div>`;
-  }).join('');
+  panel.innerHTML=destinations.map(([label,href])=>
+    `<div class="site-menu-row"><a href="${href}">${label}</a></div>`
+  ).join('');
 
-  panel.addEventListener('click',event=>{
-    const button=event.target.closest('button');
-    if(button){
-      const list=document.getElementById(button.getAttribute('aria-controls'));
-      list.hidden=!list.hidden;
-      button.setAttribute('aria-expanded',String(!list.hidden));
-    }
-  });
   document.addEventListener('click',event=>{
     if(!menu.contains(event.target)||event.target.closest('.site-menu-panel a'))menu.open=false;
   });
