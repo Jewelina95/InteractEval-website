@@ -36,7 +36,7 @@ assert.doesNotMatch(home, /class="method-steps?"/);
 assert.match(home, /<figure id="evaluation-diagram" class="method-diagram"/);
 assert.ok(home.indexOf('id="system-overview-heading"') < home.indexOf('id="evaluation-diagram"'));
 assert.match(home, /interactnet-pipeline-v168\.svg/);
-assert.match(home, /interactnet-pipeline-v168-black-gold\.svg/);
+assert.doesNotMatch(home, /interactnet-pipeline-v168-black-gold/);
 assert.match(home, /<div id="comparisons" data-initial-topic="main-results"/);
 assert.doesNotMatch(home, /result-carousel|result-library/);
 assert.doesNotMatch(home, /§|04 · Experiments|05 · Discussion/);

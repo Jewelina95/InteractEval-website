@@ -39,9 +39,9 @@
   z-index: -1;
   inset: calc(-1 * var(--method-top)) 0 calc(-1 * var(--method-bottom));
   background:
-    radial-gradient(ellipse at 34% 44%, #73512e42, transparent 59%),
-    radial-gradient(ellipse at 88% 53%, #30355755, transparent 49%),
-    #08080b;
+    radial-gradient(ellipse at 29% 36%, #8a642e36, transparent 54%),
+    radial-gradient(ellipse at 89% 63%, #34395635, transparent 46%),
+    #0b0b0e;
 }
 .method-layout {
   width: min(1680px, calc(100% - 2 * clamp(16px, 2.4vw, 40px)));
@@ -66,13 +66,11 @@
   letter-spacing: -.045em;
 }
 .method-diagram .pipeline-picture {
-  position: relative;
-  border-color: #9a794b;
+  border-color: #c9a970;
   border-radius: clamp(8px, 1.3vw, 18px);
-  background: #151419;
-  box-shadow: 0 0 36px #c9964732;
+  background: #fff;
+  box-shadow: 0 0 28px #c9964733, 0 18px 48px #0005;
 }
-.method-diagram .method-diagram-light { display: none; }
 .method-diagram :focus-visible { outline: 2px solid #f5d399; outline-offset: 4px; }
 
 @media (min-width: 801px) and (min-height: 480px) and (prefers-reduced-motion: no-preference) {
@@ -98,14 +96,6 @@
       animation: method-frame-color linear both;
       animation-timeline: --method-sequence;
       animation-range: contain 40% contain 74%;
-    }
-    .method-sequence:not(.is-static, :has(.method-diagram:target)) .method-diagram-light {
-      display: block;
-      position: absolute;
-      inset: 0;
-      animation: method-light-exit linear both;
-      animation-timeline: --method-sequence;
-      animation-range: contain 29% contain 74%;
     }
     .method-sequence:not(.is-static, :has(.method-diagram:target))::after {
       content: "";
@@ -143,7 +133,6 @@
     .method-sequence:not(.is-static, :has(.method-diagram:target)):focus-within::before,
     .method-sequence:not(.is-static, :has(.method-diagram:target)):focus-within .method-diagram h3,
     .method-sequence:not(.is-static, :has(.method-diagram:target)):focus-within .pipeline-picture { animation: none; }
-    .method-sequence:not(.is-static, :has(.method-diagram:target)):focus-within .method-diagram-light { display: none; }
 
     @keyframes method-darken {
       from { opacity: 0; }
@@ -155,11 +144,7 @@
     }
     @keyframes method-frame-color {
       from { border-color: #d8d8d8; box-shadow: none; }
-      to { border-color: #9a794b; box-shadow: 0 0 36px #c9964732; }
-    }
-    @keyframes method-light-exit {
-      from { clip-path: inset(0 0 0 0); }
-      to { clip-path: inset(0 100% 0 0); }
+      to { border-color: #c9a970; box-shadow: 0 0 28px #c9964733, 0 18px 48px #0005; }
     }
     @keyframes method-title-exit {
       from { opacity: 1; }
