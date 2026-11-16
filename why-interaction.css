@@ -218,8 +218,16 @@
 .why-storyboard { margin-top: 9px; border-top: 1px solid var(--why-line); }
 .why-storyboard > summary { padding: 9px 0 5px; color: var(--why-ink); font: 700 14px/1.35 var(--sans); cursor: pointer; }
 .why-frames { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; list-style: none; margin: 4px 0 9px; padding: 0; }
-.why-frame { display: block; width: 100%; padding: 0; border: 0; border-radius: 6px; background: transparent; cursor: pointer; }
-.why-frame-image { position: relative; display: block; }
+.why-frame { display: block; width: 100%; padding: 3px; border: 0; border-radius: 8px; background: transparent; cursor: pointer; }
+.why-frame-image {
+  position: relative;
+  display: block;
+  border-radius: 6px;
+  transform: scale(.94);
+  opacity: .68;
+  transition: transform .34s cubic-bezier(.2,.75,.25,1), opacity .25s ease, box-shadow .25s ease;
+}
+.why-frame:hover .why-frame-image, .why-frame:focus-visible .why-frame-image { opacity: 1; }
 .why-frame-image img { border-radius: 6px; }
 .why-frame-image > span {
   position: absolute;
@@ -231,8 +239,12 @@
   color: #fff;
   font: 700 10px/1.15 var(--sans);
 }
-.why-frame[aria-current] .why-frame-image { outline: 2px solid #404040; outline-offset: 1px; border-radius: 6px; }
-.why-frame-notes { display: grid; gap: 12px; margin: 0; padding: 12px; background: #f3f3f3; border-radius: 7px; }
+.why-frame[aria-current] .why-frame-image {
+  transform: scale(1.05);
+  opacity: 1;
+  box-shadow: 0 0 0 2px #fff, 0 0 0 4px #333;
+}
+.why-frame-notes { display: grid; gap: 12px; margin: 0; padding: 12px; border: 1px solid #c4c4c4; background: #fff; border-radius: 9px; }
 .why-frame-notes dt { color: var(--why-ink); font: 760 clamp(16px, 1.3vw, 19px)/1.25 var(--sans); }
 .why-frame-notes dd { margin: 4px 0 0; color: var(--why-muted); font: 500 15px/1.45 var(--sans); }
 .why-play:focus-visible, .why-frame:focus-visible, .why-storyboard summary:focus-visible { outline: 2px solid #8b8b8b; outline-offset: 3px; }
@@ -265,14 +277,17 @@
 .why-type-source { opacity: 0; }
 .why-type-live { position: absolute; inset: 0; }
 .why-storyboard[open] .why-frames { animation: why-arrive .25s ease-out both; }
-.why-entered .why-comparison { animation: why-arrive .6s cubic-bezier(.16,1,.3,1) both; }
+.why-reveal-ready:not(.why-entered) :is(.why-response, .why-interactive) { opacity: 0; }
+.why-entered :is(.why-response, .why-interactive) { animation: why-panel-enter 1.15s cubic-bezier(.2,.65,.3,1) both; }
+.why-entered .why-interactive { animation-delay: .24s; }
+.why-reveal-ready:not(.why-entered) .why-panels:focus-within :is(.why-response, .why-interactive) { opacity: 1; }
 .why-entered::before { animation: why-dim .7s ease-out both; }
 .why-reveal-ready .why-definition:not(.why-note-entered) { opacity: 0; }
-.why-definition.why-note-entered { animation: why-note-pop .74s cubic-bezier(.22,.8,.25,1) both; }
+.why-definition.why-note-entered { animation: why-panel-enter 1.2s cubic-bezier(.2,.65,.3,1) both; }
 
-@keyframes why-note-pop {
-  from { opacity: 0; transform: translateY(12px) scale(.96); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
+@keyframes why-panel-enter {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes why-arrive { from { opacity: .72; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
@@ -307,12 +322,13 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .why-storyboard[open] .why-frames,
-  .why-entered .why-comparison, .why-entered::before,
+  .why-entered :is(.why-response, .why-interactive), .why-entered::before,
   .why-definition.why-note-entered { animation: none; }
   .why-reveal-ready .why-definition:not(.why-note-entered),
-  .why-type-source { opacity: 1; }
+  .why-type-source,
+  .why-reveal-ready:not(.why-entered) :is(.why-response, .why-interactive) { opacity: 1; }
   .why-type-live { display: none; }
-  .why-situation-indicators button::before { transition: none; }
+  .why-situation-indicators button::before, .why-frame-image { transition: none; }
 }
 .results-page .article-body > .homepage-findings {
   scroll-margin-top: calc(var(--header-height, 72px) + 12px);

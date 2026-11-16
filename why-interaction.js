@@ -130,7 +130,7 @@
       onComplete?.();
     }
 
-    const timer = setTimeout(() => { frame = requestAnimationFrame(draw); }, 640);
+    const timer = setTimeout(() => { frame = requestAnimationFrame(draw); }, 820);
     return () => {
       clearTimeout(timer);
       if (frame !== undefined) cancelAnimationFrame(frame);
@@ -153,7 +153,33 @@
     let visibleSituation = 0;
     let scrollTimer;
     let entryObserver;
+    let noteObserver;
+    let previewObserver;
     let stopTyping;
+    let autoPlayback = true;
+
+    function stopAutoPlayback() {
+      autoPlayback = false;
+      previewObserver?.disconnect();
+    }
+
+    function playVisiblePreview() {
+      if (!autoPlayback || !demo.isConnected || reducedMotion.matches) return;
+      const video = videos[visibleSituation];
+      previewObserver = new IntersectionObserver(([entry]) => {
+        if (!entry.isIntersecting || entry.intersectionRatio < 0.5) return;
+        previewObserver.disconnect();
+        if (!autoPlayback || !demo.isConnected || reducedMotion.matches ||
+            video !== videos[visibleSituation] || mediaTracks.some(track => !track.paused)) return;
+        const wasMuted = video.muted;
+        video.muted = true;
+        video.play().catch(() => { video.muted = wasMuted; });
+      }, { threshold: 0.5 });
+      previewObserver.observe(video);
+    }
+
+    demo.addEventListener('pointerdown', stopAutoPlayback, { once: true });
+    demo.addEventListener('keydown', stopAutoPlayback, { once: true });
 
     function updateDialogue() {
       const playing = !audio.paused && !audio.ended;
@@ -222,10 +248,12 @@
       const video = videos[sceneIndex];
       const storyboard = slide.querySelector('details');
       const buttons = [...slide.querySelectorAll('.why-frame')];
+      const notes = slide.querySelector('.why-frame-notes');
       const state = slide.querySelector('[data-frame-state]');
       const eventLabel = slide.querySelector('[data-frame-event]');
       const { frames } = situations[sceneIndex];
       let activeMoment = -1;
+      let notesAnimation;
 
       function updateFrames() {
         const moment = frames.findLastIndex(frame => video.currentTime >= frame.start);
@@ -237,6 +265,13 @@
         });
         state.textContent = frames[moment].state;
         eventLabel.textContent = frames[moment].event;
+        if (storyboard.open && !reducedMotion.matches) {
+          notesAnimation?.cancel();
+          notesAnimation = notes.animate([
+            { opacity: 0.42, transform: 'translateY(3px)' },
+            { opacity: 1, transform: 'translateY(0)' }
+          ], { duration: 290, easing: 'ease-out' });
+        }
       }
 
       buttons.forEach((button, index) => button.addEventListener('click', () => {
@@ -254,17 +289,25 @@
         stopTyping = typeDefinition(note.querySelector('p'), onComplete);
         note.classList.add('why-note-entered');
       }
+
       demo.classList.add('why-reveal-ready');
+      noteObserver = new IntersectionObserver(([entry]) => {
+        if (entry.intersectionRatio < 0.25) return;
+        noteObserver.disconnect();
+        if (reducedMotion.matches) return;
+        showNote(responseNote, () => showNote(interactiveNote));
+      }, { threshold: 0.25 });
+      noteObserver.observe(responseNote);
+
       entryObserver = new IntersectionObserver(([entry]) => {
-        if (entry.intersectionRatio < 0.22) return;
+        if (!entry.isIntersecting) return;
         entryObserver.disconnect();
         demo.classList.add('why-entered');
-        if (reducedMotion.matches) {
-          demo.classList.remove('why-reveal-ready');
-          return;
-        }
-        showNote(responseNote, () => showNote(interactiveNote));
-      }, { threshold: 0.22 });
+        if (!autoPlayback || reducedMotion.matches || mediaTracks.some(track => !track.paused)) return;
+        audio.play().then(() => {
+          audio.addEventListener('ended', playVisiblePreview, { once: true });
+        }).catch(playVisiblePreview);
+      }, { rootMargin: '0px 0px -10% 0px' });
       entryObserver.observe(demo.querySelector('.why-comparison'));
     }
     syncCarousel();
@@ -273,6 +316,8 @@
     return () => {
       clearTimeout(scrollTimer);
       entryObserver?.disconnect();
+      noteObserver?.disconnect();
+      stopAutoPlayback();
       stopTyping?.();
       mediaTracks.forEach(track => track.pause());
     };
