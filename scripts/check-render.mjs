@@ -36,6 +36,7 @@ assert.doesNotMatch(home, /class="method-steps?"/);
 assert.match(home, /<figure id="evaluation-diagram" class="method-diagram"/);
 assert.ok(home.indexOf('id="system-overview-heading"') < home.indexOf('id="evaluation-diagram"'));
 assert.match(home, /interactnet-pipeline-v168\.svg/);
+assert.match(home, /interactnet-pipeline-v168-black-gold\.svg/);
 assert.match(home, /<details id="comparisons" class="why-resources"\s*>/);
 assert.doesNotMatch(home, /Full demo progress|Play full demo/);
 assert.equal((home.match(/class="why-frame"/g) || []).length, 6);

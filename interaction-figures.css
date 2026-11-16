@@ -22,10 +22,26 @@
 @media(max-width:800px){.pipeline-picture{overflow-x:auto}.pipeline-picture img{width:1200px;max-width:none}}
 
 .interaction-method {
+  --method-top: clamp(44px, 6vw, 88px);
+  --method-bottom: clamp(48px, 7vw, 96px);
   background: #fff;
-  color: #191919;
+  color: #faf6ed;
   font-family: var(--sans);
-  padding: clamp(44px, 6vw, 88px) 0 clamp(48px, 7vw, 96px);
+  padding: var(--method-top) 0 var(--method-bottom);
+}
+.method-sequence {
+  position: relative;
+  isolation: isolate;
+}
+.method-sequence::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: calc(-1 * var(--method-top)) 0 calc(-1 * var(--method-bottom));
+  background:
+    radial-gradient(ellipse at 34% 44%, #73512e42, transparent 59%),
+    radial-gradient(ellipse at 88% 53%, #30355755, transparent 49%),
+    #08080b;
 }
 .method-layout {
   width: min(1680px, calc(100% - 2 * clamp(16px, 2.4vw, 40px)));
@@ -50,16 +66,46 @@
   letter-spacing: -.045em;
 }
 .method-diagram .pipeline-picture {
-  border-color: #d8d8d8;
+  position: relative;
+  border-color: #9a794b;
   border-radius: clamp(8px, 1.3vw, 18px);
+  background: #151419;
+  box-shadow: 0 0 36px #c9964732;
 }
-.method-diagram :focus-visible { outline: 2px solid #333; outline-offset: 4px; }
+.method-diagram .method-diagram-light { display: none; }
+.method-diagram :focus-visible { outline: 2px solid #f5d399; outline-offset: 4px; }
 
 @media (min-width: 801px) and (min-height: 480px) and (prefers-reduced-motion: no-preference) {
   @supports (animation-timeline: view()) {
     .method-sequence:not(.is-static, :has(.method-diagram:target)) {
       view-timeline: --method-sequence block;
       view-timeline-inset: var(--header-height, 0px) 0px;
+    }
+    .method-sequence:not(.is-static, :has(.method-diagram:target))::before {
+      animation: method-darken linear both;
+      animation-timeline: --method-sequence;
+      animation-range: contain 24% contain 72%;
+    }
+    .method-sequence:not(.is-static, :has(.method-diagram:target)) .method-intro {
+      color: #191919;
+    }
+    .method-sequence:not(.is-static, :has(.method-diagram:target)) .method-diagram h3 {
+      animation: method-caption-color step-end both;
+      animation-timeline: --method-sequence;
+      animation-range: contain 24% contain 48%;
+    }
+    .method-sequence:not(.is-static, :has(.method-diagram:target)) .pipeline-picture {
+      animation: method-frame-color linear both;
+      animation-timeline: --method-sequence;
+      animation-range: contain 40% contain 74%;
+    }
+    .method-sequence:not(.is-static, :has(.method-diagram:target)) .method-diagram-light {
+      display: block;
+      position: absolute;
+      inset: 0;
+      animation: method-light-exit linear both;
+      animation-timeline: --method-sequence;
+      animation-range: contain 29% contain 74%;
     }
     .method-sequence:not(.is-static, :has(.method-diagram:target))::after {
       content: "";
@@ -94,6 +140,27 @@
     .method-sequence:not(.is-static, :has(.method-diagram:target)):focus-within .method-intro { visibility: hidden; }
     .method-sequence:not(.is-static, :has(.method-diagram:target)):focus-within .method-diagram { animation: none; }
 
+    .method-sequence:not(.is-static, :has(.method-diagram:target)):focus-within::before,
+    .method-sequence:not(.is-static, :has(.method-diagram:target)):focus-within .method-diagram h3,
+    .method-sequence:not(.is-static, :has(.method-diagram:target)):focus-within .pipeline-picture { animation: none; }
+    .method-sequence:not(.is-static, :has(.method-diagram:target)):focus-within .method-diagram-light { display: none; }
+
+    @keyframes method-darken {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes method-caption-color {
+      from { color: #191919; }
+      to { color: #faf6ed; }
+    }
+    @keyframes method-frame-color {
+      from { border-color: #d8d8d8; box-shadow: none; }
+      to { border-color: #9a794b; box-shadow: 0 0 36px #c9964732; }
+    }
+    @keyframes method-light-exit {
+      from { clip-path: inset(0 0 0 0); }
+      to { clip-path: inset(0 100% 0 0); }
+    }
     @keyframes method-title-exit {
       from { opacity: 1; }
       to { opacity: 0; }
