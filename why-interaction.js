@@ -6,17 +6,17 @@
     {
       id: 'a', title: 'Situation A', context: 'Learning',
       frames: [
-        { start: 0, seek: 2.05, state: 'Curious about how it works', event: 'Tony asks about explosives.', alt: 'Tony and the AI face each other in a quiet room' },
-        { start: 4.5, seek: 8.35, state: 'Engaged in the explanation', event: 'The AI explains the underlying science.', alt: 'Tony studies a holographic diagram' },
-        { start: 9.2, seek: 11.9, state: 'Understands the risk', event: 'The AI explains the potential harm to others.', alt: 'The AI speaks to Tony about the risk to others' }
+        { start: 0, seek: 2.05, state: 'Tony is curious about how explosives work.', event: 'Tony asks about explosives, and the AI limits its answer to the science.', alt: 'Tony and the AI face each other in a quiet room' },
+        { start: 5.5, seek: 8.35, state: 'Tony is engaged in the explanation.', event: 'The AI explains the underlying science.', alt: 'Tony studies a holographic diagram' },
+        { start: 10, seek: 11.9, state: 'Tony recognizes the risk to others.', event: 'The AI warns that making explosives can harm others.', alt: 'The AI speaks to Tony about the risk to others' }
       ]
     },
     {
       id: 'b', title: 'Situation B', context: 'Immediate Danger',
       frames: [
-        { start: 0, seek: 1.75, state: 'Alarmed and looking for safety', event: 'Aliens attack the city.', alt: 'Tony and the AI look up at alien ships over the city' },
-        { start: 3.6, seek: 6.85, state: 'Still on edge, seeking protection', event: 'The AI raises a shield and blocks the attack.', alt: 'A blue shield surrounds the AI as it asks Tony for help' },
-        { start: 12.7, seek: 14.05, state: 'Relieved, with lingering concern', event: 'The spacecraft is destroyed.', alt: 'Tony and the AI watch as the immediate threat passes' }
+        { start: 0, seek: 1.75, state: 'Tony is alarmed and needs protection.', event: 'Aliens attack the city.', alt: 'Tony and the AI look up at alien ships over the city' },
+        { start: 4, seek: 6.85, state: 'Tony remains on edge under the shield.', event: 'The AI shields Tony from the attack and asks for his help.', alt: 'A blue shield surrounds the AI as it asks Tony for help' },
+        { start: 12.72, seek: 14.05, state: 'Tony feels safer but worries the attackers could return.', event: 'The spacecraft is destroyed, and the AI tells Tony the danger has passed.', alt: 'Tony and the AI watch as the immediate threat passes' }
       ]
     }
   ];
@@ -44,8 +44,8 @@
               </button></li>`).join('')}
           </ol>
           <dl class="why-frame-notes">
-            <div><dt>Latent state</dt><dd data-frame-state></dd></div>
-            <div><dt>Event chain</dt><dd data-frame-event></dd></div>
+            <div><dt>Latent State</dt><dd data-frame-state></dd></div>
+            <div><dt>Event Chain</dt><dd data-frame-event></dd></div>
           </dl>
         </details>
       </article>`;
@@ -68,14 +68,14 @@
         <p class="why-case"><strong>Case</strong> <span>“${turns[0].line}”</span></p>
       </header>
       <div class="why-layout">
-        <aside class="why-definition" data-definition="response" aria-label="Response Intelligence explanation">
-          <strong>RESPONSE INTELLIGENCE</strong>
+        <aside class="why-definition" data-definition="response" aria-label="Responsive Intelligence explanation">
+          <strong>RESPONSIVE INTELLIGENCE</strong>
           <p>The ability to respond appropriately within the direction set by a partner, following instructions and using new information.</p>
         </aside>
         <div class="why-comparison">
           <div class="why-panels">
             <section class="why-response" aria-labelledby="why-response-heading">
-              <h3 id="why-response-heading">Response Intelligence</h3>
+              <h3 id="why-response-heading">Responsive Intelligence</h3>
               <div class="why-chat">
                 <audio preload="metadata" src="${media}response-voices.m4a"></audio>
                 <ol class="why-turns" aria-label="Two exchanges between Tony and the AI">${turns.map(turnMarkup).join('')}</ol>
