@@ -38,7 +38,7 @@ const atlasWorldLayers = [
 const atlasWorldDustCount = 20;
 
 function atlasWorldFigure(){
-  const art = './assets/hero/layered-city.webp';
+  const art = './assets/hero/layered-city-silver-gold.webp';
   const dust = '<span class="atlas-world-dust"></span>'.repeat(atlasWorldDustCount);
   return `<figure class="atlas-world" style="--world-image:url('${art}')">
     <div class="atlas-world-stage" role="img" aria-label="A beam descends from a galaxy through four floating layers, revealing each in a cloud of light.">

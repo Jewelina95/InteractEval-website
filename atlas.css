@@ -463,7 +463,6 @@ html[data-ui-input=keyboard] select,html[data-ui-input=keyboard] select::picker-
   isolation: isolate;
   overflow: hidden;
   background: #fff;
-  filter: grayscale(1);
 }
 
 .atlas-world-art {
@@ -490,12 +489,12 @@ html[data-ui-input=keyboard] select,html[data-ui-input=keyboard] select::picker-
 
 .atlas-world-slice::before {
   content: "";
-  filter: saturate(.55) brightness(1.13) blur(.45px);
+  filter: grayscale(.82) brightness(1.09) blur(.45px);
   opacity: .17;
 }
 
 .atlas-world-ink {
-  filter: saturate(.95) brightness(1.13) contrast(1.12);
+  filter: saturate(.88) contrast(1.1) brightness(1.03);
   opacity: 0;
 }
 
@@ -535,7 +534,14 @@ html[data-ui-input=keyboard] select,html[data-ui-input=keyboard] select::picker-
   width: 100%;
   height: 0;
   translate: -50% 0;
+  --cool-haze: #a9c5ec47;
+  --warm-haze: #f0bc7b63;
 }
+
+.atlas-world-layer--galaxy .atlas-world-impact,
+.atlas-world-layer--waves .atlas-world-impact { --cool-haze: #b6a6ec52; }
+.atlas-world-layer--timeline .atlas-world-impact { --cool-haze: #95d5eb63; }
+.atlas-world-layer--city .atlas-world-impact { --warm-haze: #e9ad5969; }
 
 .atlas-world-mist,
 .atlas-world-ripple,
@@ -548,12 +554,13 @@ html[data-ui-input=keyboard] select,html[data-ui-input=keyboard] select::picker-
 }
 
 .atlas-world-mist {
+  mask-image: radial-gradient(ellipse 50% 50% at center, #000 26%, #000c 59%, transparent 100%);
   width: 76%;
   height: clamp(33px, 8vw, 76px);
   background:
-    radial-gradient(ellipse at 37% 49%, #fff9, #d2d2d24d 27%, transparent 58%),
-    radial-gradient(ellipse at 64% 53%, #fff9, #c2c2c24d 24%, transparent 57%),
-    radial-gradient(ellipse, #fff 6%, #edededea 18%, #bdbdbd65 43%, #a8a8a828 57%, transparent 72%);
+    radial-gradient(ellipse at 38% 44%, #fffc, var(--warm-haze) 31%, transparent 61%),
+    radial-gradient(ellipse at 66% 55%, #fff9, var(--cool-haze) 32%, transparent 62%),
+    radial-gradient(ellipse, #fffdf6 5%, #ffe8b2e0 20%, #e8bb7b55 46%, transparent 74%);
   filter: blur(2.7px);
 }
 
@@ -561,7 +568,7 @@ html[data-ui-input=keyboard] select,html[data-ui-input=keyboard] select::picker-
   width: 60%;
   aspect-ratio: 6.8;
   border-radius: 50%;
-  border: 1px solid #72aaa075;
+  border: 1px solid #d4aa6a8c;
   box-shadow: 0 0 8px #fff, inset 0 0 9px #fff;
   filter: blur(.45px);
 }
@@ -571,12 +578,17 @@ html[data-ui-input=keyboard] select,html[data-ui-input=keyboard] select::picker-
   aspect-ratio: 1;
   background: #fff;
   border-radius: 50%;
-  box-shadow: 0 0 2px 1px #b38e5fba, 0 0 7px 2px #efd99dc4;
+  box-shadow: 0 0 2px 1px #d29d5bbd, 0 0 7px 2px #f4c976b5;
 }
 
 .atlas-world-dust:nth-child(3n) {
   width: 2px;
   filter: blur(.3px);
+  box-shadow: 0 0 2px 1px #8eb9e6c4, 0 0 7px 2px #aad7f486;
+}
+
+.atlas-world-dust:nth-child(5n) {
+  box-shadow: 0 0 2px 1px #ba9ce6a6, 0 0 7px 2px #d9c3f59c;
 }
 
 .atlas-world-beam,
@@ -593,8 +605,8 @@ html[data-ui-input=keyboard] select,html[data-ui-input=keyboard] select::picker-
   height: 81.7%;
   translate: -50% 0;
   transform-origin: center top;
-  background: linear-gradient(90deg, transparent, #abcab44a 23%, #b0a38666 39%,
-    #fff5d5ad 50%, #b0a38666 61%, #abcab44a 77%, transparent);
+  background: linear-gradient(90deg, transparent, #acb5ee24 21%, #edc78a58 35%,
+    #ffedc4cd 50%, #f2c08066 65%, #a8d8f32c 79%, transparent);
   clip-path: polygon(31% 0, 69% 0, 100% 100%, 0 100%);
   mask-image: linear-gradient(transparent, #000 12%, #000 84%, transparent);
   filter: blur(2px);
@@ -608,12 +620,12 @@ html[data-ui-input=keyboard] select,html[data-ui-input=keyboard] select::picker-
 }
 
 .atlas-world-beam::before {
-  background: linear-gradient(90deg, transparent 15%, #e4e4e43d 29%, #b1946c70 41%,
-    #fff7e3ed 46%, #fff 50%, #fff7e3ed 54%, #b1946c70 59%, #e4e4e43d 71%, transparent 85%);
+  background: linear-gradient(90deg, transparent 14%, #e5cbf42c 27%, #e7b87365 42%,
+    #ffe7addf 46%, #fffdf4 50%, #ffe2a4e5 54%, #e8b66f69 59%, #b2d5f930 73%, transparent 86%);
 }
 
 .atlas-world-beam::after {
-  background: radial-gradient(ellipse 26% 46% at 50% 79%, #fff9, #eee9 30%, #c9c9c932 68%, transparent);
+  background: radial-gradient(ellipse 26% 46% at 50% 79%, #fffceac9, #ffe3a696 32%, #edae633e 66%, transparent);
   filter: blur(3px);
 }
 
@@ -637,7 +649,7 @@ html[data-ui-input=keyboard] select,html[data-ui-input=keyboard] select::picker-
   width: clamp(23px, 5vw, 52px);
   height: 23%;
   transform-origin: 50% 100%;
-  background: radial-gradient(ellipse at bottom, #fff 6%, #e8e8e8c4 24%, #aaaaaa65 45%, transparent 74%);
+  background: radial-gradient(ellipse at bottom, #fffdf6 6%, #ffe1a5ce 24%, #e6b36e55 45%, transparent 74%);
   filter: blur(1.1px);
 }
 
@@ -646,7 +658,7 @@ html[data-ui-input=keyboard] select,html[data-ui-input=keyboard] select::picker-
   aspect-ratio: .65;
   border-radius: 50%;
   background: #fff;
-  box-shadow: 0 0 4px 1px #ad8758, 0 0 13px 5px #e8c98b95, 0 0 26px 10px #b5d8be88;
+  box-shadow: 0 0 4px 1px #d19652, 0 0 13px 5px #f4c46fb0, 0 0 26px 10px #d7c3ef69;
 }
 
 .atlas-world-controls {
