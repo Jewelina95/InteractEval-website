@@ -28,10 +28,11 @@ function setupSiteMenu(){
   const menu=document.querySelector('.site-menu');
   if(!menu)return;
   const panel=menu.querySelector('nav'),summary=menu.querySelector('summary');
-  const home='./index.html',research='./research.html',showcase='./showcase.html';
+  const home='./index.html';
   const destinations=[
     ['Main',home],
     ['Findings',home+'#key-findings'],
+    ['How InteractNet works',home+'#system-overview'],
     ['Models',home+'#models',[
       ['All evaluations',home+'#models'],
       ['Capabilities',home+'#models?category=Capabilities'],
@@ -47,26 +48,6 @@ function setupSiteMenu(){
       ...['MetaMind','Cognizer','Claude Code'].map(name=>[name,home+'#agents?architecture='+encodeURIComponent(name)])
     ]],
     ['Image, Speech, Video',home+'#multimodal'],
-    ['Showcase',showcase,[
-      ['All conversations',showcase],
-      ['Task-oriented',showcase+'#cases?purpose=functional'],
-      ['Open-ended',showcase+'#cases?purpose=nonfunctional']
-    ]],
-    ['Leaderboards',home+'#leaderboards',[
-      ['Overall ranking',home+'#leaderboards'],
-      ['Interaction stages',home+'#leaderboards?metric=stage2'],
-      ['Scenario performance',home+'#leaderboards?metric=nonfunctional'],
-      ['Partner-role capability',home+'#leaderboards?metric=user-composite']
-    ]],
-    ['Research',research,[
-      ['Three theoretical ideas',research+'#theory'],
-      ['Instrument architecture',research+'#architecture'],
-      ['World components',research+'#components'],
-      ['Time-indexed records',research+'#temporal-records'],
-      ['Key findings',research+'#discoveries'],
-      ['Scenario design',research+'#scenario-space'],
-      ['Capability rubric',research+'#rubric']
-    ]]
   ];
   const link=([label,href])=>`<a href="${href}">${label}</a>`;
   panel.innerHTML=destinations.map(([label,href,items],index)=>{

@@ -36,11 +36,6 @@ function resultResources(open) {
     `<option value="${id}" ${id===mainComparisonMeasure?'selected':''}>${safe(label)}</option>`
   ).join('')}</optgroup>`).join('');
   return `<section id="resources" class="article-section" aria-label="Explore InteractNet">
-    <nav class="result-next-links home-destinations" aria-label="Explore InteractNet">
-      <a href="./research.html"><b>Research</b><span aria-hidden="true">↗</span></a>
-      <a href="#leaderboards"><b>Leaderboards</b><span aria-hidden="true">↗</span></a>
-      <a href="./showcase.html"><b>Showcase</b><span aria-hidden="true">↗</span></a>
-    </nav>
     <details id="comparisons" class="why-resources" ${open?'open':''}>
       <summary>Results &amp; analysis</summary>
       <label class="why-resource-measure">Compare by<select id="main-resource-measure">${choices}</select></label>
@@ -88,7 +83,8 @@ function resultsHomeV2(){
   return `<div class="research-restored results-page">${atlasHero()}<article>
     <div class="article-shell"><div class="article-body">${interactionFigure('motivation')}${window.interactNetTheory?.render() ?? ""}</div></div>
     ${coreFindings(true)}
-    <div class="findings-continuation"><div class="article-shell"><div class="article-body">${interactionFigure('system')}${resultResources(showResults)}</div></div></div>
+    ${interactionFigure('system')}
+    <div class="method-results"><div class="article-shell"><div class="article-body">${resultResources(showResults)}</div></div></div>
   </article></div>`;
 }
 function comparisonDataTable(ids,labels=ids.map(id=>metricOf(id).label),rows=publication.models,headerModels=[]){

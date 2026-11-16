@@ -320,32 +320,6 @@
 .results-page .article-body > .homepage-findings {
   scroll-margin-top: calc(var(--header-height, 72px) + 12px);
 }
-.results-page .result-next-links.home-destinations {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 0;
-  margin: 0 0 22px;
-  padding: 0 clamp(16px, 3vw, 34px);
-  background: linear-gradient(135deg, #1c362a, #101b16);
-  border-radius: 18px;
-  box-shadow: 0 10px 26px #12281e24;
-}
-.results-page .home-destinations > a {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  min-height: 57px;
-  padding: 9px 0;
-  border: 0;
-  border-bottom: 1px solid #ffffff29;
-  border-radius: 0;
-  background: transparent;
-  color: #f1f7f3;
-  text-decoration: none;
-}
-.results-page .home-destinations > a:last-child { border-bottom: 0; }
-.results-page .home-destinations > a b { color: inherit; }
-.results-page .home-destinations > a:hover { color: #b7e0c5; }
 .why-resources > summary { cursor: pointer; color: #193b30; font-weight: 650; }
 .why-resource-measure { display: grid; gap: 6px; margin: 18px 0; width: min(100%, 420px); }
 .why-resource-measure select { width: 100%; min-height: 42px; padding: 5px 9px; font: inherit; }

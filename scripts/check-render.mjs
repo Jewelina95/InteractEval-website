@@ -18,9 +18,8 @@ const context = vm.createContext({
 });
 const read = file => fs.readFileSync(new URL('../' + file, import.meta.url), 'utf8');
 vm.runInContext(read('why-interaction.js'), context);
-context.interactionFigure = kind => {
-  return kind === 'motivation' ? context.window.whyInteractionFigure() : '<section id="system-overview"></section>';
-};
+context.document.body.dataset = {};
+vm.runInContext(read('interaction-figures.js'), context);
 const source = read('results-explorer.js');
 const start = source.indexOf('function resultsHomeV2()');
 const end = source.indexOf('function comparisonDataTable(', start);
@@ -32,7 +31,9 @@ const home = vm.runInContext('resultsHomeV2()', context);
 const order = ['id="main-hero"', 'id="response-interaction"', 'id="why-response-heading"', 'data-definition="response"', 'id="why-interactive-heading"', 'data-definition="interactive"', 'id="why-situation-a"', 'id="why-situation-b"', 'id="theoretical-framework"', 'id="key-findings"', 'id="system-overview"', 'id="resources"'];
 assert.ok(order.every(id => home.includes(id)));
 for (let i = 1; i < order.length; i++) assert.ok(home.indexOf(order[i - 1]) < home.indexOf(order[i]), order[i]);
-assert.doesNotMatch(home, /main-results-rail|figure1-field-aligned|why-teardown/);
+assert.doesNotMatch(home, /main-results-rail|figure1-field-aligned|why-teardown|home-destinations|href="[^"]*(?:research\.html|showcase\.html|#leaderboards)/);
+assert.equal((home.match(/<li class="method-step">/g) || []).length, 3);
+assert.match(home, /<details class="method-diagram">/);
 assert.match(home, /<details id="comparisons" class="why-resources"\s*>/);
 assert.doesNotMatch(home, /Full demo progress|Play full demo/);
 assert.equal((home.match(/class="why-frame"/g) || []).length, 6);
@@ -53,4 +54,4 @@ for (const [hash, group, measure] of [
   assert.equal(vm.runInContext('mainComparisonGroup', context), group);
   assert.equal(vm.runInContext('mainComparisonMeasure', context), measure);
 }
-console.log('Main renders both videos and the chat dialogue, six timeline frames, definitions, findings, and the vertical resource links. Direct comparison links still open the selected measure.');
+console.log('Main renders both videos and the chat dialogue, six timeline frames, definitions, findings, and the three-step evaluation walkthrough. Direct comparison links still open the selected measure.');
