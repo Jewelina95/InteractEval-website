@@ -2,25 +2,32 @@
 
 window.interactNetTheory = (() => {
   const image = './assets/hero/layered-city.webp';
-  const layers = ['galaxy', 'mountain', 'timeline', 'waves', 'city'];
+  const layers = [
+    {name:'state', art:'iceberg', alt:'Cutaway of a glacier above and below the waterline', caption:'Public acts O<sub>t</sub> · Scene S<sub>t</sub> · Latent state Ψ<sub>t</sub>'},
+    {name:'time', art:'trajectory', alt:'A branching illuminated trajectory crosses three film frames', caption:'Past · Present · Possible futures'},
+    {name:'agency', art:'city', alt:'A floating city with illuminated routes through its buildings', caption:'Contribution · L1–L6'}
+  ];
 
   function render(){
     return `<section class="theory-story" aria-labelledby="theory-story-title">
+      <div class="theory-entry">
+        <a href="#theoretical-framework" aria-label="Continue to the three-layer framework"><span aria-hidden="true">↓</span></a>
+      </div>
+      <div class="theory-curtain" aria-hidden="true"></div>
       <div class="theory-board" id="theoretical-framework">
         <header class="theory-heading">
           <h2 id="theory-story-title">The three-layer framework</h2>
           <button class="theory-replay" type="button" hidden>Replay animation</button>
         </header>
         <div class="theory-layout">
-          <figure class="theory-world" style="--world-image:url('${image}')" aria-label="A galaxy above the mountain, timeline, waves and city of the interaction world">
-            <img src="${image}" width="1280" height="854" alt="" decoding="async"/>
-            ${layers.map(layer => `<i class="theory-slice theory-slice--${layer}" aria-hidden="true"></i>`).join('')}
-            <div class="theory-cutaway" aria-hidden="true"></div>
-            <div class="theory-mark theory-mark--state" aria-hidden="true"><span>Public acts O<sub>t</sub></span><span>Scene S<sub>t</sub> · Latent state Ψ<sub>t</sub></span></div>
-            <div class="theory-mark theory-mark--time" aria-hidden="true">Past · Present · Possible future</div>
-            <div class="theory-mark theory-mark--agency" aria-hidden="true">Contribution · L1–L6</div>
-          </figure>
-          ${['state', 'time', 'agency'].map((name, index) => `<div class="theory-leader theory-leader--${name}" aria-hidden="true" style="--reveal:${1.1 + index * .8}s"><i></i><i></i><i></i></div>`).join('')}
+          <img class="theory-stack" src="${image}" width="1280" height="854" alt="" decoding="async"/>
+          ${layers.map(({name, art, alt, caption}) => `
+            <figure class="theory-visual theory-visual--${name}">
+              <img src="./assets/theory-story/${art}.webp" width="880" height="480" alt="${alt}" decoding="async"/>
+              <figcaption>${caption}</figcaption>
+            </figure>
+            <div class="theory-arrow theory-arrow--${name}" aria-hidden="true"></div>
+          `).join('')}
           <div class="theory-diagrams">
             <section class="theory-row theory-row--state" aria-labelledby="theory-iceberg">
               <div class="theory-row-title"><h3 id="theory-iceberg">Data Iceberg Theory</h3><p>Interaction-world reconstruction</p></div>
@@ -66,27 +73,6 @@ window.interactNetTheory = (() => {
     </section>`;
   }
 
-  function alignLeaders(story){
-    const layout = story.querySelector('.theory-layout').getBoundingClientRect();
-    const marks = story.querySelectorAll('.theory-mark');
-    const rows = story.querySelectorAll('.theory-row');
-    story.querySelectorAll('.theory-leader').forEach((leader, index) => {
-      const mark = marks[index].getBoundingClientRect();
-      const row = rows[index].getBoundingClientRect();
-      const from = mark.top + mark.height / 2;
-      const to = row.top + row.height / 2;
-      const top = Math.min(from, to);
-      Object.assign(leader.style, {
-        left: `${mark.right - layout.left}px`,
-        top: `${top - layout.top}px`,
-        width: `${Math.max(0, row.left - mark.right)}px`,
-        height: `${Math.abs(from - to) + 1}px`
-      });
-      leader.style.setProperty('--start-line', `${from - top}px`);
-      leader.style.setProperty('--end-line', `${to - top}px`);
-    });
-  }
-
   let observer;
   let activeStory;
   function setup(){
@@ -95,32 +81,36 @@ window.interactNetTheory = (() => {
     observer?.disconnect();
     activeStory = story;
     if(!story) return;
-    alignLeaders(story);
     if(matchMedia('(prefers-reduced-motion: reduce)').matches || !('IntersectionObserver' in window)) return;
 
     const board = story.querySelector('.theory-board');
     const replay = story.querySelector('.theory-replay');
+    const entryCue = story.querySelector('.theory-entry');
     story.classList.add('theory-ready');
     function play(){
       story.classList.remove('theory-playing');
-      alignLeaders(story);
+      void board.offsetWidth;
       story.classList.add('theory-playing');
       replay.hidden = false;
     }
     replay.addEventListener('click', play);
     const mastheadHeight = document.querySelector('.masthead')?.offsetHeight ?? 72;
     const trigger = mastheadHeight + 112;
-    observer = new IntersectionObserver(entries => {
-      if(!entries.some(entry => entry.isIntersecting)) return;
-      observer.disconnect();
-      play();
+    observer = new IntersectionObserver((entries, currentObserver) => {
+      for(const entry of entries){
+        if(!entry.isIntersecting) continue;
+        if(entry.target === entryCue){
+          story.classList.add('theory-cued');
+          currentObserver.unobserve(entryCue);
+        }else{
+          currentObserver.disconnect();
+          play();
+        }
+      }
     }, {rootMargin:`0px 0px -${Math.max(0, window.innerHeight - trigger)}px 0px`});
+    observer.observe(entryCue);
     observer.observe(board);
   }
-
-  window.addEventListener('resize', () => {
-    if(activeStory?.isConnected) alignLeaders(activeStory);
-  }, {passive:true});
 
   return {render, setup};
 })();
