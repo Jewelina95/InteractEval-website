@@ -3,9 +3,9 @@
 window.interactNetTheory = (() => {
   const image = './assets/hero/layered-city.webp';
   const layers = [
-    {name:'state', art:'iceberg', band:[.19, .35], bridge:'State understanding', alt:'Cutaway of a glacier above and below the waterline', caption:'Public acts O<sub>t</sub> · Scene S<sub>t</sub> · Latent state Ψ<sub>t</sub>'},
-    {name:'time', art:'trajectory', band:[.35, .69], bridge:'Process understanding', alt:'A branching illuminated trajectory crosses three film frames', caption:'Past · Present · Possible futures'},
-    {name:'agency', art:'city', band:[.643, 1], bridge:'Contribution attribution', alt:'A floating city with illuminated routes through its buildings', caption:'Contribution · L1–L6'}
+    {name:'state', art:'iceberg', band:[.19, .35], width:.43, title:'Data Iceberg Theory', bridge:'State understanding', alt:'Cutaway of a glacier above and below the waterline', caption:'Public acts O<sub>t</sub> · Scene S<sub>t</sub> · Latent state Ψ<sub>t</sub>'},
+    {name:'time', art:'trajectory', band:[.35, .69], width:.59, title:'Movie Evaluation Theory', bridge:'Process understanding', alt:'A branching illuminated trajectory crosses three film frames'},
+    {name:'agency', art:'city', band:[.643, .98], width:.81, title:'Agency Principle', bridge:'Contribution attribution', alt:'A floating city with illuminated routes through its buildings'}
   ];
 
   function render(){
@@ -21,26 +21,28 @@ window.interactNetTheory = (() => {
         </header>
         <div class="theory-layout">
           <img class="theory-stack" src="${image}" width="1280" height="854" alt="" decoding="async"/>
-          ${layers.map(({name, art, bridge, alt, caption}) => `
+          ${layers.map(({name, art, title, bridge, alt, caption}) => `
             <figure class="theory-visual theory-visual--${name}">
-              <img src="./assets/theory-story/${art}.webp" width="880" height="480" alt="${alt}" decoding="async"/>
-              <figcaption>${caption}</figcaption>
+              <div class="theory-art">
+                <img src="./assets/theory-story/${art}.webp" width="880" height="480" alt="${alt}" decoding="async"/>
+              </div>
+              <figcaption><strong>${title}</strong>${caption ? `<span>${caption}</span>` : ''}</figcaption>
             </figure>
-            <div class="theory-arrow theory-arrow--${name}"><span>${bridge}</span></div>
+            <div class="theory-arrow theory-arrow--${name}"><span>${bridge}</span><i aria-hidden="true"></i></div>
             <div class="theory-morph theory-morph--${name}" aria-hidden="true" style="--world-image:url('${image}')"></div>
           `).join('')}
           <div class="theory-diagrams">
             <section class="theory-row theory-row--state" aria-labelledby="theory-iceberg">
               <p class="theory-mobile-bridge">State understanding</p>
-              <div class="theory-row-title"><h3 id="theory-iceberg">Data Iceberg Theory</h3><p>Interaction-world reconstruction</p></div>
+              <div class="theory-row-title"><h3 id="theory-iceberg">Interaction-world reconstruction</h3></div>
               <div class="theory-state-flow">
-                <div class="theory-node theory-node--acts"><strong>Public acts <var>O<sub>t</sub></var></strong></div>
+                <div class="theory-node theory-node--acts"><span>Dialogue transcript</span><strong>Public acts <var>O<sub>t</sub></var></strong></div>
                 <div class="theory-state-inputs">
                   <div class="theory-node theory-node--scene"><strong>Scene <var>S<sub>t</sub></var></strong></div>
                   <div class="theory-node theory-node--latent"><strong>Latent state <var>Ψ<sub>t</sub></var></strong></div>
                 </div>
                 <div class="theory-state-output">
-                  <div class="theory-node theory-node--prior"><strong>Previous world <var>W<sub>t−1</sub></var> ↓</strong></div>
+                  <div class="theory-node theory-node--prior"><strong>Previous world <var>W<sub>t−1</sub></var></strong></div>
                   <div class="theory-node theory-node--outcome"><strong>World model <var>W<sub>t</sub></var></strong></div>
                 </div>
               </div>
@@ -56,24 +58,19 @@ window.interactNetTheory = (() => {
             </section>
             <section class="theory-row theory-row--time" aria-labelledby="theory-movie">
               <p class="theory-mobile-bridge">Process understanding</p>
-              <div class="theory-row-title"><h3 id="theory-movie">Movie Evaluation Theory</h3><p>Trajectory understanding</p></div>
+              <div class="theory-row-title"><h3 id="theory-movie">Trajectory understanding</h3></div>
               <div class="theory-timeline">
-                <div class="theory-node"><strong>Past</strong></div>
-                <div class="theory-node"><strong>Present</strong></div>
-                <div class="theory-node theory-node--future"><strong>Possible futures</strong></div>
+                <div class="theory-node"><strong>Past</strong><span>Event chain <var>E<sub>t</sub></var></span></div>
+                <div class="theory-node"><strong>Present</strong><span>Current turn</span></div>
+                <div class="theory-node theory-node--future"><strong>Possible futures</strong><span>State transitions</span></div>
               </div>
-              <details class="theory-details">
-                <summary>How is a trajectory read?</summary>
-                <dl>
-                  <dt>Past</dt><dd>The events and choices that led to the current turn.</dd>
-                  <dt>Present</dt><dd>The current exchange and the changes it produces.</dd>
-                  <dt>Possible futures</dt><dd>How the joint activity could advance, stay on course, deteriorate or break down.</dd>
-                </dl>
-              </details>
+              <ul class="theory-transitions" aria-label="Possible state transitions">
+                <li>Advance</li><li>Maintain</li><li>Degrade</li><li>Collapse</li>
+              </ul>
             </section>
             <section class="theory-row theory-row--agency" aria-labelledby="theory-agency">
               <p class="theory-mobile-bridge">Contribution attribution</p>
-              <div class="theory-row-title"><h3 id="theory-agency">Agency Principle</h3><p>Capability adjudication</p></div>
+              <div class="theory-row-title"><h3 id="theory-agency">Capability adjudication</h3></div>
               <div class="theory-capabilities" aria-label="Six levels of assistant capability">
                 ${[
                   ['L1–L2', 'Passive execution'],
@@ -107,28 +104,36 @@ window.interactNetTheory = (() => {
     const origin = stack.getBoundingClientRect();
     const bounds = layout.getBoundingClientRect();
     const pictures = layout.querySelectorAll('.theory-visual img');
+    const previewHeight = Math.max(250, window.innerHeight - bounds.top - 20);
     return [...layout.querySelectorAll('.theory-morph')].map((morph, index) => {
-      const [top, bottom] = layers[index].band;
+      const {band:[top, bottom], width} = layers[index];
       const portion = bottom - top;
-      const startX = origin.left - bounds.left;
-      const startY = origin.top - bounds.top + top * origin.height;
+      const startX = origin.left - bounds.left + origin.width / 2;
+      const startY = origin.top - bounds.top + origin.height * (top + bottom) / 2;
       const bandHeight = origin.height * portion;
       const target = pictures[index].getBoundingClientRect();
       const targetWidth = Math.min(target.width, target.height * (880 / 480));
-      const scale = targetWidth / origin.width;
-      const moveX = target.left - bounds.left + (target.width - targetWidth) / 2 - startX;
-      const moveY = target.top - bounds.top + (target.height - bandHeight * scale) / 2 - startY;
+      const scale = Math.max(1.1, targetWidth * .86 / (origin.width * width));
+      const moveX = target.left - bounds.left + target.width / 2 - startX;
+      const moveY = target.top - bounds.top + target.height / 2 - startY;
       Object.assign(morph.style, {
-        left: `${startX}px`, top: `${startY}px`, width: `${origin.width}px`, height: `${bandHeight}px`,
+        left: `${startX - origin.width / 2}px`, top: `${startY - bandHeight / 2}px`,
+        width: `${origin.width}px`, height: `${bandHeight}px`,
         backgroundSize: `100% ${100 / portion}%`, backgroundPosition: `center ${100 * top / (1 - portion)}%`
       });
-      const moved = `translate(${moveX}px, ${moveY}px) scale(${scale})`;
+      const previewY = previewHeight * (.2 + index * .28) - startY;
+      const previewScale = Math.min(scale, Math.max(1.12, previewHeight * .2 / bandHeight));
+      const separated = `translate(${moveX}px, ${previewY}px)`;
+      const expanded = `translate(${moveX}px, ${moveY}px) scale(${scale})`;
       return morph.animate([
         {opacity:0, transform:'none'},
-        {opacity:.62, transform:'none', offset:.12, easing:'cubic-bezier(.18,.65,.2,1)'},
-        {opacity:.88, transform:moved, offset:.76},
-        {opacity:0, transform:moved}
-      ], {duration:1490, delay:1420 + index * 180});
+        {opacity:1, transform:'none', offset:.13, easing:'cubic-bezier(.25,.72,.23,1)'},
+        {opacity:1, transform:separated, offset:.49},
+        {opacity:1, transform:separated, offset:.55, easing:'cubic-bezier(.24,.66,.2,1)'},
+        {opacity:1, transform:`${separated} scale(${previewScale})`, offset:.76},
+        {opacity:1, transform:expanded, offset:.89},
+        {opacity:0, transform:expanded}
+      ], {duration:2630, delay:1510 + index * 145});
     });
   }
 
@@ -147,15 +152,19 @@ window.interactNetTheory = (() => {
     const entryCue = story.querySelector('.theory-entry');
     story.classList.add('theory-ready');
     let movements = [];
-    function play(){
+    function play(withCurtain = false){
       movements.forEach(movement => movement.cancel());
       story.classList.remove('theory-playing');
       void board.offsetWidth;
       movements = animateLayers(board);
+      story.classList.toggle('theory-entering', withCurtain);
       story.classList.add('theory-playing');
       replay.hidden = false;
     }
-    replay.addEventListener('click', play);
+    replay.addEventListener('click', () => {
+      board.scrollIntoView({block:'start', behavior:'instant'});
+      play();
+    });
     const mastheadHeight = document.querySelector('.masthead')?.offsetHeight ?? 72;
     const trigger = mastheadHeight + 112;
     observer = new IntersectionObserver((entries, currentObserver) => {
@@ -166,7 +175,7 @@ window.interactNetTheory = (() => {
           currentObserver.unobserve(entryCue);
         }else{
           currentObserver.disconnect();
-          play();
+          play(true);
         }
       }
     }, {rootMargin:`0px 0px -${Math.max(0, window.innerHeight - trigger)}px 0px`});
