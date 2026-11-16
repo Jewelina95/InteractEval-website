@@ -28,7 +28,7 @@ function setupSiteMenu(){
   const menu=document.querySelector('.site-menu');
   if(!menu)return;
   const panel=menu.querySelector('nav'),summary=menu.querySelector('summary');
-  const home='./index.html';
+  const home='./';
   const destinations=[
     ['Main',home],
     ['Findings',home+'#key-findings'],

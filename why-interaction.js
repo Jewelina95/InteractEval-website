@@ -104,6 +104,39 @@
       <p class="why-status" role="status"></p>
     </section>`;
 
+  function typeDefinition(paragraph, delay) {
+    const copy = paragraph.textContent;
+    const characters = Array.from(copy);
+    const source = document.createElement('span');
+    const animated = document.createElement('span');
+    source.className = 'why-type-source';
+    source.textContent = copy;
+    animated.className = 'why-type-live';
+    animated.setAttribute('aria-hidden', 'true');
+    paragraph.replaceChildren(source, animated);
+    paragraph.classList.add('is-typing');
+
+    let frame;
+    let start;
+    function draw(now) {
+      start ??= now;
+      const count = Math.min(characters.length, Math.floor((now - start) / 23) + 1);
+      animated.textContent = characters.slice(0, count).join('');
+      if (count < characters.length) {
+        frame = requestAnimationFrame(draw);
+        return;
+      }
+      paragraph.textContent = copy;
+      paragraph.classList.remove('is-typing');
+    }
+
+    const timer = setTimeout(() => { frame = requestAnimationFrame(draw); }, delay);
+    return () => {
+      clearTimeout(timer);
+      if (frame !== undefined) cancelAnimationFrame(frame);
+    };
+  }
+
   function setupDemo(demo) {
     const audio = demo.querySelector('audio');
     const audioButton = demo.querySelector('.why-assistant-control');
@@ -121,6 +154,7 @@
     let visibleSituation = 0;
     let scrollTimer;
     let entryObserver;
+    let stopTyping = [];
 
     function updateDialogue() {
       const playing = !audio.paused && !audio.ended;
@@ -219,11 +253,15 @@
     if (!reducedMotion.matches && 'IntersectionObserver' in window) {
       demo.classList.add('why-reveal-ready');
       entryObserver = new IntersectionObserver(([entry]) => {
-        if (!entry.isIntersecting) return;
+        if (entry.intersectionRatio < 0.24) return;
+        if (!reducedMotion.matches) {
+          const paragraphs = demo.querySelectorAll('.why-definition p:first-of-type');
+          stopTyping = [...paragraphs].map((paragraph, index) => typeDefinition(paragraph, 720 + index * 310));
+        }
         demo.classList.add('why-entered');
         entryObserver.disconnect();
-      }, { threshold: 0.16 });
-      entryObserver.observe(demo);
+      }, { threshold: 0.24 });
+      entryObserver.observe(demo.querySelector('.why-comparison'));
     }
     syncCarousel();
     updateDialogue();
@@ -231,6 +269,7 @@
     return () => {
       clearTimeout(scrollTimer);
       entryObserver?.disconnect();
+      stopTyping.forEach(stop => stop());
       mediaTracks.forEach(track => track.pause());
     };
   }

@@ -3,8 +3,8 @@
 let findingsResearch,findingsEvidence;
 const findingById=id=>findingsResearch?.findings.find(f=>f.id===id);
 const findingCategory=slug=>findingsResearch?.categories.find(c=>c.slug===slug);
-const findingLink=f=>`./index.html#comparisons?measure=${encodeURIComponent(f.measure)}`;
-const findingCategoryLink=slug=>`./index.html#findings?category=${encodeURIComponent(slug)}`;
+const findingLink=f=>`./#comparisons?measure=${encodeURIComponent(f.measure)}`;
+const findingCategoryLink=slug=>`./#findings?category=${encodeURIComponent(slug)}`;
 function activeResearchFinding(){
  const id=new URLSearchParams(location.hash.split('?')[1]||'').get('finding'),f=findingById(id);
  return f?.measure===mainComparisonMeasure?f:null;
@@ -53,7 +53,7 @@ function findingEvidenceIntro(){
 function findingEvidenceFooter(){
  const f=activeResearchFinding();if(!f)return '';
  const visible=new Set(findingsResearch.published_ids||[]),related=f.related_ids.map(findingById).filter(r=>r&&visible.has(r.id)&&r.id!==f.id),next=publishedFindings()[publishedFindings().findIndex(r=>r.id===f.id)+1];
- return `${f.evidence_summary_en?`<p class="finding-evidence-statement" data-research-finding="${f.id}">${safe(f.evidence_summary_en)}</p>`:''}${findingKeyMetrics(f)}${findingDataExplanation(f.measure)}<p class="finding-evidence-limit">${safe(f.limitation_en)}</p><nav class="finding-evidence-nav" aria-label="Related findings">${related.length?`<div><span>Related findings</span>${related.map(r=>findingAnchor(r,`${safe(r.title_en)} <i aria-hidden="true">↓</i>`)).join('')}</div>`:''}${next?`<div><span>Next finding</span>${findingAnchor(next,`${safe(next.title_en)} <i aria-hidden="true">→</i>`)}</div>`:''}<a href="./index.html#key-findings">Back to key findings ↑</a></nav>`;
+ return `${f.evidence_summary_en?`<p class="finding-evidence-statement" data-research-finding="${f.id}">${safe(f.evidence_summary_en)}</p>`:''}${findingKeyMetrics(f)}${findingDataExplanation(f.measure)}<p class="finding-evidence-limit">${safe(f.limitation_en)}</p><nav class="finding-evidence-nav" aria-label="Related findings">${related.length?`<div><span>Related findings</span>${related.map(r=>findingAnchor(r,`${safe(r.title_en)} <i aria-hidden="true">↓</i>`)).join('')}</div>`:''}${next?`<div><span>Next finding</span>${findingAnchor(next,`${safe(next.title_en)} <i aria-hidden="true">→</i>`)}</div>`:''}<a href="./#key-findings">Back to key findings ↑</a></nav>`;
 }
 
 function evidenceTable(headers,rows,caption='Published evidence',showCaption=true){
@@ -221,7 +221,7 @@ document.addEventListener('input',event=>{
  const home=event.target.id==='home-finding-search';
  document.getElementById(home?'home-finding-catalog-results':'finding-catalog-results').innerHTML=findingsCards(category,q);
  const params=new URLSearchParams();if(category)params.set('category',category);if(q)params.set('q',q);
- history.replaceState(null,'','./index.html#'+(home?'key-findings':'findings')+(params.size?'?'+params:''));
+ history.replaceState(null,'','./#'+(home?'key-findings':'findings')+(params.size?'?'+params:''));
 });
 
 const primaryFindingMetrics={
