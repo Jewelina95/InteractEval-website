@@ -39,13 +39,15 @@ const atlasWorldDustCount = 20;
 
 function atlasWorldFigure(){
   const art = './assets/hero/layered-city-black-gold.webp';
+  const current = '<span class="atlas-world-glint"></span>'.repeat(3);
   const dust = '<span class="atlas-world-dust"></span>'.repeat(atlasWorldDustCount);
   return `<figure class="atlas-world" style="--world-image:url('${art}')">
-    <div class="atlas-world-stage" role="img" aria-label="A beam descends from a galaxy through four floating layers, revealing each in a cloud of light.">
+    <div class="atlas-world-stage" role="img" aria-label="A beam descends from a galaxy through four floating layers, revealing each in a cloud of light. Points of light travel around the illuminated layers.">
       <img class="atlas-world-art" src="${art}" width="1280" height="853" alt="" fetchpriority="high" decoding="async"/>
       ${atlasWorldLayers.map(({name,hit}) => `
         <span aria-hidden="true" class="atlas-world-layer atlas-world-layer--${name}" style="--hit:${hit}%">
           <span class="atlas-world-slice"><span class="atlas-world-ink"></span></span>
+          <span class="atlas-world-current">${current}</span>
           <span class="atlas-world-impact">
             <span class="atlas-world-mist"></span><span class="atlas-world-ripple"></span>${dust}
           </span>
@@ -193,7 +195,11 @@ function setupAtlasWorld(){
       const reveal = layer.querySelector('.atlas-world-ink').animate([
         {opacity:0}, {opacity:1}
       ], {duration:760, delay, fill:'forwards', easing:'ease-out'});
-      return [reveal, ...animateAtlasWorldImpact(layer, delay, width, index)];
+      const current = layer.querySelector('.atlas-world-current').animate(
+        [{opacity:0}, {opacity:1}],
+        {duration:1100, delay:delay + 200, fill:'forwards', easing:'ease-out'}
+      );
+      return [reveal, current, ...animateAtlasWorldImpact(layer, delay, width, index)];
     });
 
     const travel = {duration, delay:leadIn};
