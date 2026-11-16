@@ -18,7 +18,24 @@ const atlasSymbols={
   agency:'<path d="M12 61V42h18V27h18V12h19v12H58v15H40v15H22v7Z" fill="currentColor" opacity=".22"/><path d="M12 61h12V49h18V34h18V19h7" stroke="currentColor" stroke-width="6" stroke-linejoin="round"/><circle cx="65" cy="18" r="7" fill="currentColor"/>'
 };
 function atlasSymbol(name){return `<svg viewBox="0 0 80 80" fill="none" aria-hidden="true">${atlasSymbols[name]}</svg>`;}
-function atlasHero(){return `<section class="atlas-hero"><div><h1>The measure of intelligence is the ability to change</h1><a href="#response-interaction" data-research-section="response-interaction">Why interact <span aria-hidden="true">&#8595;</span></a></div>${atlasWorldFigure()}</section>`;}
+function atlasHero(){
+  return `<section class="atlas-hero atlas-hero--gallery" aria-labelledby="atlas-hero-title">
+    <h1 id="atlas-hero-title">The measurement of intelligence<br/> is the ability to change</h1>
+    <div class="atlas-hero-panels">
+      <img src="./assets/hero/landscape.webp" width="720" height="300" alt="A galaxy above a mountain landscape" fetchpriority="high"/>
+      <img src="./assets/hero/dynamics.webp" width="900" height="300" alt="An illuminated timeline and shifting waves" decoding="async"/>
+      <img src="./assets/hero/city.webp" width="1160" height="300" alt="A city suspended in a ring of light" decoding="async"/>
+    </div>
+    <div class="atlas-hero-actions">
+      <button type="button" data-open-atlas-world>Play animation</button>
+      <a href="#response-interaction" data-research-section="response-interaction">Why interact <span aria-hidden="true">&#8595;</span></a>
+    </div>
+    <dialog class="atlas-world-dialog" aria-label="InteractNet layer animation">
+      <form method="dialog"><button type="submit" aria-label="Close animation">&times;</button></form>
+      ${atlasWorldFigure()}
+    </dialog>
+  </section>`;
+}
 const atlasWorldLayers = [
   {name:'galaxy', hit:11.3},
   {name:'mountain', hit:30},
@@ -27,14 +44,14 @@ const atlasWorldLayers = [
   {name:'city', hit:84}
 ];
 
-const atlasWorldDustCount = 16;
+const atlasWorldDustCount = 20;
 
 function atlasWorldFigure(){
   const art = './assets/hero/layered-city.webp';
   const dust = '<span class="atlas-world-dust"></span>'.repeat(atlasWorldDustCount);
   return `<figure class="atlas-world" style="--world-image:url('${art}')">
     <div class="atlas-world-stage" role="img" aria-label="A beam descends from a galaxy through four floating layers, revealing each in a cloud of light.">
-      <img class="atlas-world-art" src="${art}" width="1280" height="854" alt="" fetchpriority="high" decoding="async"/>
+      <img class="atlas-world-art" src="${art}" width="1280" height="854" alt="" decoding="async"/>
       ${atlasWorldLayers.map(({name,hit}) => `
         <span aria-hidden="true" class="atlas-world-layer atlas-world-layer--${name}" style="--hit:${hit}%">
           <span class="atlas-world-slice"><span class="atlas-world-ink"></span></span>
@@ -58,63 +75,66 @@ function animateAtlasWorldImpact(layer, delay, width, layerIndex){
   const mist = layer.querySelector('.atlas-world-mist');
   const ripple = layer.querySelector('.atlas-world-ripple');
   const dust = [...layer.querySelectorAll('.atlas-world-dust')];
-  const spread = width * (.14 + layerIndex * .035);
+  const spread = width * (.17 + layerIndex * .038);
   const haze = mist.animate([
-    {opacity:0, scale:'.13 .55'},
-    {opacity:.9, scale:'.65 .9', offset:.19},
-    {opacity:0, scale:'1.34 1.6'}
-  ], {duration:1620, delay, easing:'ease-out'});
+    {opacity:0, scale:'.09 .4', easing:'ease-out'},
+    {opacity:.94, scale:'.63 .88', offset:.16, easing:'ease-out'},
+    {opacity:.68, scale:'.98 1.13', offset:.48},
+    {opacity:.28, scale:'1.14 1.28', offset:.76},
+    {opacity:0, scale:'1.28 1.48'}
+  ], {duration:2900, delay});
   const ring = ripple.animate([
     {opacity:0, scale:'.08 .13'},
-    {opacity:.52, scale:'.48 .6', offset:.22},
+    {opacity:.52, scale:'.6 .72', offset:.22},
     {opacity:0, scale:'1.18 1.2'}
-  ], {duration:1340, delay:delay + 60, easing:'ease-out'});
+  ], {duration:1900, delay:delay + 60, easing:'ease-out'});
 
   const drift = dust.map((mote, index) => {
     const angle = index * 2.39996 + layerIndex * .8;
     const distance = .34 + (index % 7) * .11;
     const x = Math.cos(angle) * spread * distance;
-    const y = (Math.sin(angle) * .22 - .06) * spread * distance;
+    const y = (Math.sin(angle) * .28 - .05) * spread * distance;
     const size = .48 + (index % 5) * .24;
     return mote.animate([
-      {opacity:0, transform:'translate(0, 0) scale(.35)'},
-      {opacity:.71, transform:`translate(${x * .23}px, ${y * .18}px) scale(${size})`, offset:.19},
-      {opacity:.28, transform:`translate(${x * .77}px, ${y * .7}px) scale(${size * .72})`, offset:.63},
-      {opacity:0, transform:`translate(${x}px, ${y - 6}px) scale(.24)`}
-    ], {delay:delay + index % 6 * 42, duration:1060 + index % 7 * 115, easing:'ease-out'});
+      {opacity:0, transform:'translate(0, 0) scale(.35)', easing:'ease-out'},
+      {opacity:.85, transform:`translate(${x * .47}px, ${y * .44}px) scale(${size})`, offset:.24, easing:'ease-out'},
+      {opacity:.6, transform:`translate(${x * .82}px, ${y * .81 - 3}px) scale(${size * .84})`, offset:.58},
+      {opacity:.22, transform:`translate(${x * .95}px, ${y - 7}px) scale(${size * .53})`, offset:.84},
+      {opacity:0, transform:`translate(${x}px, ${y - 11}px) scale(.24)`}
+    ], {delay:delay + index % 6 * 45, duration:2170 + index % 7 * 130});
   });
   return [haze, ring, ...drift];
 }
 
-let atlasWorldObserver;
 function setupAtlasWorld(){
   const figure = document.querySelector('.atlas-world');
   if(figure?.dataset.ready) return;
-  atlasWorldObserver?.disconnect();
   if(!figure) return;
   figure.dataset.ready = 'true';
 
   const stage = figure.querySelector('.atlas-world-stage');
-  const art = stage.querySelector('img');
   const layers = [...stage.querySelectorAll('.atlas-world-layer')];
   const beam = stage.querySelector('.atlas-world-beam');
   const signal = stage.querySelector('.atlas-world-signal');
   const core = signal.querySelector('.atlas-world-core');
   const trail = signal.querySelector('.atlas-world-trail');
   const replay = figure.querySelector('button');
+  const dialog = figure.closest('dialog');
+  const opener = dialog.closest('.atlas-hero').querySelector('[data-open-atlas-world]');
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
   const start = atlasWorldLayers[0].hit;
   const end = 93;
   const leadIn = 480;
   const duration = 6200;
   let animations = [];
-  let started = false;
 
   function play(){
     animations.forEach(animation => animation.cancel());
     animations = [];
-    if(reducedMotion.matches) return;
-    started = true;
+    const still = reducedMotion.matches || typeof stage.animate !== 'function';
+    figure.classList.toggle('atlas-world-static', still);
+    replay.hidden = still;
+    if(still) return;
     const width = stage.clientWidth;
 
     animations = layers.flatMap((layer, index) => {
@@ -130,10 +150,11 @@ function setupAtlasWorld(){
     const position = progress => `${start + (end - start) * progress}%`;
     animations.push(
       beam.animate([
-        {scale:'1 0', opacity:0},
-        {scale:'1 .14', opacity:.8, offset:.14},
-        {scale:'1 .86', opacity:.68, offset:.86},
-        {scale:'1 1', opacity:0}
+        {scale:'.78 0', opacity:0},
+        {scale:'1 .14', opacity:.94, offset:.14},
+        {scale:'1.13 .48', opacity:.9, offset:.48},
+        {scale:'1.04 .86', opacity:.82, offset:.86},
+        {scale:'.9 1', opacity:0}
       ], travel),
       signal.animate([
         {top:position(0), opacity:0},
@@ -152,28 +173,16 @@ function setupAtlasWorld(){
     );
   }
 
-  if(typeof stage.animate !== 'function'){
-    figure.classList.add('atlas-world-static');
-    return;
-  }
-  replay.hidden = false;
+  if(reducedMotion.matches || typeof stage.animate !== 'function') opener.textContent = 'View illustration';
+  opener.addEventListener('click', () => {
+    dialog.showModal();
+    play();
+  });
   replay.addEventListener('click', play);
-  const begin = () => {
-    if(!figure.isConnected) return;
-    if(typeof IntersectionObserver === 'undefined'){
-      figure.classList.add('is-in-view');
-      play();
-      return;
-    }
-    atlasWorldObserver = new IntersectionObserver(([entry]) => {
-      const visible = entry.intersectionRatio >= .35;
-      figure.classList.toggle('is-in-view', visible);
-      if(visible && !started) play();
-    }, {threshold:.35});
-    atlasWorldObserver.observe(figure);
-  };
-  if(art.complete && art.naturalWidth) begin();
-  else art.addEventListener('load', begin, {once:true});
+  dialog.addEventListener('close', () => {
+    animations.forEach(animation => animation.cancel());
+    animations = [];
+  });
 }
 
 function atlasMobileScores(){

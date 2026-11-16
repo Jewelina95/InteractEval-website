@@ -413,35 +413,86 @@ html[data-ui-input=keyboard] select,html[data-ui-input=keyboard] select::picker-
   .main-rail-comparisons > .main-rail-direct { min-height: 44px; }
 }
 
-.atlas-hero:has(.atlas-world) {
-  grid-template-columns: minmax(0, 1fr) minmax(350px, 1.1fr);
-  gap: clamp(18px, 4vw, 60px);
-  padding-block: 18px 23px;
-  border-bottom: 0;
+.atlas-hero.atlas-hero--gallery {
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(22px, 4.7svh, 46px);
+  width: min(1296px, calc(100% - 64px));
+  min-height: max(520px, calc(100svh - var(--header-height, 80px)));
+  padding: clamp(36px, 7svh, 80px) 0;
+  border: 0;
+  text-align: center;
 }
-
-.atlas-hero .atlas-world {
-  position: relative;
+.atlas-hero--gallery h1 {
+  margin: 0;
+  color: #14231c;
+  font-size: clamp(40px, 6vw, 88px);
+  line-height: .99;
+  letter-spacing: -.064em;
+}
+.atlas-hero-panels {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(8px, 1.25vw, 18px);
   width: 100%;
-  max-width: min(480px, 50svh);
-  justify-self: end;
 }
-
-
-.atlas-hero:has(.atlas-world) h1 {
-  max-width: 17ch;
-  color: #18181a;
-  margin-bottom: 0;
-  font-size: clamp(35px, 4.3vw, 62px);
+.atlas-hero .atlas-hero-panels img {
+  width: 100%;
+  height: auto;
+  min-width: 0;
+  aspect-ratio: 2.4;
+  object-fit: contain;
+  background: #e3efe2;
+  border: 1px solid #17291e12;
+  border-radius: clamp(8px, 1.7vw, 21px);
+  box-shadow: 0 13px 26px #17291e13;
 }
-.atlas-hero:has(.atlas-world) a {
-  margin-top: 16px;
-  padding: 7px 0;
-  color: #242426;
-  background: transparent;
-  text-decoration: underline;
-  text-underline-offset: 4px;
+.atlas-hero-actions { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 12px 20px; }
+.atlas-hero--gallery .atlas-hero-actions a,
+.atlas-hero-actions button {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  min-height: 42px;
+  margin: 0;
+  padding: 0 15px;
+  border: 1px solid #cadad1;
+  border-radius: 40px;
+  background: #fff;
+  color: #183527;
+  font: 650 13px/1.2 var(--sans);
+  text-decoration: none;
+  cursor: pointer;
 }
+.atlas-hero-actions button { background: #193b30; border-color: #193b30; color: #fff; }
+.atlas-hero-actions button:hover { background: #285345; }
+.atlas-hero--gallery .atlas-hero-actions a:hover { background: #eef5ef; }
+.atlas-world-dialog {
+  box-sizing: border-box;
+  width: min(830px, calc(100% - 32px));
+  max-height: calc(100dvh - 28px);
+  padding: clamp(12px, 2vw, 26px);
+  border: 1px solid #cddbd2;
+  border-radius: 24px;
+  background: #fff;
+  box-shadow: 0 28px 110px #0b1b1855;
+}
+.atlas-world-dialog::backdrop { background: #101b17bd; }
+.atlas-world-dialog form { display: flex; justify-content: end; }
+.atlas-world-dialog form button {
+  width: 40px;
+  height: 40px;
+  font: 500 24px/1 var(--sans);
+  color: #17332a;
+  border: 0;
+  border-radius: 50%;
+  background: #eef3ef;
+  cursor: pointer;
+}
+.atlas-hero .atlas-world { position: relative; width: min(100%, 108dvh); max-width: none; margin-inline: auto; }
 
 .atlas-world-stage {
   position: relative;
@@ -461,23 +512,6 @@ html[data-ui-input=keyboard] select,html[data-ui-input=keyboard] select::picker-
   position: absolute;
   inset: 0;
   pointer-events: none;
-}
-
-.atlas-world-layer {
-  --float: 4px;
-  --period: 7.6s;
-  --phase: -1s;
-  animation: atlas-world-hover var(--period) var(--phase) ease-in-out infinite;
-  animation-play-state: paused;
-}
-
-.atlas-world.is-in-view .atlas-world-layer {
-  animation-play-state: running;
-}
-
-@keyframes atlas-world-hover {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(calc(-1 * var(--float))); }
 }
 
 .atlas-world-slice {
@@ -504,11 +538,6 @@ html[data-ui-input=keyboard] select,html[data-ui-input=keyboard] select::picker-
   opacity: 1;
 }
 
-.atlas-world-layer--galaxy { --float: 3px; --period: 8.2s; --phase: -.5s; }
-.atlas-world-layer--mountain { --float: 6px; --period: 7.1s; --phase: -2s; }
-.atlas-world-layer--timeline { --float: 5px; --period: 8.3s; --phase: -4s; }
-.atlas-world-layer--waves { --float: 7px; --period: 9.2s; --phase: -.8s; }
-.atlas-world-layer--city { --float: 5px; --period: 10.4s; --phase: -2.8s; }
 
 .atlas-world-layer--galaxy .atlas-world-slice { clip-path: inset(0 0 81% 0); }
 .atlas-world-layer--mountain .atlas-world-slice { clip-path: inset(19% 0 65% 0); }
@@ -543,10 +572,13 @@ html[data-ui-input=keyboard] select,html[data-ui-input=keyboard] select::picker-
 }
 
 .atlas-world-mist {
-  width: 66%;
-  height: clamp(20px, 5vw, 54px);
-  background: radial-gradient(ellipse, #fff 0%, #fdfdfdf7 15%, #d5d5d580 35%, #9992 53%, transparent 72%);
-  filter: blur(2px);
+  width: 76%;
+  height: clamp(33px, 8vw, 76px);
+  background:
+    radial-gradient(ellipse at 37% 49%, #fff9, #d2d2d24d 27%, transparent 58%),
+    radial-gradient(ellipse at 64% 53%, #fff9, #c2c2c24d 24%, transparent 57%),
+    radial-gradient(ellipse, #fff 6%, #edededea 18%, #bdbdbd65 43%, #a8a8a828 57%, transparent 72%);
+  filter: blur(2.7px);
 }
 
 .atlas-world-ripple {
@@ -581,15 +613,32 @@ html[data-ui-input=keyboard] select,html[data-ui-input=keyboard] select::picker-
 }
 
 .atlas-world-beam {
-  width: clamp(23px, 5vw, 52px);
+  width: clamp(54px, 10vw, 112px);
   height: 81.7%;
   translate: -50% 0;
   transform-origin: center top;
-  background: linear-gradient(90deg,
-    transparent 4%, #aaa2 30%, #bbb7 43%, #fffdfdf0 49%,
-    #fffd 51%, #bbb7 57%, #aaa2 70%, transparent 96%);
-  mask-image: linear-gradient(transparent, #000 9%, #000 94%, transparent);
-  filter: blur(.8px);
+  background: linear-gradient(90deg, transparent, #d0d0d046 23%, #b9b9b95c 39%,
+    #eeeeeead 50%, #b9b9b95c 61%, #d0d0d046 77%, transparent);
+  clip-path: polygon(31% 0, 69% 0, 100% 100%, 0 100%);
+  mask-image: linear-gradient(transparent, #000 12%, #000 84%, transparent);
+  filter: blur(2px);
+}
+
+.atlas-world-beam::before,
+.atlas-world-beam::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+.atlas-world-beam::before {
+  background: linear-gradient(90deg, transparent 15%, #e4e4e43d 29%, #a5a5a56b 41%,
+    #f8f8f8ed 46%, #fff 50%, #f8f8f8ed 54%, #a5a5a56b 59%, #e4e4e43d 71%, transparent 85%);
+}
+
+.atlas-world-beam::after {
+  background: radial-gradient(ellipse 26% 46% at 50% 79%, #fff9, #eee9 30%, #c9c9c932 68%, transparent);
+  filter: blur(3px);
 }
 
 .atlas-world-signal {
@@ -609,10 +658,10 @@ html[data-ui-input=keyboard] select,html[data-ui-input=keyboard] select::picker-
   top: auto;
   bottom: 100%;
   translate: -50% 0;
-  width: clamp(12px, 3vw, 29px);
-  height: 20%;
+  width: clamp(23px, 5vw, 52px);
+  height: 23%;
   transform-origin: 50% 100%;
-  background: radial-gradient(ellipse at bottom, #fff 5%, #ddd8 26%, #aaa3 46%, transparent 72%);
+  background: radial-gradient(ellipse at bottom, #fff 6%, #e8e8e8c4 24%, #aaaaaa65 45%, transparent 74%);
   filter: blur(1.1px);
 }
 
@@ -653,23 +702,16 @@ html[data-ui-input=keyboard] select,html[data-ui-input=keyboard] select::picker-
   display: none;
 }
 
-@media (max-width: 900px) {
-  .atlas-hero:has(.atlas-world) {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  }
-}
-
 @media (max-width: 650px) {
-  .atlas-hero:has(.atlas-world) {
-    grid-template-columns: 1fr;
+  .atlas-hero.atlas-hero--gallery {
+    min-height: max(470px, calc(100svh - var(--header-height, 70px)));
+    width: calc(100% - 36px);
+    gap: 27px;
   }
-
-  .atlas-hero .atlas-world {
-    max-width: min(260px, 35svh);
-    justify-self: center;
-  }
-
-  .results-page .article-shell { padding-top: 20px; }
+  .atlas-hero--gallery h1 { font-size: clamp(36px, 8.7vw, 56px); }
+  .atlas-hero--gallery h1 br { display: none; }
+  .atlas-hero .atlas-hero-panels img { aspect-ratio: 1.65; }
+  .results-page .article-shell { padding-top: 24px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -678,9 +720,6 @@ html[data-ui-input=keyboard] select,html[data-ui-input=keyboard] select::picker-
   .atlas-world-signal,
   .atlas-world-replay {
     display: none;
-  }
-  .atlas-world-layer {
-    animation: none;
   }
   .atlas-world-ink {
     opacity: 1 !important;
