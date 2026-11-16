@@ -93,7 +93,10 @@
               <ol class="why-turns" aria-label="Two exchanges between Tony and the AI">${turns.map(turnMarkup).join('')}</ol>
               <button type="button" class="why-play why-assistant-control"><span>Play dialogue</span></button>
             </div>
-            <p class="why-definition" data-definition="response" hidden>The ability to respond appropriately within the direction set by a partner, following instructions and using new information.</p>
+            <div class="why-definition" data-definition="response" hidden>
+              <strong>Response Intelligence</strong>
+              <p>The ability to respond appropriately within the direction set by a partner, following instructions and using new information.</p>
+            </div>
           </section>
           <section class="why-interactive" aria-labelledby="why-interactive-heading">
             <h3 id="why-interactive-heading">Interactive Intelligence</h3>
@@ -106,6 +109,7 @@
               <button type="button" data-situation-next aria-label="Next situation" aria-controls="why-situations"><span aria-hidden="true">›</span></button>
             </div>
             <div class="why-definition" data-definition="interactive" hidden>
+              <strong>Interactive Intelligence</strong>
               <p>The ability to understand an evolving situation, initiate a justified new direction, and follow through across turns.</p>
               <p>In A, curiosity calls for an explanation. In B, the immediate threat calls for protection and follow-through.</p>
             </div>
