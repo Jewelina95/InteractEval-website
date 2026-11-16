@@ -303,10 +303,7 @@
         if (!entry.isIntersecting) return;
         entryObserver.disconnect();
         demo.classList.add('why-entered');
-        if (!autoPlayback || reducedMotion.matches || mediaTracks.some(track => !track.paused)) return;
-        audio.play().then(() => {
-          audio.addEventListener('ended', playVisiblePreview, { once: true });
-        }).catch(playVisiblePreview);
+        playVisiblePreview();
       }, { rootMargin: '0px 0px -10% 0px' });
       entryObserver.observe(demo.querySelector('.why-comparison'));
     }
