@@ -56,6 +56,7 @@ function cases(){return caseLibrary();}
 async function openExample(id){return openCaseReader(id);}
 function research(){return researchArticle();}
 function trends(){return `<div class="section-top"><h1>Cognition & interaction</h1></div><p class="page-deck">Published dimensions of goal preservation, adaptation, and long-horizon coherence.</p><div class="paper-two">${metricCard('stage0',10)}${metricCard('stage1',10)}${metricCard('stage2',10)}${metricCard('coherence',10)}</div><p class="paper-footnote">All four profiles reproduce Table 4. Interest-change relationships are not inferred from the example library.</p>`;}
+let resultsMount;
 function render(){
  const [hash,query='']=location.hash.slice(1).split('?'),page=location.pathname.split('/').pop();
  const resultAnchors=['key-findings','system-overview','resources','illustrations','beneath-the-words','model-readout','capability','comparisons','multi-party','behavior','representations','creativity','cost','stages','scenarios','reliability','process','duration','architectures','partners','takeaways','notes','outcomes','coverage'];
@@ -79,8 +80,24 @@ function render(){
  else if(route==='trends')content=trends();
  else if(route==='multimodal')content='<section class="paper-card pending-publication"><span class="eyebrow">Pending</span><h1>Image, speech, and video</h1><p>Multimodal results will appear when published measurements are available.</p></section>';
  else content=home();
+ resultsMount?.abort();
  $('#app').innerHTML=content;afterExplorerRender();
- if(hash==='comparisons' && params.has('measure')) requestAnimationFrame(()=>atlasScrollTo(document.getElementById('comparisons')));
+ const results=document.querySelector('.zip-results #comparisons');
+ if(results){
+   resultsMount=new AbortController();
+   const {signal}=resultsMount;
+   import('./results-glass.js?v=20261116-zip').then(({mountResults})=>{
+     if(signal.aborted)return;
+     mountResults(results,publication,findingsEvidence,researchEvidence,results.dataset.initialTopic,signal);
+   }).catch(error=>{
+     if(signal.aborted)return;
+     results.innerHTML='<p role="alert">The evaluation results could not be loaded. Refresh to try again.</p>';
+     console.error(error);
+   }).finally(()=>{
+     if(!signal.aborted)results.removeAttribute('aria-busy');
+   });
+ }
+ if(hash==='comparisons' && (params.has('measure') || params.has('topic'))) requestAnimationFrame(()=>atlasScrollTo(document.getElementById('comparisons')));
 }
 document.addEventListener('click',e=>{const m=e.target.closest('[data-metric]');if(m){metric=m.dataset.metric;render();}const level=e.target.closest('[data-home-level]');if(level){metric=level.dataset.homeLevel;$('#home-level').innerHTML=chart(metric);document.querySelectorAll('[data-home-level]').forEach(b=>b.classList.toggle('active',b===level));}const a=e.target.closest('[data-architecture]');if(a){architecture=a.dataset.architecture;render();}const c=e.target.closest('[data-open-example]');if(c)openExample(c.dataset.openExample);if(e.target.closest('#agent-view')){agentView=agentView==='chart'?'table':'chart';render();}if(e.target.closest('#paper-view')){view=view==='chart'?'table':'chart';render();}if(e.target.closest('#sort-paper')){sortDown=!sortDown;render();}if(e.target.closest('#close-example'))$('#example-dialog').close();});
 document.addEventListener('change',e=>{if(e.target.id==='paper-metric'){metric=e.target.value;render();}if(e.target.id==='agent-metric'){agentMetric=e.target.value;render();}if(e.target.id==='case-purpose'){casePurpose=e.target.value;$('#case-library').innerHTML=caseCards();}});

@@ -33,65 +33,20 @@ const leaderboardGroups=[
 const leaderboardIds=()=>leaderboardGroups.flatMap(group=>group.items);
 function modelNameMarkup(name){return safe(name).replace(/-/g,'-<wbr>');}
 function modelIdentity(name){return `<span class="model-identity"><img src="${assets(name)}" alt=""/><span>${modelNameMarkup(name)}</span></span>`;}
-const resultsThemes={setup:'sage',stages:'sage',architectures:'sand',reliability:'blue',scenarios:'sand',behavior:'plum',partners:'blue',duration:'sage',creativity:'plum',cost:'sand'};
-const breakthroughRange=[8.7,12.3]; // Chapter 5.5, percentage of evaluated assistant turns.
-function previewBars(rows,max,format){
-  return `<dl class="result-preview-bars">${rows.map(([label,value])=>`<div><dt>${safe(label)}</dt><dd><span aria-hidden="true"><i style="--bar:${100*value/max}%"></i></span><b>${format(value)}</b></dd></div>`).join('')}</dl>`;
-}
-function resultHighlights(){
-  const spreads=['stage0','stage1','stage2'].map(id=>{
-    const values=publication.models.map(metricOf(id).get);
-    return Math.max(...values)-Math.min(...values);
-  });
-  const gains=publication.architecture_gains.map(g=>[g.architecture,g.stages[2]]);
-  const peak=Math.max(...gains.map(([,value])=>value));
-  const pairs=publication.interaction_matrix;
-  const cards=[
-    {id:'stage-profile',theme:'sage',wide:true,title:'Model differences widen at L5–L6',value:number(spreads[2]),description:'Score range across the ten models at the proactive stage.',chart:previewBars(['Passive · L1–L2','Responsive · L3–L4','Proactive · L5–L6'].map((label,i)=>[label,spreads[i]]),1,value=>number(value))},
-    {id:'architecture-stages',theme:'sand',title:'Agent configurations raise proactive scores',value:'+'+number(peak),description:'Largest mean L5–L6 gain over the matching base models.',chart:previewBars(gains,.08,value=>'+'+number(value))},
-    {id:'pairings',theme:'blue',title:'Changing the interaction partner',value:`${pairs.length} × ${publication.models.length}`,description:'Models evaluated in both roles. Each cell is the assistant score for an ordered pairing.',chart:`<div class="result-preview-matrix" style="--matrix-columns:${publication.models.length}" aria-hidden="true">${pairs.flatMap(row=>row.scores).map(score=>`<i style="--cell:${score}"></i>`).join('')}</div>`},
-    {id:'creative-breakthroughs',theme:'plum',title:'Breakthroughs in evaluated turns',value:breakthroughRange.join('–')+'%',description:'Range across the four Cognizer configurations with nonzero results.',chart:breakthroughScale()}
-  ];
-  return cards.map(card=>`<article class="result-preview ${card.wide?'result-preview-wide':''}" data-result-theme="${card.theme}">
-    <header><h3>${card.title}</h3></header><strong class="result-preview-value">${card.value}</strong><p>${card.description}</p>
-    <div class="result-preview-plot">${card.chart}</div>
-    <button type="button" data-result-measure="${card.id}" data-result-jump aria-label="Explore: ${card.title}">Explore chart <span aria-hidden="true">↗</span></button>
-  </article>`).join('');
-}
-function breakthroughScale(){
-  const [lo,hi]=breakthroughRange;
-  return `<div class="result-range" role="img" aria-label="Cognizer range: ${lo}% to ${hi}% on a scale from 0% to 15%."><div class="result-range-track" aria-hidden="true"><i style="--range-start:${lo/15*100}%;--range-end:${hi/15*100}%"></i></div><div class="result-range-ticks" aria-hidden="true"><span>0%</span><span>5%</span><span>10%</span><span>15%</span></div></div>`;
-}
-function creativityComparison(){
-  return `<header class="comparison-reading"><h4>Breakthrough rates</h4><p>Share of evaluated assistant turns judged to make a substantive new contribution, using the full dialogue history.</p></header>
-    <figure class="result-breakthrough"><figcaption>Cognizer · Four configurations with nonzero rates</figcaption><strong>${breakthroughRange.join('–')}%</strong>${breakthroughScale()}</figure>
-    <div class="result-breakthrough-zero"><span>Ten base models and their matching MetaMind configurations</span><strong>0%</strong></div>
-    <p class="comparison-reading-note">The study reports a range across these four configurations.</p>`;
-}
-function resultTopicButtons(group){
-  const button=([id,label])=>`<button type="button" data-result-measure="${id}" aria-pressed="${id===mainComparisonMeasure}">${safe(label)}</button>`;
-  const base=group.items.filter(([id])=>!paperSubsection(group,id));
-  return `<div class="result-topic-set">${base.map(button).join('')}</div>`+(group.subsections??[]).map(sub=>`<div class="result-topic-set" role="group" aria-label="${sub.title}"><span>${sub.title}</span>${group.items.filter(([id])=>sub.items.includes(id)).map(button).join('')}</div>`).join('');
-}
 function resultResources(){
-  const active=mainComparisonGroups.find(group=>group.id===mainComparisonGroup);
-  const nav=[['4','Experiments'],['5','Discussion']].map(([chapter,title])=>`<div class="result-chapter" role="group" aria-label="${title}">
-    <p>${title}</p>
-    ${mainComparisonGroups.filter(group=>group.section.startsWith(chapter+'.')).map(group=>`<button type="button" data-result-section="${group.id}" data-result-measure="${group.items[0][0]}" aria-current="${group===active}">${group.title}<i aria-hidden="true">›</i></button>`).join('')}
-  </div>`).join('');
-  return `<section id="resources" class="result-gallery" aria-labelledby="results-heading">
-    <header class="result-gallery-header"><h2 id="results-heading">Results &amp; analysis</h2><div class="result-slider-controls" role="group" aria-label="Featured charts">
-      <button type="button" data-result-slide="-1" aria-label="Previous featured chart" aria-controls="result-carousel" aria-disabled="true">←</button>
-      <button type="button" data-result-slide="1" aria-label="Next featured chart" aria-controls="result-carousel">→</button>
-    </div></header>
-    <div class="result-carousel" id="result-carousel" role="region" aria-label="Featured charts" tabindex="0">${resultHighlights()}</div>
-    <div id="comparisons" class="result-library" data-result-theme="${resultsThemes[active.id]}">
-      <nav class="result-chapters" aria-label="Results topics">${nav}</nav>
-      <div class="result-detail">
-        <header><h3 id="result-section-title">${active.title}</h3></header>
-        <div id="result-topics" class="result-topics" role="group" aria-label="Charts in this section">${resultTopicButtons(active)}</div>
-        <p id="result-announcement" class="result-announcement" aria-live="polite"></p>
-        <div id="main-comparison-body" tabindex="-1" role="region" aria-label="Selected comparison">${mainComparisonPanel()}</div>
+  const topicByGroup={
+    setup:'main-results',stages:'main-results',architectures:'agents',reliability:'robustness',
+    scenarios:'scenarios',behavior:'personas',partners:'participants',duration:'dynamics',
+    creativity:'creativity',cost:'cost'
+  };
+  const params=new URLSearchParams(location.hash.split('?')[1]||'');
+  const topic=params.get('topic');
+  const initialTopic=Object.values(topicByGroup).includes(topic)?topic:topicByGroup[mainComparisonGroup];
+  return `<section id="resources" class="zip-results" aria-labelledby="evaluation-results-heading">
+    <div class="results">
+      <header class="page-heading"><h2 id="evaluation-results-heading">Evaluation results</h2></header>
+      <div id="comparisons" data-initial-topic="${initialTopic}" aria-busy="true">
+        <p role="status">Loading evaluation data…</p>
       </div>
     </div>
   </section>`;
@@ -139,7 +94,7 @@ function resultsHomeV2(){
     <div class="article-shell"><div class="article-body">${interactionFigure('motivation')}${window.interactNetTheory?.render() ?? ""}</div></div>
     ${coreFindings(true)}
     ${interactionFigure('system')}
-    <div class="method-results">${resultResources()}</div>
+    ${resultResources()}
   </article></div>`;
 }
 function comparisonDataTable(ids,labels=ids.map(id=>metricOf(id).label),rows=publication.models,headerModels=[]){
@@ -167,7 +122,7 @@ function mainComparisonContent(){
   if(evidence!==null)return evidence;
   switch(mainComparisonMeasure){
     case 'capability-profile':return capabilityMatrix();
-    case 'creative-breakthroughs':return creativityComparison();
+    case 'creative-breakthroughs':return '<p>See Creativity analysis in the evaluation results.</p>';
     case 'behavior-profile':return mainBehaviorContent();
     case 'stage-profile':return `<header class="comparison-reading"><h4>Model differences widen at the proactive stage</h4><p>The same ten systems are compared across all three stages. Scores are three-pass means on a 0–1 scale.</p></header>${comparisonDataTable(['stage0','stage1','stage2'],['Passive execution · L1–L2','Interactive adaptation · L3–L4','Proactive promotion · L5–L6'])}<div class="finding-stage-ranges" aria-label="Across-model score ranges">${['Passive execution','Interactive adaptation','Proactive promotion'].map((label,index)=>{const values=publication.models.map(model=>model.stages[index]);return `<span>${label}<strong>${number(Math.max(...values)-Math.min(...values))}</strong></span>`;}).join('')}</div><p class="comparison-reading-note">Range = maximum − minimum across models · Table 5 / Figure 7</p>${findingStageSupplement()}`;
     case 'pairings':return pairingMatrix();
@@ -209,45 +164,6 @@ function refreshMainComparison(){
   body.innerHTML=mainComparisonPanel();
   atlasResponsiveTables();
 }
-function selectMainComparison(id){
-  const group=mainComparisonGroups.find(group=>group.items.some(item=>item[0]===id));
-  if(!group || id===mainComparisonMeasure)return;
-  const changedGroup=group.id!==mainComparisonGroup;
-  mainComparisonGroup=group.id;mainComparisonMeasure=id;selectedMainLevel=null;
-  const params=new URLSearchParams(location.hash.split('?')[1]||'');
-  const finding=findingById(params.get('finding'));
-  if(finding?.measure!==id)params.delete('finding');
-  params.set('measure',id);
-  lastMainComparisonHash='#comparisons?'+params;
-  history.replaceState(history.state,'',lastMainComparisonHash);
-  const library=document.getElementById('comparisons');
-  library.dataset.resultTheme=resultsThemes[group.id];
-  if(changedGroup){
-    document.getElementById('result-section-title').textContent=group.title;
-    document.getElementById('result-topics').innerHTML=resultTopicButtons(group);
-    library.querySelectorAll('[data-result-section]').forEach(button=>button.setAttribute('aria-current',String(button.dataset.resultSection===group.id)));
-  } else {
-    library.querySelectorAll('#result-topics button').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.resultMeasure===id)));
-  }
-  refreshMainComparison();
-  document.getElementById('result-announcement').textContent=group.title+': '+group.items.find(([key])=>key===id)[1];
-}
-function updateResultSlider(carousel){
-  const end=carousel.scrollWidth-carousel.clientWidth;
-  const controls=carousel.closest('.result-gallery').querySelectorAll('[data-result-slide]');
-  controls[0].setAttribute('aria-disabled',String(carousel.scrollLeft<=1));
-  controls[1].setAttribute('aria-disabled',String(carousel.scrollLeft>=end-1));
-}
-let resultSliderResize;
-function initResultSlider(){
-  resultSliderResize?.disconnect();
-  const carousel=document.getElementById('result-carousel');
-  if(!carousel)return;
-  const update=()=>updateResultSlider(carousel);
-  carousel.addEventListener('scroll',update,{passive:true});
-  resultSliderResize=new ResizeObserver(update);
-  resultSliderResize.observe(carousel);
-}
 function leaderboardMetricSelect(){
  const rich=CSS.supports('appearance','base-select'),icons=['stages','scenario','scenario','partner'];
  return `<label class="leaderboard-measure-field"><span>Compare by</span><select class="atlas-rich-select" id="leaderboard-measure" aria-label="Compare by">${rich?'<button type="button"><selectedcontent></selectedcontent></button>':''}${leaderboardGroups.map((group,index)=>`<optgroup label="${group.title}">${group.items.map(id=>`<option value="${id}" aria-label="${safe(metricOf(id).label)}" ${metric===id?'selected':''}>${rich?`<span class="measure-option-icon ${stageCodes[id]?'has-code':''}" aria-hidden="true">${stageCodes[id]||navigationIcon(id==='composite'?'overview':icons[index])}</span><span class="measure-option-copy"><span>${safe(metricOf(id).label)}</span>${measureHints[id]?`<small>${measureHints[id]}</small>`:''}</span>`:safe(metricOf(id).label)}</option>`).join('')}</optgroup>`).join('')}</select></label>`;
@@ -259,22 +175,6 @@ function curatedLeaderboard(){
 }
 
 document.addEventListener('click',event=>{
-  const slide=event.target.closest('[data-result-slide]');
-  if(slide && slide.getAttribute('aria-disabled')!=='true'){
-    const carousel=document.getElementById('result-carousel'),forward=Number(slide.dataset.resultSlide)>0;
-    const cards=[...carousel.children],origin=cards[0].offsetLeft;
-    const starts=cards.map(card=>card.offsetLeft-origin);
-    const start=forward?starts.find(point=>point>carousel.scrollLeft+2):starts.reverse().find(point=>point<carousel.scrollLeft-2);
-    carousel.scrollTo({left:start??(forward?carousel.scrollWidth:0),behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});
-  }
-  const result=event.target.closest('[data-result-measure]');
-  if(result){
-    selectMainComparison(result.dataset.resultMeasure);
-    if(result.hasAttribute('data-result-jump')||(result.hasAttribute('data-result-section')&&matchMedia('(max-width: 760px)').matches)){
-      document.getElementById('main-comparison-body').focus({preventScroll:true});
-      atlasScrollTo(document.querySelector('#comparisons .result-detail'));
-    }
-  }
   const level=event.target.closest('[data-main-level]');
 
   if(level){const id=level.dataset.mainLevel,note=document.getElementById('main-level-note');selectedMainLevel=selectedMainLevel===id?null:id;readMainLevels.add(id);document.querySelectorAll('[data-main-level]').forEach(button=>{button.setAttribute('aria-expanded',String(button.dataset.mainLevel===selectedMainLevel));button.querySelector('i')?.classList.toggle('is-read',readMainLevels.has(button.dataset.mainLevel));});note.hidden=!selectedMainLevel;document.querySelectorAll('.main-capability-table [data-score-level]').forEach(cell=>cell.classList.toggle('is-level-selected',cell.dataset.scoreLevel===selectedMainLevel));if(selectedMainLevel){note.innerHTML=mainLevelExplanation(id);if(level.closest('.level-explanation-tabs'))note.querySelector(`[data-main-level="${id}"]`)?.focus();if(matchMedia('(max-width:600px)').matches&&note.getBoundingClientRect().top<document.querySelector('.masthead').getBoundingClientRect().bottom)atlasScrollTo(note);}}

@@ -24,8 +24,7 @@ const source = read('results-explorer.js');
 const start = source.indexOf('function resultsHomeV2()');
 const end = source.indexOf('function comparisonDataTable(', start);
 vm.runInContext(source.slice(source.indexOf('const representationMeasures='), source.indexOf('const leaderboardGroups=')), context);
-vm.runInContext(source.slice(source.indexOf('const resultsThemes='), source.indexOf('function capabilityMatrix(')), context);
-context.resultHighlights = () => '<article>Featured charts</article>';
+vm.runInContext(source.slice(source.indexOf('function resultResources('), source.indexOf('function capabilityMatrix(')), context);
 vm.runInContext(source.slice(start, end), context);
 
 const home = vm.runInContext('resultsHomeV2()', context);
@@ -38,8 +37,8 @@ assert.match(home, /<figure id="evaluation-diagram" class="method-diagram"/);
 assert.ok(home.indexOf('id="system-overview-heading"') < home.indexOf('id="evaluation-diagram"'));
 assert.match(home, /interactnet-pipeline-v168\.svg/);
 assert.match(home, /interactnet-pipeline-v168-black-gold\.svg/);
-assert.match(home, /<div id="comparisons" class="result-library"/);
-assert.ok(home.indexOf('id="result-carousel"') < home.indexOf('id="comparisons"'));
+assert.match(home, /<div id="comparisons" data-initial-topic="main-results"/);
+assert.doesNotMatch(home, /result-carousel|result-library/);
 assert.doesNotMatch(home, /§|04 · Experiments|05 · Discussion/);
 assert.doesNotMatch(home, /Full demo progress|Play full demo/);
 assert.equal((home.match(/class="why-frame"/g) || []).length, 6);
@@ -48,18 +47,18 @@ for (const [, path] of home.matchAll(/(?:src|poster)="https:\/\/worldeology\.com
   assert.ok(fs.statSync(new URL('../' + path, import.meta.url)).size > 0, path);
 }
 
-for (const [hash, group, measure] of [
-  ['#comparisons?measure=stage-profile', 'stages', 'stage-profile'],
-  ['#comparisons?measure=information', 'scenarios', 'information'],
-  ['#comparisons?measure=pairings', 'partners', 'pairings'],
-  ['#coverage', 'setup', 'scenario-coverage'],
-  ['#multi-party', 'partners', 'group-size'],
-  ['#representations', 'reliability', 'role-probes'],
-  ['#creativity', 'creativity', 'creative-breakthroughs']
+for (const [hash, group, measure, topic] of [
+  ['#comparisons?measure=stage-profile', 'stages', 'stage-profile', 'main-results'],
+  ['#comparisons?measure=information', 'scenarios', 'information', 'scenarios'],
+  ['#comparisons?measure=pairings', 'partners', 'pairings', 'participants'],
+  ['#coverage', 'setup', 'scenario-coverage', 'main-results'],
+  ['#multi-party', 'partners', 'group-size', 'participants'],
+  ['#representations', 'reliability', 'role-probes', 'robustness'],
+  ['#creativity', 'creativity', 'creative-breakthroughs', 'creativity']
 ]) {
   context.location.hash = hash;
   const result = vm.runInContext('resultsHomeV2()', context);
-  assert.match(result, /<div id="comparisons" class="result-library"/);
+  assert.ok(result.includes('id="comparisons" data-initial-topic="' + topic + '"'));
   assert.equal(vm.runInContext('mainComparisonGroup', context), group);
   assert.equal(vm.runInContext('mainComparisonMeasure', context), measure);
 }

@@ -72,7 +72,6 @@ function researchArticle(){return researchIntroduction();}
 
 function afterExplorerRender(){
   syncAtlasLayout();
-  initResultSlider();
   window.interactNetTheory?.setup();
   window.interactNetFindingsStory?.setup();
   syncEditorialHeader();
