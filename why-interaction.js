@@ -79,10 +79,7 @@
               <div class="why-chat">
                 <audio preload="metadata" src="${media}response-dialogue-tony.mp3"></audio>
                 <ol class="why-turns" aria-label="Two exchanges between Tony and the AI">${turns.map(turnMarkup).join('')}</ol>
-                <div class="why-dialogue-controls">
-                  <button type="button" class="why-play why-assistant-control"><span>Play dialogue</span></button>
-                  <small>AI-generated voices</small>
-                </div>
+                <button type="button" class="why-play why-assistant-control"><span>Play dialogue</span></button>
               </div>
             </section>
             <section class="why-interactive" aria-labelledby="why-interactive-heading">
