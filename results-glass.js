@@ -63,7 +63,7 @@ function table(label, headers, rows, options = {}) {
 }
 
 function card(title, content, note = '') {
-  return '<article class="glass card"><div class="card-heading"><h3>' + safe(title) + '</h3>' +
+  return '<article class="glass card"><div class="results-card-heading"><h3>' + safe(title) + '</h3>' +
     (note ? '<details class="metric-note"><summary aria-label="Measurement notes for ' + safe(title) +
       '">i</summary><p>' + safe(note) + '</p></details>' : '') + '</div>' + content + '</article>';
 }
