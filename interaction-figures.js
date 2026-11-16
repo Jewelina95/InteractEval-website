@@ -3,8 +3,8 @@
 const systemImage = './assets/research/pipeline/interactnet-pipeline-v168.svg';
 const methodSteps = [
   {
-    title: 'Reconstruct the interaction',
-    description: 'Use the dialogue and background to update the scene, latent states, and event chain.',
+    title: 'Interaction-world reconstruction',
+    description: 'Use the dialogue transcript and background to update the previous world model, including the scene, latent states, and event chain.',
     graphic: '<span>Scene</span><span>Latent state</span><span>Event chain</span>',
     graphicClass: 'method-world',
   },
