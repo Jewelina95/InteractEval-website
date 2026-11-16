@@ -45,12 +45,14 @@ for(const f of data.findings){
  assert.ok(/<table|evidence-bars|comparison-bars|architecture-comparison-grid/.test(html),f.id+' missing evidence');
 }
 c.location.hash='#key-findings';
-const homepage=vm.runInContext('coreFindings()',c);
-assert.equal((homepage.match(/class="finding-row-link/g)||[]).length,8);
-assert.equal((homepage.match(/class="finding-row"/g)||[]).length,5);
-assert.ok(homepage.includes('finding-row-tag'),'rows must carry a category tag');
-for(const tag of ['Capability','Context','Trajectory','Partners','Architecture'])assert.ok(homepage.includes('>'+tag+'<'),'missing row tag '+tag);
-for(const tag of ['Representation','Measurement'])assert.ok(!homepage.includes('>'+tag+'<'),'a category with no published finding must not render a row');
+const homepage=vm.runInContext('coreFindings(true)',c);
+const standalone=vm.runInContext('coreFindings()',c);
+for (const findingsPage of [homepage, standalone]) {
+ assert.match(findingsPage, /<ol class="selected-findings"><li>/);
+ assert.equal((findingsPage.match(/class="selected-finding-link"/g)||[]).length,8);
+ assert.equal((findingsPage.match(/<li>/g)||[]).length,8);
+ assert.doesNotMatch(findingsPage, /finding-row-tag|data-finding-category/);
+}
 assert.ok(!homepage.includes('All findings'));
 assert.ok(!homepage.includes('home-finding-search'));
 for(const id of data.homepage_ids)assert.ok(homepage.includes("measure="+encodeURIComponent(data.findings.find(f=>f.id===id).measure)));
@@ -69,7 +71,7 @@ assert.deepEqual(data.homepage_ids,approved);
 for(const id of ['F03','F05','F24','F25','F33','F36','F43','F13','F22','F35','F16','F17','F32'])assert.ok(!homepage.includes('finding='+id));
 assert.ok(!homepage.includes('Judging six capabilities'),'F44 must stay unpublished');
 assert.ok(homepage.includes('widen as the interaction continues'),'F14 must render');
-assert.equal(vm.runInContext('findingsIndex()',c),homepage);
+assert.equal(vm.runInContext('findingsIndex()',c),standalone);
 assert.match(vm.runInContext("findingsCards('', 'F19')",c),/interaction partner/);
 assert.match(vm.runInContext("findingsCards('', 'no matching phrase xyz')",c),/No findings match/);
 for(const id of ['F43','F44','F45','F46','F47','F48'])assert.ok(ids.has(id));

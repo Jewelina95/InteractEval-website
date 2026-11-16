@@ -14,14 +14,14 @@
   position: relative;
   isolation: isolate;
   display: grid;
-  place-items: center;
+  justify-items: center;
   padding: clamp(30px, 5svh, 54px) clamp(20px, 6vw, 84px);
 }
 
 .findings-story-panel {
   position: absolute;
   z-index: -1;
-  inset: var(--board-y, 0%) var(--board-x, 0%);
+  inset: var(--board-top, 0%) var(--board-x, 0%) var(--board-bottom, 0%);
   overflow: hidden;
   border-radius: var(--board-radius, 0px);
   background: var(--findings-band);
@@ -40,60 +40,45 @@
 }
 
 .findings-story-content {
-  width: min(100%, 1130px);
+  width: min(100%, 1060px);
 }
 
 #findings-story-title {
   margin: 0;
-  text-align: center;
   color: #18241e;
   font: 650 clamp(34px, min(5.3vw, 10svh), 76px)/1.05 var(--sans);
   letter-spacing: -.065em;
 }
 
-.findings-story .finding-rows {
-  display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
-  gap: 0 clamp(20px, 3vw, 44px);
-  margin: clamp(18px, 3.6svh, 36px) 0 0;
-  border: 0;
+.findings-list .selected-findings {
+  margin: clamp(26px, 5svh, 52px) 0 0;
+  border-top: 0;
 }
 
-.findings-story .finding-row {
-  display: block;
-  border: 0;
-  border-top: 1px solid #cdd2d0;
-  padding: clamp(10px, 1.9svh, 20px) 0 8px;
+.findings-list .selected-findings > li {
+  border-color: #cdd0d2;
 }
 
-.findings-story .finding-row-head {
-  position: static;
-  margin-bottom: 5px;
+.findings-list .selected-findings > li > .selected-finding-link {
+  grid-template-columns: 2ch minmax(0, 1fr) auto;
+  gap: clamp(12px, 2vw, 24px);
+  align-items: baseline;
+  padding: clamp(16px, 2.9svh, 28px) 0;
+  color: #1d2422;
 }
 
-.findings-story .finding-row-tag {
-  padding: 0;
-  background: none;
-  color: #345244;
+.findings-list .selected-finding-link h3 {
+  font: 600 clamp(17px, 2.05vw, 27px)/1.25 var(--sans);
+  letter-spacing: -.035em;
 }
 
-.findings-story .finding-row-note {
-  margin: 3px 0 0;
+.findings-list .selected-finding-number,
+.findings-list .selected-finding-arrow {
+  color: #55645d;
 }
 
-.findings-story .finding-row-link {
-  grid-template-columns: 20px minmax(0, 1fr);
-  gap: 5px;
-  padding: 6px 0;
-}
-
-.findings-story .finding-row-number {
-  color: #52655b;
-}
-
-.findings-story .finding-row-link:focus-visible {
-  outline: 2px solid #285c40;
-  outline-offset: 3px;
+.findings-list .selected-finding-arrow {
+  font-size: 17px;
 }
 
 .findings-continuation {
@@ -109,42 +94,31 @@
   border-top: 0;
 }
 
-@media (min-width: 851px) {
-  .findings-story .finding-row { grid-column: span 2; }
-  .findings-story .finding-row:nth-last-child(2):nth-child(3n + 1) { grid-column: 2 / span 2; }
-}
-
-@media (max-width: 850px) {
-  .findings-story .finding-rows { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-}
-
-@media (max-width: 520px) {
-  .findings-story .finding-rows { grid-template-columns: minmax(0, 1fr); }
-}
-
 @media (min-width: 851px) and (min-height: 560px) and (prefers-reduced-motion: no-preference) {
   .findings-story-stage {
     padding-top: calc(var(--header-height, 82px) + 14px);
     padding-bottom: clamp(16px, 3svh, 30px);
   }
 
-  .findings-story.is-pinned {
-    height: 205svh;
+  .findings-story.is-pinned::after {
+    content: "";
+    display: block;
+    height: 74svh;
   }
 
   .findings-story.is-pinned .findings-story-stage {
     position: sticky;
     top: 0;
-    height: 100svh;
+    min-height: 100svh;
   }
 
   .findings-story.is-pinned #findings-story-title,
-  .findings-story.is-pinned .finding-row {
+  .findings-story.is-pinned .selected-findings > li {
     opacity: var(--board-reveal, 1);
     transform: translateY(calc((1 - var(--board-reveal, 1)) * 12px));
   }
 
-  .findings-story.is-pinned:not(:focus-within) .finding-row:not(.is-readable) .finding-row-link {
+  .findings-story.is-pinned:not(:focus-within) .selected-findings > li:not(.is-readable) > a {
     pointer-events: none;
   }
 
@@ -158,7 +132,7 @@
   .findings-story.is-pinned:focus-within .findings-story-panel::after { opacity: 0; }
 
   .findings-story.is-pinned:focus-within #findings-story-title,
-  .findings-story.is-pinned:focus-within .finding-row {
+  .findings-story.is-pinned:focus-within .selected-findings > li {
     opacity: 1;
     transform: none;
   }

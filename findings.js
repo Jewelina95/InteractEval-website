@@ -23,44 +23,17 @@ function findingAnchor(f,content,classes=''){
 function findingRows(rows=publishedFindings()){
  return `<ol class="selected-findings">${rows.map((f,i)=>`<li>${findingAnchor(f,`<span class="selected-finding-number">${String(i+1).padStart(2,'0')}</span><h3>${safe(f.title_en)}</h3><span class="selected-finding-arrow" aria-hidden="true">↓</span>`,'selected-finding-link')}</li>`).join('')}</ol>`;
 }
-// Rows keep one category per line: a tag on the left, its findings on the right.
-const findingRowTags={
- capability:{tag:'Capability',note:'What separates today’s models'},
- context:{tag:'Context',note:'When conditions change behaviour'},
- trajectory:{tag:'Trajectory',note:'Why good turns can still fail'},
- partners:{tag:'Partners',note:'Who is interacting, and how many'},
- architectures:{tag:'Architecture',note:'What an added harness changes'},
- representations:{tag:'Representation',note:'What is encoded inside'},
- measurement:{tag:'Measurement',note:'Whether the difference is real'}
-};
-function findingRowsByCategory(rows=publishedFindings()){
- const groups=[];
- for(const f of rows){
-  let group=groups.find(g=>g.slug===f.category_slug);
-  if(!group){group={slug:f.category_slug,title:f.category_en||f.category_slug,findings:[]};groups.push(group);}
-  group.findings.push(f);
- }
- return groups;
-}
-function findingCategoryRow(group,startIndex){
- const meta=findingRowTags[group.slug]||{tag:group.title||group.slug,note:''};
- return `<section class="finding-row" data-finding-category="${safe(group.slug)}" aria-label="${safe(group.title)}"><header class="finding-row-head"><span class="finding-row-tag">${safe(meta.tag)}</span>${meta.note?`<p class="finding-row-note">${safe(meta.note)}</p>`:''}</header><ol class="finding-row-list">${group.findings.map((f,i)=>`<li>${findingAnchor(f,`<span class="finding-row-number">${String(startIndex+i+1).padStart(2,'0')}</span><h3>${safe(f.title_en)}</h3>`,'finding-row-link')}</li>`).join('')}</ol></section>`;
-}
-function findingColumnsMarkup(rows=publishedFindings()){
- const groups=findingRowsByCategory(rows);let offset=0;
- return `<div class="finding-rows">${groups.map(g=>{const markup=findingCategoryRow(g,offset);offset+=g.findings.length;return markup;}).join('')}</div>`;
-}
 function coreFindings(animated=false){
- if(animated)return `<section id="key-findings" class="findings-story" aria-labelledby="findings-story-title">
+ if(animated)return `<section id="key-findings" class="findings-story findings-list" aria-labelledby="findings-story-title">
    <div class="findings-story-stage">
      <div class="findings-story-panel" aria-hidden="true"></div>
      <div class="findings-story-content">
        <h2 id="findings-story-title">Key Findings</h2>
-       ${findingColumnsMarkup()}
+       ${findingRows()}
      </div>
    </div>
  </section>`;
- return `<section id="key-findings" class="article-section atlas-key-findings homepage-findings"><div class="findings-section-heading"><h2>Key Findings</h2></div>${findingColumnsMarkup()}</section>`;
+ return `<section id="key-findings" class="article-section atlas-key-findings homepage-findings findings-list"><div class="findings-section-heading"><h2>Key Findings</h2></div>${findingRows()}</section>`;
 }
 
 function findingEvidenceTarget(){
