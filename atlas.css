@@ -415,14 +415,32 @@ html[data-ui-input=keyboard] select,html[data-ui-input=keyboard] select::picker-
 
 .atlas-hero:has(.atlas-world) {
   grid-template-columns: minmax(0, 1fr) minmax(350px, 1.1fr);
-  gap: clamp(24px, 4vw, 64px);
+  gap: clamp(18px, 4vw, 60px);
+  padding-block: 18px 23px;
+  border-bottom-color: #e4e4e7;
 }
 
 .atlas-hero .atlas-world {
   position: relative;
   width: 100%;
-  max-width: 720px;
+  max-width: min(480px, 50svh);
   justify-self: end;
+}
+
+
+.atlas-hero:has(.atlas-world) h1 {
+  max-width: 17ch;
+  color: #18181a;
+  margin-bottom: 0;
+  font-size: clamp(35px, 4.3vw, 62px);
+}
+.atlas-hero:has(.atlas-world) a {
+  margin-top: 16px;
+  padding: 7px 0;
+  color: #242426;
+  background: transparent;
+  text-decoration: underline;
+  text-underline-offset: 4px;
 }
 
 .atlas-world-stage {
@@ -647,8 +665,11 @@ html[data-ui-input=keyboard] select,html[data-ui-input=keyboard] select::picker-
   }
 
   .atlas-hero .atlas-world {
+    max-width: min(260px, 35svh);
     justify-self: center;
   }
+
+  .results-page .article-shell { padding-top: 20px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

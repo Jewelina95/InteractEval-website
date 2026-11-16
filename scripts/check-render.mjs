@@ -52,4 +52,4 @@ for (const [hash, group, measure] of [
   assert.equal(vm.runInContext('mainComparisonGroup', context), group);
   assert.equal(vm.runInContext('mainComparisonMeasure', context), measure);
 }
-console.log('Main renders both videos and the Siri-style demo, six timeline frames, relocated definitions, and Resources. Direct comparison links still open the selected measure.');
+console.log('Main renders both videos and the chat dialogue, six timeline frames, relocated definitions, and Resources. Direct comparison links still open the selected measure.');
