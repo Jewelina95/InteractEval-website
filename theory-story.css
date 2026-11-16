@@ -351,6 +351,12 @@
 .theory-branch::after { top: 50%; border-top: 0; border-bottom-left-radius: 8px; }
 .theory-branch--join { transform: scaleX(-1); }
 
+.theory-timeline-label {
+  margin: 0 0 5px;
+  color: var(--panel-gold);
+  font: 650 14px/1.25 var(--sans);
+}
+
 .theory-timeline {
   position: relative;
   grid-template-columns: minmax(0, .9fr) minmax(0, .95fr) minmax(0, 1.15fr);

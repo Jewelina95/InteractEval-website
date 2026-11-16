@@ -56,11 +56,11 @@ window.interactNetTheory = (() => {
               <p class="theory-mobile-bridge">State understanding</p>
               <div class="theory-row-title"><h3 id="theory-iceberg">Interaction-world reconstruction</h3></div>
               <div class="theory-state-flow">
-                <div class="theory-node theory-node--acts"><span>Dialogue transcript</span><strong>Public acts <var>O<sub>t</sub></var></strong></div>
+                <div class="theory-node theory-node--acts"><span>Transcript <var>O<sub>1:t</sub></var></span><strong>Visible action <var>O<sub>t</sub></var></strong></div>
                 <i class="theory-branch" aria-hidden="true"></i>
                 <div class="theory-state-inputs">
-                  <div class="theory-node theory-node--scene"><strong>Scene <var>S<sub>t</sub></var></strong><span>Roles · Goals · Rules</span></div>
-                  <div class="theory-node theory-node--latent"><strong>Latent state <var>Ψ<sub>t</sub></var></strong><span>Trust · Emotion · Relations</span></div>
+                  <div class="theory-node theory-node--scene"><strong>Scene <var>S<sub>t</sub></var></strong><span>Persona · Objective · World mechanism</span></div>
+                  <div class="theory-node theory-node--latent"><strong>Latent state <var>Ψ<sub>t</sub></var></strong><span>Trust · Emotional stability · Intimacy</span></div>
                 </div>
                 <i class="theory-branch theory-branch--join" aria-hidden="true"></i>
                 <div class="theory-node theory-node--outcome">
@@ -71,7 +71,7 @@ window.interactNetTheory = (() => {
               <details class="theory-details">
                 <summary>What do the symbols mean?</summary>
                 <dl>
-                  <dt>Public acts <var>O<sub>t</sub></var></dt><dd>What participants say or do at turn <var>t</var>, as recorded in the dialogue transcript.</dd>
+                  <dt>Externally visible action <var>O<sub>t</sub></var></dt><dd>The observed action at exchange <var>t</var>. The transcript through that exchange is <var>O<sub>1:t</sub></var>.</dd>
                   <dt>Scene <var>S<sub>t</sub></var></dt><dd>The roles, goals, rules and constraints of the interaction at that turn.</dd>
                   <dt>Latent state <var>Ψ<sub>t</sub></var></dt><dd>What the evidence suggests about beliefs, emotions, relationships and intentions.</dd>
                   <dt>World model <var>W<sub>t</sub></var></dt><dd>The previous world <var>W<sub>t−1</sub></var> updated using new evidence. <var>W<sub>t</sub> = (S<sub>t</sub>, Ψ<sub>t</sub>, E<sub>t</sub>)</var>, where <var>E<sub>t</sub></var> is the event chain.</dd>
@@ -81,12 +81,13 @@ window.interactNetTheory = (() => {
             <section class="theory-row theory-row--time" aria-labelledby="theory-movie">
               <p class="theory-mobile-bridge">Process understanding</p>
               <div class="theory-row-title"><h3 id="theory-movie">Trajectory understanding</h3></div>
+              <p class="theory-timeline-label">Event chain <var>E<sub>t</sub></var></p>
               <div class="theory-timeline">
-                <div class="theory-node"><strong>Past</strong><span>Event chain <var>E<sub>t</sub></var></span></div>
-                <div class="theory-node"><strong>Present</strong><span>Current turn</span></div>
-                <div class="theory-node theory-node--future"><strong>Possible futures</strong><span>State transitions</span></div>
+                <div class="theory-node"><strong>Past <var>P<sub>t</sub></var></strong><span>Established premises and prior events</span></div>
+                <div class="theory-node"><strong>Present <var>C<sub>t</sub></var></strong><span>Current event or conflict</span></div>
+                <div class="theory-node theory-node--future"><strong>Future <var>F<sub>t</sub></var></strong><span>Candidate continuations</span></div>
               </div>
-              <ul class="theory-transitions" aria-label="Possible state transitions">
+              <ul class="theory-transitions" aria-label="Candidate path labels">
                 <li><span aria-hidden="true">↗</span> Advance</li>
                 <li><span aria-hidden="true">→</span> Maintain</li>
                 <li><span aria-hidden="true">↘</span> Degrade</li>
@@ -103,7 +104,7 @@ window.interactNetTheory = (() => {
                 ${[
                   ['L1–L2', 'Passive execution'],
                   ['L3–L4', 'Interactive adaptation'],
-                  ['L5–L6', 'Agentic advancement']
+                  ['L5–L6', 'Proactive promotion']
                 ].map(([levels, label]) => `<div class="theory-node">
                   <strong>${levels}</strong><span>${label}</span>
                 </div>`).join('')}
