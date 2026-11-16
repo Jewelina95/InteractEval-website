@@ -94,6 +94,12 @@ function resultsHomeV2(){
     <div class="article-shell"><div class="article-body">${interactionFigure('motivation')}${window.interactNetTheory?.render() ?? ""}</div></div>
     ${coreFindings(true)}
     ${interactionFigure('system')}
+    <section class="method-why" aria-labelledby="method-why-heading">
+      <div class="method-why-content">
+        <h2 id="method-why-heading">Why it works</h2>
+        <p>Each response is evaluated in the context of how the interaction has changed across turns.</p>
+      </div>
+    </section>
     ${resultResources()}
   </article></div>`;
 }

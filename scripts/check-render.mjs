@@ -28,14 +28,15 @@ vm.runInContext(source.slice(source.indexOf('function resultResources('), source
 vm.runInContext(source.slice(start, end), context);
 
 const home = vm.runInContext('resultsHomeV2()', context);
-const order = ['id="main-hero"', 'id="response-interaction"', 'data-definition="response"', 'class="why-comparison"', 'id="why-response-heading"', 'id="why-interactive-heading"', 'id="why-situation-a"', 'id="why-situation-b"', 'data-definition="interactive"', 'id="theoretical-framework"', 'id="key-findings"', 'id="system-overview"', 'id="resources"'];
+const order = ['id="main-hero"', 'id="response-interaction"', 'data-definition="response"', 'class="why-comparison"', 'id="why-response-heading"', 'id="why-interactive-heading"', 'id="why-situation-a"', 'id="why-situation-b"', 'data-definition="interactive"', 'id="theoretical-framework"', 'id="key-findings"', 'id="system-overview"', 'id="evaluation-diagram"', 'id="method-why-heading"', 'id="resources"'];
 assert.ok(order.every(id => home.includes(id)));
 for (let i = 1; i < order.length; i++) assert.ok(home.indexOf(order[i - 1]) < home.indexOf(order[i]), order[i]);
 assert.doesNotMatch(home, /main-results-rail|figure1-field-aligned|why-teardown|home-destinations|href="[^"]*(?:research\.html|showcase\.html|#leaderboards)/);
 assert.doesNotMatch(home, /class="method-steps?"/);
 assert.match(home, /<figure id="evaluation-diagram" class="method-diagram"/);
 assert.ok(home.indexOf('id="system-overview-heading"') < home.indexOf('id="evaluation-diagram"'));
-assert.match(home, /interactnet-pipeline-v168\.svg/);
+assert.match(home, /href="[^"]*interactnet-pipeline-v168\.svg/);
+assert.match(home, /src="[^"]*interactnet-world-architecture-v168\.svg/);
 assert.doesNotMatch(home, /interactnet-pipeline-v168-black-gold/);
 assert.match(home, /<div id="comparisons" data-initial-topic="main-results"/);
 assert.doesNotMatch(home, /result-carousel|result-library/);
@@ -62,4 +63,4 @@ for (const [hash, group, measure, topic] of [
   assert.equal(vm.runInContext('mainComparisonGroup', context), group);
   assert.equal(vm.runInContext('mainComparisonMeasure', context), measure);
 }
-console.log('Main renders both videos and the chat dialogue, six timeline frames, definitions, findings, and the full evaluation diagram. Direct comparison links still open the selected measure.');
+console.log('Main renders both videos and the chat dialogue, six timeline frames, definitions, findings, the focused architecture, and its transition to results. Direct comparison links still open the selected measure.');

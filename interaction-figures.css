@@ -41,18 +41,13 @@
   background: linear-gradient(180deg, #fff 0%, #f3f4f5 46%, #f3f4f5 82%, #fff 100%);
 }
 .method-layout {
-  width: min(1680px, calc(100% - 2 * clamp(16px, 2.4vw, 40px)));
+  width: min(1260px, calc(100% - 2 * clamp(20px, 5vw, 72px)));
   margin-inline: auto;
 }
 .method-intro {
-  padding-inline: clamp(4px, 3vw, 48px);
   margin-bottom: clamp(24px, 4vw, 56px);
 }
-.method-intro h2 {
-  margin: 0;
-  font: 650 clamp(38px, 5.7vw, 82px)/.99 var(--sans);
-  letter-spacing: -.07em;
-}
+.method-intro h2 { margin: 0; }
 .method-diagram {
   width: 100%;
   margin: 0;
@@ -78,8 +73,8 @@
 .method-diagram .method-full-image:hover { background: #e9edef; }
 .method-diagram h3 {
   margin: 0;
-  font: 650 clamp(21px, 3vw, 44px)/1.07 var(--sans);
-  letter-spacing: -.045em;
+  font: 650 clamp(20px, 2.25vw, 30px)/1.12 var(--sans);
+  letter-spacing: -.04em;
 }
 .method-diagram .pipeline-picture {
   border-color: #d4d9db;
@@ -96,9 +91,10 @@
   .method-sequence.is-scroll-animated::after {
     content: "";
     display: block;
-    height: clamp(320px, 65svh, 560px);
+    height: clamp(220px, 48svh, 420px);
   }
   .method-sequence.is-scroll-animated .method-layout {
+    --diagram-max: min(100%, max(76%, calc((100svh - var(--header-height, 0px) - 98px) * 1.63)));
     position: sticky;
     top: var(--header-height, 0px);
     display: grid;
@@ -106,23 +102,80 @@
     min-height: calc(100svh - var(--header-height, 0px));
     padding-block: 18px;
   }
+  .method-sequence.is-scroll-animated .method-layout::before {
+    content: "";
+    grid-area: 1 / 1;
+    width: var(--diagram-max);
+    aspect-ratio: 1350 / 825;
+    margin-top: calc(36px + clamp(12px, 1.5vw, 20px));
+    pointer-events: none;
+  }
   .method-sequence.is-scroll-animated :is(.method-intro, .method-diagram) {
     grid-area: 1 / 1;
   }
   .method-sequence.is-scroll-animated .method-intro {
-    width: 34%;
+    width: 29%;
+    text-wrap: balance;
     margin: 0;
     opacity: clamp(0, calc(1.2 - var(--method-progress, 0) * 4), 1);
   }
   .method-sequence.is-scroll-animated .method-diagram {
-    transform-origin: right center;
-    transform: scale(calc(.62 + .38 * clamp(0, (var(--method-progress, 0) - .12) / .68, 1)));
+    --method-zoom: clamp(0, (var(--method-progress, 0) - .17) / .63, 1);
+    justify-self: end;
+    width: calc(62% + (var(--diagram-max) - 62%) * var(--method-zoom));
+    margin-inline-end: calc((100% - var(--diagram-max)) / 2 * var(--method-zoom));
   }
   .method-sequence.is-scroll-animated:focus-within .method-intro { visibility: hidden; }
-  .method-sequence.is-scroll-animated:focus-within .method-diagram { transform: none; }
+  .method-sequence.is-scroll-animated:focus-within .method-diagram { --method-zoom: 1; }
   .method-sequence.is-scroll-animated:focus-within::before { opacity: 1; }
 }
 
 .method-results { background: #f4f4f4; }
 .results-page .method-results #resources { padding-top: 0; border-top: 0; }
 .results-page .method-results .why-resources > summary { color: #252525; }
+
+
+.results-page, .interaction-only {
+  --section-title: 650 clamp(32px, 4vw, 56px)/1.07 var(--sans);
+  --section-tracking: -.05em;
+}
+.results-page :is(.why-heading h2, .theory-heading h2, #findings-story-title,
+  #system-overview-heading, #method-why-heading, #evaluation-results-heading),
+.interaction-only #system-overview-heading {
+  font: var(--section-title);
+  letter-spacing: var(--section-tracking);
+}
+
+.method-why {
+  overflow: hidden;
+  background: linear-gradient(180deg, #fff 0%, #f4f2ed 42%, #090807 100%);
+  color: #222426;
+  padding: clamp(34px, 6vw, 80px) clamp(20px, 5vw, 72px) clamp(100px, 13vw, 180px);
+}
+.method-why-content {
+  max-width: 1260px;
+  margin-inline: auto;
+}
+.method-why-content h2 { margin: 0; }
+.method-why-content p {
+  max-width: 47ch;
+  margin: 14px 0 0;
+  color: #505050;
+  font: 450 clamp(16px, 1.6vw, 21px)/1.5 var(--sans);
+}
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .method-why-content {
+      animation: method-why-enter ease-out both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 95%;
+    }
+    @keyframes method-why-enter {
+      from { opacity: .25; translate: 0 24px; }
+      to { opacity: 1; translate: 0 0; }
+    }
+  }
+}
+@media (max-width: 800px) {
+  .method-diagram .pipeline-picture img { width: 820px; }
+}
