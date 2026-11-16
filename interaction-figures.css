@@ -139,75 +139,43 @@
   --section-tracking: -.05em;
 }
 .results-page :is(.why-heading h2, .theory-heading h2, #findings-story-title,
-  #system-overview-heading, #method-why-heading),
+  #system-overview-heading, #method-why-heading, #resources-heading),
 .interaction-only #system-overview-heading {
   font: var(--section-title);
   letter-spacing: var(--section-tracking);
 }
 
 .method-why {
-  position: relative;
-  isolation: isolate;
-  overflow: hidden;
-  background: linear-gradient(180deg, #fff 0%, #f0ede6 55%, #8e8270 77%, #090807 100%);
+  background: linear-gradient(180deg, #fff 0%, #fff 59%, #ece8df 75%, #090807 100%);
   color: #222426;
-  padding: clamp(116px, 14vw, 198px) clamp(20px, 5vw, 72px) clamp(124px, 14vw, 196px);
-}
-.method-why::before {
-  content: "";
-  position: absolute;
-  z-index: -1;
-  inset: 0;
-  background: radial-gradient(ellipse at 24% 43%, #e7cfa24a, transparent 57%);
+  padding: clamp(110px, 12vw, 180px) clamp(22px, 5vw, 72px) clamp(150px, 18vw, 260px);
+  text-align: center;
 }
 .method-why-content {
-  max-width: 1260px;
+  max-width: 620px;
   margin-inline: auto;
 }
 .method-why-content h2 { margin: 0; }
 .method-why-content p {
-  max-width: 47ch;
-  margin: 14px 0 0;
+  max-width: 52ch;
+  margin: 18px auto 0;
   color: #505050;
-  font: 450 clamp(16px, 1.6vw, 21px)/1.5 var(--sans);
+  font: 450 clamp(16px, 1.55vw, 20px)/1.55 var(--sans);
 }
+
 @media (prefers-reduced-motion: no-preference) {
-  .method-why.has-reveal::before {
-    transition: opacity 1.2s ease-out, transform 1.2s ease-out;
+  .method-why-content.has-reveal :is(h2, p),
+  .resources-intro.has-reveal h2 {
+    transition: opacity .65s ease-out, transform .8s cubic-bezier(.2,.75,.24,1);
   }
-  .method-why.has-reveal :is(h2, p) {
-    transition: opacity .65s ease-out, transform .75s cubic-bezier(.2,.75,.24,1);
-  }
-  .method-why.has-reveal:not(.is-revealed)::before {
+  .method-why-content.has-reveal:not(.is-revealed) :is(h2, p),
+  .resources-intro.has-reveal:not(.is-revealed) h2 {
     opacity: 0;
-    transform: translateY(28px);
+    transform: translateY(24px);
   }
-  .method-why.has-reveal:not(.is-revealed) :is(h2, p) {
-    opacity: 0;
-    transform: translateY(28px);
-  }
-  .method-why.has-reveal.is-revealed p { transition-delay: 140ms; }
-  .method-why-content { transform-origin: left center; }
-  @supports (animation-timeline: view()) {
-    .method-why { view-timeline-name: --why-bridge; }
-    .method-why.has-reveal .method-why-content {
-      animation: method-why-zoom linear both;
-      animation-timeline: --why-bridge;
-      animation-range: entry 28% exit 18%;
-    }
-  }
-  @supports not (animation-timeline: view()) {
-    .method-why.has-reveal.is-revealed .method-why-content {
-      animation: method-why-zoom 1.6s ease-in-out both;
-    }
-  }
-  @keyframes method-why-zoom {
-    0% { transform: scale(.9); }
-    48% { transform: scale(var(--why-zoom-peak, 1.12)); }
-    100% { transform: scale(.96); }
-  }
+  .method-why-content.has-reveal.is-revealed p { transition-delay: 130ms; }
 }
+
 @media (max-width: 800px) {
-  .method-why { --why-zoom-peak: 1.05; }
   .method-diagram .pipeline-picture img { width: 100%; }
 }

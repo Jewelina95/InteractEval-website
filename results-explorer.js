@@ -42,8 +42,11 @@ function resultResources(){
   const params=new URLSearchParams(location.hash.split('?')[1]||'');
   const topic=params.get('topic');
   const initialTopic=Object.values(topicByGroup).includes(topic)?topic:topicByGroup[mainComparisonGroup];
-  return `<section id="resources" class="zip-results" aria-label="Evaluation results">
+  return `<section id="resources" class="zip-results" aria-labelledby="resources-heading">
     <div class="results">
+      <header class="resources-intro">
+        <h2 id="resources-heading">Resources</h2>
+      </header>
       <div id="comparisons" data-initial-topic="${initialTopic}" aria-busy="true">
         <p role="status">Loading evaluation data…</p>
       </div>
@@ -96,7 +99,7 @@ function resultsHomeV2(){
     <section class="method-why" aria-labelledby="method-why-heading">
       <div class="method-why-content">
         <h2 id="method-why-heading">Why it works</h2>
-        <p>Each response is evaluated in the context of how the interaction has changed across turns.</p>
+        <p>Following an exchange turn by turn shows what a model can do and how the interaction changes across scenarios and participants.</p>
       </div>
     </section>
     ${resultResources()}

@@ -11,11 +11,11 @@ const levelLabels = [
 const resultGroups = [
   ['Results', [
     ['main-results', 'Main results'], ['agents', 'Agent evaluation'], ['robustness', 'Robustness analysis']
-  ]],
+  ], 'Compare model capabilities, agent configurations, and how robust the scores are.'],
   ['Phenomena', [
     ['scenarios', 'Scenario effects'], ['personas', 'Model persona'], ['participants', 'Participant effects'],
     ['dynamics', 'Interaction dynamics'], ['creativity', 'Creativity analysis'], ['cost', 'Computational cost']
-  ]]
+  ], 'Explore how scenarios, model personas, and participants shape the exchange.']
 ];
 const providerIcons = [
   [/^claude/i, 'claude.svg'], [/^gpt/i, 'openai.svg'], [/^gemini/i, 'gemini.png'], [/^gemma/i, 'google.svg'],
@@ -78,9 +78,10 @@ function resultPicker() {
     '<button type="button" data-group-filter="' + index + '" aria-controls="picker-group-' + index +
       '" aria-pressed="' + (index === 0) + '">' + title + '</button>'
   ).join('');
-  const topics = resultGroups.map(([title, items], index) =>
+  const topics = resultGroups.map(([title, items, description], index) =>
     '<div id="picker-group-' + index + '" class="picker-buttons" role="group" aria-label="' + title +
-      ' topics" data-topic-group="' + index + '"' + (index ? ' hidden' : '') + '>' +
+      ' topics" data-topic-group="' + index + '"' + (index ? ' hidden' : '') +
+      '><p class="picker-description">' + safe(description) + '</p>' +
       items.map(([id, label]) => '<button type="button" data-section-filter="' + id + '" aria-controls="' +
         'results-topic-' + id + '" aria-pressed="false">' + label + '</button>').join('') + '</div>'
   ).join('');

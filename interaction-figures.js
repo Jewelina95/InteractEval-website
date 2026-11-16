@@ -27,28 +27,32 @@ function interactionFigure(kind) {
   </section>`;
 }
 
-let whyTransitionObserver;
+let sectionEntranceObserver;
 
-function setupWhyTransition() {
-  whyTransitionObserver?.disconnect();
-  const bridge = document.querySelector('.method-why');
-  const content = bridge?.querySelector('.method-why-content');
-  if (!content || !('IntersectionObserver' in window)) return;
+function setupSectionEntrances() {
+  sectionEntranceObserver?.disconnect();
+  if (!('IntersectionObserver' in window)) return;
 
-  bridge.classList.add('has-reveal');
-  whyTransitionObserver = new IntersectionObserver(([entry]) => {
-    if (entry.isIntersecting) bridge.classList.add('is-revealed');
-    else if (entry.rootBounds && entry.boundingClientRect.top >= entry.rootBounds.bottom) {
-      bridge.classList.remove('is-revealed');
+  const sections = document.querySelectorAll('.method-why-content, .resources-intro');
+  sectionEntranceObserver = new IntersectionObserver(entries => {
+    for (const entry of entries) {
+      if (entry.isIntersecting) entry.target.classList.add('is-revealed');
+      else if (entry.rootBounds && entry.boundingClientRect.top >= entry.rootBounds.bottom) {
+        entry.target.classList.remove('is-revealed');
+      }
     }
-  }, { rootMargin: '0px 0px -18% 0px', threshold: .15 });
-  whyTransitionObserver.observe(content);
+  }, { rootMargin: '0px 0px -22% 0px', threshold: .15 });
+
+  for (const section of sections) {
+    section.classList.add('has-reveal');
+    sectionEntranceObserver.observe(section);
+  }
 }
 
 let stopDiagramScroll;
 function setupInteractionFigures() {
   window.setupTheoryProcessFigures?.();
-  setupWhyTransition();
+  setupSectionEntrances();
   stopDiagramScroll?.();
   stopDiagramScroll = undefined;
   const sequence = document.querySelector('.method-sequence:not(.is-static)');

@@ -364,6 +364,16 @@
 }
 .zip-results .picker-buttons { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 12px; }
 .zip-results .picker-buttons[hidden] { display: none; }
+.zip-results .picker-description {
+  flex-basis: 100%;
+  margin: 0 0 4px;
+  color: #d8c7ae;
+  font-size: 14px;
+}
+.zip-results .resources-intro h2 {
+  margin: 0 0 clamp(18px, 3vw, 36px);
+  color: #fcf6e9;
+}
 .zip-results .result-picker button {
   min-height: 33px;
   padding: 5px 12px;
