@@ -217,6 +217,7 @@
     });
 
     if (!reducedMotion.matches && 'IntersectionObserver' in window) {
+      demo.classList.add('why-reveal-ready');
       entryObserver = new IntersectionObserver(([entry]) => {
         if (!entry.isIntersecting) return;
         demo.classList.add('why-entered');
