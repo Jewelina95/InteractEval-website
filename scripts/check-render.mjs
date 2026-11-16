@@ -29,10 +29,11 @@ vm.runInContext(source.slice(source.indexOf('function resultResources('), source
 vm.runInContext(source.slice(start, end), context);
 
 const home = vm.runInContext('resultsHomeV2()', context);
-const order = ['id="main-hero"', 'id="response-interaction"', 'data-definition="response"', 'class="why-comparison"', 'id="why-response-heading"', 'id="why-interactive-heading"', 'id="why-situation-a"', 'id="why-situation-b"', 'data-definition="interactive"', 'id="theoretical-framework"', 'id="key-findings"', 'id="system-overview"', 'id="evaluation-diagram"', 'id="method-why-heading"', 'id="case-studies"', 'id="resources"'];
+const order = ['id="main-hero"', 'id="response-interaction"', 'data-definition="response"', 'class="why-comparison"', 'id="why-response-heading"', 'id="why-interactive-heading"', 'id="why-situation-a"', 'id="why-situation-b"', 'data-definition="interactive"', 'id="theoretical-framework"', 'id="key-findings"', 'id="system-overview"', 'id="evaluation-diagram"', 'id="method-why-heading"', 'id="resources"', 'id="case-studies"'];
 assert.ok(order.every(id => home.includes(id)));
 for (let i = 1; i < order.length; i++) assert.ok(home.indexOf(order[i - 1]) < home.indexOf(order[i]), order[i]);
 assert.doesNotMatch(home, /main-results-rail|figure1-field-aligned|why-teardown|home-destinations|href="[^"]*(?:research\.html|showcase\.html|#leaderboards)/);
+assert.match(home, /id="case-studies" hidden aria-labelledby=/);
 assert.equal((home.match(/class="home-case-study" type="button" data-open-example=/g) || []).length, 3);
 assert.doesNotMatch(home, /class="method-steps?"/);
 assert.match(home, /<figure id="evaluation-diagram" class="method-diagram"/);

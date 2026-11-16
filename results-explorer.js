@@ -83,7 +83,7 @@ function homeCaseStudies(){
     { id:'case_023', summary:'Arrange a guest’s meal and lodging while renewing an old friendship.' },
     { id:'case_070', summary:'Plan a safe route to a relay station and verify life-support margins.' },
   ];
-  return `<section class="home-case-studies" id="case-studies" aria-labelledby="case-studies-heading">
+  return `<section class="home-case-studies" id="case-studies" hidden aria-labelledby="case-studies-heading">
     <div class="home-case-studies-inner">
       <h2 id="case-studies-heading">Case Studies</h2>
       <div class="home-case-studies-grid">
@@ -126,8 +126,8 @@ function resultsHomeV2(){
         <p>Following an exchange turn by turn shows what a model can do and how the interaction changes across scenarios and participants.</p>
       </div>
     </section>
-    ${homeCaseStudies()}
     ${resultResources()}
+    ${homeCaseStudies()}
   </article></div>`;
 }
 function comparisonDataTable(ids,labels=ids.map(id=>metricOf(id).label),rows=publication.models,headerModels=[]){
