@@ -24,6 +24,77 @@ const navigationIcons={
 };
 function navigationIcon(name){return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${navigationIcons[name]||navigationIcons.overview}</svg>`;}
 
+function setupSiteMenu(){
+  const menu=document.querySelector('.site-menu');
+  if(!menu)return;
+  const panel=menu.querySelector('nav'),summary=menu.querySelector('summary');
+  const home='./index.html',research='./research.html',showcase='./showcase.html';
+  const destinations=[
+    ['Main',home],
+    ['Findings',home+'#key-findings'],
+    ['Models',home+'#models',[
+      ['All evaluations',home+'#models'],
+      ['Capabilities',home+'#models?category=Capabilities'],
+      ['Scenario conditions',home+'#models?category=Scenarios'],
+      ['Behavior',home+'#models?category=Behavior'],
+      ['Outcomes',home+'#models?category=Outcomes'],
+      ['Conversation length',home+'#models?category=Duration'],
+      ['Partners &amp; roles',home+'#models?category=Partners'],
+      ['Repeatability',home+'#models?category=Reliability']
+    ]],
+    ['Agents',home+'#agents',[
+      ['Compare architectures',home+'#agents'],
+      ...['MetaMind','Cognizer','Claude Code'].map(name=>[name,home+'#agents?architecture='+encodeURIComponent(name)])
+    ]],
+    ['Image, Speech, Video',home+'#multimodal'],
+    ['Showcase',showcase,[
+      ['All conversations',showcase],
+      ['Task-oriented',showcase+'#cases?purpose=functional'],
+      ['Open-ended',showcase+'#cases?purpose=nonfunctional']
+    ]],
+    ['Leaderboards',home+'#leaderboards',[
+      ['Overall ranking',home+'#leaderboards'],
+      ['Interaction stages',home+'#leaderboards?metric=stage2'],
+      ['Scenario performance',home+'#leaderboards?metric=nonfunctional'],
+      ['Partner-role capability',home+'#leaderboards?metric=user-composite']
+    ]],
+    ['Research',research,[
+      ['Three theoretical ideas',research+'#theory'],
+      ['Instrument architecture',research+'#architecture'],
+      ['World components',research+'#components'],
+      ['Time-indexed records',research+'#temporal-records'],
+      ['Key findings',research+'#discoveries'],
+      ['Scenario design',research+'#scenario-space'],
+      ['Capability rubric',research+'#rubric']
+    ]]
+  ];
+  const link=([label,href])=>`<a href="${href}">${label}</a>`;
+  panel.innerHTML=destinations.map(([label,href,items],index)=>{
+    const id='site-menu-group-'+index;
+    const children=items?`<button type="button" aria-label="${label} links" aria-expanded="false" aria-controls="${id}"></button><ul id="${id}" hidden>${items.map(item=>`<li>${link(item)}</li>`).join('')}</ul>`:'';
+    return `<div class="site-menu-row">${link([label,href])}${children}</div>`;
+  }).join('');
+
+  panel.addEventListener('click',event=>{
+    const button=event.target.closest('button');
+    if(button){
+      const list=document.getElementById(button.getAttribute('aria-controls'));
+      list.hidden=!list.hidden;
+      button.setAttribute('aria-expanded',String(!list.hidden));
+    }
+  });
+  document.addEventListener('click',event=>{
+    if(!menu.contains(event.target)||event.target.closest('.site-menu-panel a'))menu.open=false;
+  });
+  menu.addEventListener('keydown',event=>{
+    if(event.key==='Escape'&&menu.open){
+      menu.open=false;
+      summary.focus();
+    }
+  });
+}
+setupSiteMenu();
+
 let headerHeroObserver;
 function syncEditorialHeader(){
   if(headerHeroObserver)headerHeroObserver.disconnect();
