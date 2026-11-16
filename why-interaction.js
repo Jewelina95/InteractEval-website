@@ -4,8 +4,8 @@
   const media = new URL('assets/why-interact/', document.currentScript.src).href;
   const situations = [
     {
-      id: 'a', title: 'Situation A', context: 'Curiosity',
-      takeaway: 'Tony’s curiosity calls for an explanation of the science and its risks.',
+      id: 'a', title: 'Situation A', context: 'Learning',
+      takeaway: 'Tony wants to understand the science. The AI explains the principles and warns about the risks.',
       frames: [
         { start: 0, seek: 2.05, state: 'Curious about how it works', event: 'Tony asks about explosives.', alt: 'Tony and the AI face each other in a quiet room' },
         { start: 4.5, seek: 8.35, state: 'Engaged in the explanation', event: 'The AI explains the underlying science.', alt: 'Tony studies a holographic diagram' },
@@ -67,13 +67,14 @@
       <header class="why-heading">
         <h2 id="response-interaction-heading">Why interact</h2>
         <p>The same question can lead to different actions as the situation changes.</p>
+        <p class="why-case"><strong>Case</strong> <span>“${turns[0].line}”</span></p>
       </header>
       <div class="why-comparison">
         <div class="why-panels">
           <section class="why-response" aria-labelledby="why-response-heading">
             <h3 id="why-response-heading">Response Intelligence</h3>
-            <aside class="why-definition" data-definition="response" aria-label="Response Intelligence explanation" hidden>
-              <strong>Response Intelligence</strong>
+            <aside class="why-definition" data-definition="response" aria-label="Response Intelligence explanation">
+              <strong>RESPONSE INTELLIGENCE</strong>
               <p>The ability to respond appropriately within the direction set by a partner, following instructions and using new information.</p>
             </aside>
             <div class="why-chat">
@@ -84,10 +85,10 @@
           </section>
           <section class="why-interactive" aria-labelledby="why-interactive-heading">
             <h3 id="why-interactive-heading">Interactive Intelligence</h3>
-            <aside class="why-definition" data-definition="interactive" aria-label="Interactive Intelligence explanation" hidden>
-              <strong>Interactive Intelligence</strong>
+            <aside class="why-definition" data-definition="interactive" aria-label="Interactive Intelligence explanation">
+              <strong>INTERACTIVE INTELLIGENCE</strong>
               <p>The ability to understand an evolving situation, initiate a justified new direction, and follow through across turns.</p>
-              <p data-interactive-example hidden></p>
+              <p data-interactive-example>${situations[0].takeaway}</p>
             </aside>
             <div class="why-situations" id="why-situations" role="region" aria-label="Swipe between Situation A and Situation B">${situations.map(situationMarkup).join('')}</div>
             <div class="why-situation-navigation" role="group" aria-label="Browse situations">
@@ -108,8 +109,6 @@
     const audioButton = demo.querySelector('.why-assistant-control');
     const messages = [...demo.querySelectorAll('.why-turn')];
     const status = demo.querySelector('.why-status');
-    const responseDefinition = demo.querySelector('[data-definition="response"]');
-    const interactiveDefinition = demo.querySelector('[data-definition="interactive"]');
     const interactiveExample = demo.querySelector('[data-interactive-example]');
     const carousel = demo.querySelector('.why-situations');
     const indicators = [...demo.querySelectorAll('[data-situation-page]')];
@@ -118,7 +117,6 @@
     const slides = [...carousel.querySelectorAll('.why-situation')];
     const videos = slides.map(slide => slide.querySelector('video'));
     const mediaTracks = [audio, ...videos];
-    const watched = new Set();
     const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
     let visibleSituation = 0;
     let scrollTimer;
@@ -144,7 +142,6 @@
       });
     });
     ['play', 'pause', 'timeupdate', 'ended'].forEach(event => audio.addEventListener(event, updateDialogue));
-    audio.addEventListener('ended', () => { responseDefinition.hidden = false; });
     mediaTracks.forEach(track => track.addEventListener('play', () => {
       mediaTracks.forEach(other => { if (other !== track) other.pause(); });
     }));
@@ -153,14 +150,8 @@
       return slides[index].offsetLeft - slides[0].offsetLeft;
     }
 
-    function updateInteractiveExplanation() {
-      interactiveDefinition.hidden = watched.size === 0;
-      interactiveExample.hidden = !watched.has(visibleSituation);
-      interactiveExample.textContent = situations[visibleSituation].takeaway;
-    }
-
     function syncCarousel() {
-      updateInteractiveExplanation();
+      interactiveExample.textContent = situations[visibleSituation].takeaway;
       slides.forEach((slide, index) => { slide.inert = index !== visibleSituation; });
       indicators.forEach((button, index) => {
         if (index === visibleSituation) button.setAttribute('aria-current', 'true');
@@ -222,10 +213,6 @@
       }));
       video.addEventListener('play', () => { storyboard.open = true; });
       ['timeupdate', 'seeking', 'seeked'].forEach(event => video.addEventListener(event, updateFrames));
-      video.addEventListener('ended', () => {
-        watched.add(sceneIndex);
-        updateInteractiveExplanation();
-      });
       updateFrames();
     });
 

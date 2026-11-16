@@ -36,6 +36,20 @@
   color: #fbfbfb;
 }
 .why-demo .why-heading p { margin: 7px 0 0; color: #d1d1d1; font: 450 clamp(16px, 1.7vw, 21px)/1.45 var(--sans); }
+.why-demo .why-heading .why-case {
+  display: inline-flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px 11px;
+  margin-top: 15px;
+  padding: 7px 13px;
+  border: 1px solid #626262;
+  border-radius: 7px;
+  color: #fafafa;
+  font: 500 15px/1.4 var(--sans);
+}
+.why-case strong { color: #ccc; font: 700 11px/1.3 var(--sans); letter-spacing: .11em; text-transform: uppercase; }
 
 .why-comparison {
   width: min(100%, var(--why-center));
@@ -226,16 +240,14 @@
   color: var(--why-ink);
   font: 500 clamp(15px, 1.06vw, 18px)/1.48 var(--sans);
 }
-.why-definition strong { display: block; margin-bottom: 4px; font-weight: 700; }
+.why-definition strong { display: block; margin-bottom: 7px; font-size: .8em; font-weight: 750; letter-spacing: .095em; line-height: 1.35; }
 .why-demo .why-definition p { margin: 0; font: inherit; color: inherit; }
 .why-demo .why-definition p + p { margin-top: 6px; }
 .why-storyboard[open] .why-frames { animation: why-arrive .25s ease-out both; }
-.why-definition:not([hidden]) { animation: why-note-enter .5s cubic-bezier(.16,1,.3,1) both; }
 .why-entered .why-comparison { animation: why-arrive .6s cubic-bezier(.16,1,.3,1) both; }
 .why-entered::before { animation: why-dim .7s ease-out both; }
 
 @keyframes why-arrive { from { opacity: .72; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes why-note-enter { from { opacity: 0; transform: translate(var(--why-enter-x, 0), 8px); } to { opacity: 1; transform: translate(0, 0); } }
 @keyframes why-dim { from { opacity: .8; } to { opacity: 1; } }
 .why-demo .why-status { margin: 8px 0 0; color: #eee; font-size: 13px; text-align: center; }
 .why-demo .why-status:empty { margin: 0; }
@@ -260,11 +272,9 @@
     color: #f1f1f1;
   }
   .results-page .why-response > .why-definition {
-    --why-enter-x: -14px;
     right: calc(100% + var(--why-panel-pad) + 13px);
   }
   .results-page .why-interactive > .why-definition {
-    --why-enter-x: 14px;
     left: calc(100% + var(--why-panel-pad) + 13px);
   }
 }
@@ -279,7 +289,7 @@
   .why-comparison { border-radius: 15px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .why-definition:not([hidden]), .why-storyboard[open] .why-frames,
+  .why-storyboard[open] .why-frames,
   .why-entered .why-comparison, .why-entered::before { animation: none; }
   .why-situation-indicators button::before { transition: none; }
 }
