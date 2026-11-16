@@ -58,21 +58,18 @@ window.interactNetTheory = (() => {
               <div class="theory-state-flow">
                 <div class="theory-node theory-node--acts">
                   <strong>Evidence record <var>D<sub>t</sub></var></strong>
-                  <span>Authorized scenario and transcript <var>O<sub>1:t</sub></var></span>
                 </div>
                 <i class="theory-reconstruction-link" aria-hidden="true"></i>
                 <ol class="theory-state-inputs" aria-label="Reconstruction update order">
                   <li class="theory-node theory-node--latent">
-                    <strong>Operational latent state <var>Ψ<sub>t</sub></var></strong>
-                    <span>Evidence-linked estimates for both participants</span>
+                    <strong>Latent state <var>Ψ<sub>t</sub></var></strong>
                   </li>
                   <li class="theory-node theory-node--event">
                     <strong>Event chain <var>E<sub>t</sub></var></strong>
                     <span><var>E<sub>t</sub> = (P<sub>t</sub>, C<sub>t</sub>, F<sub>t</sub>)</var></span>
                   </li>
                   <li class="theory-node theory-node--scene">
-                    <strong>Effective scene <var>S<sub>t</sub></var></strong>
-                    <span>Previous scene with any admissible amendments</span>
+                    <strong>Scene <var>S<sub>t</sub></var></strong>
                   </li>
                 </ol>
                 <i class="theory-reconstruction-link" aria-hidden="true"></i>
@@ -81,25 +78,15 @@ window.interactNetTheory = (() => {
                   <span><var>W<sub>t</sub> = (S<sub>t</sub>, Ψ<sub>t</sub>, E<sub>t</sub>)</var></span>
                 </div>
               </div>
-              <details class="theory-details">
-                <summary>What do the symbols mean?</summary>
-                <dl>
-                  <dt>Evidence record <var>D<sub>t</sub></var></dt><dd>The authorized scenario specification <var>C<sub>eval</sub></var> and the transcript <var>O<sub>1:t</sub></var>. <var>O<sub>t</sub></var> denotes the externally visible action at exchange <var>t</var>.</dd>
-                  <dt>Operational latent state <var>Ψ<sub>t</sub></var></dt><dd>The evaluator’s estimates of internal, relational, world-mechanism and goal states for the user and the assistant’s character. Each interpretation retains the evidence that supports it.</dd>
-                  <dt>Event chain <var>E<sub>t</sub></var></dt><dd>Prior events and premises <var>P<sub>t</sub></var>, the present event or conflict <var>C<sub>t</sub></var>, and conditional future paths <var>F<sub>t</sub></var>.</dd>
-                  <dt>Effective scene <var>S<sub>t</sub></var></dt><dd>The persona, hidden constraints, world mechanism, interaction boundary, objective and initial situation. The scene carries forward unless a proposed amendment is admitted.</dd>
-                  <dt>World reconstruction <var>W<sub>t</sub></var></dt><dd>The effective scene, operational latent state and event chain assembled for capability adjudication.</dd>
-                </dl>
-              </details>
             </section>
             <section class="theory-row theory-row--time" aria-labelledby="theory-movie">
               <p class="theory-mobile-bridge">Process understanding</p>
               <div class="theory-row-title"><h3 id="theory-movie">Trajectory understanding</h3></div>
               <p class="theory-timeline-label">Event chain <var>E<sub>t</sub></var></p>
               <div class="theory-timeline">
-                <div class="theory-node"><strong>Past <var>P<sub>t</sub></var></strong><span>Established premises and prior events</span></div>
-                <div class="theory-node"><strong>Present <var>C<sub>t</sub></var></strong><span>Current event or conflict</span></div>
-                <div class="theory-node theory-node--future"><strong>Future <var>F<sub>t</sub></var></strong><span>Candidate continuations</span></div>
+                <div class="theory-node"><strong>Past <var>P<sub>t</sub></var></strong></div>
+                <div class="theory-node"><strong>Present <var>C<sub>t</sub></var></strong></div>
+                <div class="theory-node theory-node--future"><strong>Future <var>F<sub>t</sub></var></strong></div>
               </div>
               <ul class="theory-transitions" aria-label="Candidate path labels">
                 <li><span aria-hidden="true">↗</span> Advance</li>
