@@ -428,7 +428,7 @@ html[data-ui-input=keyboard] select,html[data-ui-input=keyboard] select::picker-
 
 .atlas-hero--animated h1 {
   margin: 0;
-  color: #14231c;
+  color: #171717;
   font-size: clamp(38px, min(5.8vw, 9svh), 82px);
   line-height: 1;
   letter-spacing: -.06em;
@@ -442,15 +442,15 @@ html[data-ui-input=keyboard] select,html[data-ui-input=keyboard] select::picker-
   min-height: 40px;
   margin: 0;
   padding: 0 15px;
-  border: 1px solid #cadad1;
+  border: 1px solid #d4d4d4;
   border-radius: 40px;
   background: #fff;
-  color: #183527;
+  color: #242424;
   font: 650 13px/1.2 var(--sans);
   text-decoration: none;
 }
 
-.atlas-hero--animated .atlas-hero-actions a:hover { background: #eef5ef; }
+.atlas-hero--animated .atlas-hero-actions a:hover { background: #f1f1f1; }
 
 .atlas-hero .atlas-world {
   position: relative;
@@ -463,6 +463,7 @@ html[data-ui-input=keyboard] select,html[data-ui-input=keyboard] select::picker-
   isolation: isolate;
   overflow: hidden;
   background: #fff;
+  filter: grayscale(1);
 }
 
 .atlas-world-art {
@@ -648,10 +649,33 @@ html[data-ui-input=keyboard] select,html[data-ui-input=keyboard] select::picker-
   box-shadow: 0 0 4px 1px #ad8758, 0 0 13px 5px #e8c98b95, 0 0 26px 10px #b5d8be88;
 }
 
-.atlas-world-replay {
+.atlas-world-controls {
   position: absolute;
   z-index: 1;
-  inset: auto 10px 10px auto;
+  inset: auto 6px 6px auto;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.atlas-world-sound {
+  min-height: 32px;
+  padding: 4px 10px;
+  border: 1px solid #cecece;
+  border-radius: 20px;
+  background: #fff;
+  color: #343434;
+  font: 650 12px/1.1 var(--sans);
+  cursor: pointer;
+}
+
+.atlas-world-sound[aria-pressed="true"] {
+  background: #282828;
+  border-color: #282828;
+  color: #fff;
+}
+
+.atlas-world-replay {
   display: grid;
   place-items: center;
   width: 36px;
@@ -673,7 +697,8 @@ html[data-ui-input=keyboard] select,html[data-ui-input=keyboard] select::picker-
   height: 18px;
 }
 
-.atlas-world-replay[hidden] {
+.atlas-world-replay[hidden],
+.atlas-world-sound[hidden] {
   display: none;
 }
 
@@ -692,7 +717,7 @@ html[data-ui-input=keyboard] select,html[data-ui-input=keyboard] select::picker-
   .atlas-world-impact,
   .atlas-world-beam,
   .atlas-world-signal,
-  .atlas-world-replay {
+  .atlas-world-controls {
     display: none;
   }
   .atlas-world-ink {

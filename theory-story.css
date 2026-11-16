@@ -68,7 +68,7 @@
 .theory-layout {
   display: grid;
   position: relative;
-  grid-template-columns: minmax(0, 46fr) minmax(36px, 8fr) minmax(0, 46fr);
+  grid-template-columns: minmax(0, 44fr) minmax(36px, 11fr) minmax(0, 45fr);
   grid-template-rows: repeat(3, minmax(218px, auto));
   align-items: center;
   column-gap: clamp(12px, 2.1vw, 30px);
@@ -79,16 +79,31 @@
 .theory-diagrams { display: contents; }
 
 .theory-stack {
-  display: none;
+  opacity: 0;
   position: absolute;
-  width: min(41%, 530px);
+  width: min(29%, 380px);
   height: auto;
   top: 20px;
-  left: 2.5%;
+  left: 7.8%;
   mix-blend-mode: multiply;
   filter: grayscale(1) brightness(1.16);
   pointer-events: none;
 }
+
+.theory-morph {
+  position: absolute;
+  opacity: 0;
+  background-image: var(--world-image);
+  background-repeat: no-repeat;
+  filter: grayscale(1) brightness(1.13) contrast(1.1);
+  mix-blend-mode: multiply;
+  transform-origin: top left;
+  pointer-events: none;
+}
+
+/* Cut around the tallest towers where the wave and city bands meet. */
+.theory-morph--time { clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 94%, 36% 91%, 26% 86%, 0 100%); }
+.theory-morph--agency { clip-path: polygon(0 13%, 26% 0, 36% 5%, 50% 8%, 100% 13%, 100% 100%, 0 100%); }
 
 .theory-visual { min-width: 0; grid-column: 1; margin: 0; text-align: center; }
 
@@ -116,9 +131,9 @@
 
 .theory-arrow span {
   position: absolute;
-  inset: auto 0 8px;
+  inset: auto -5px 8px;
   color: var(--graphite);
-  font: 650 11px/1.2 var(--sans);
+  font: 700 clamp(12px, 1.2vw, 16px)/1.22 var(--sans);
   text-align: center;
 }
 
@@ -143,9 +158,11 @@
   background: linear-gradient(125deg, #f3f3f3, #fff 78%);
 }
 
-.theory-visual--state, .theory-arrow--state, .theory-row--state { grid-row: 1; --beat: 0s; --fold: 18%; }
-.theory-visual--time, .theory-arrow--time, .theory-row--time { grid-row: 2; --beat: .24s; --fold: -24%; }
-.theory-visual--agency, .theory-arrow--agency, .theory-row--agency { grid-row: 3; --beat: .48s; --fold: -48%; }
+.theory-visual--state, .theory-arrow--state, .theory-row--state { grid-row: 1; --beat: 0s; }
+.theory-visual--time, .theory-arrow--time, .theory-row--time { grid-row: 2; --beat: .24s; }
+.theory-visual--agency, .theory-arrow--agency, .theory-row--agency { grid-row: 3; --beat: .48s; }
+
+.theory-mobile-bridge { display: none; }
 
 .theory-row-title {
   display: flex;
@@ -162,13 +179,17 @@
   font: 700 clamp(18px, 2.05vw, 29px)/1.1 var(--sans);
 }
 
-.theory-row-title p, .theory-note {
+.theory-row-title p {
   margin: 0;
   color: var(--muted);
   font: 500 12px/1.4 var(--sans);
 }
 
-.theory-note { margin-top: 7px; }
+.theory-details { margin-top: 13px; font: 500 14px/1.45 var(--sans); }
+.theory-details summary { width: fit-content; color: #303030; font-weight: 650; cursor: pointer; }
+.theory-details dl { margin: 10px 0 0; }
+.theory-details dt { margin-top: 8px; font-weight: 700; }
+.theory-details dd { margin: 2px 0 0; color: var(--muted); }
 
 .theory-state-flow,
 .theory-timeline,
@@ -182,8 +203,6 @@
 .theory-timeline { grid-template-columns: minmax(0, .8fr) minmax(0, .9fr) minmax(0, 1.3fr); }
 .theory-state-inputs, .theory-state-output { display: grid; gap: 4px; }
 .theory-node--prior { border-style: dashed; }
-.theory-agency-path { margin: 0 0 6px; color: var(--muted); font: 600 11px/1.4 var(--sans); }
-.theory-agency-path span { color: var(--graphite); }
 
 .theory-node {
   position: relative;
@@ -191,14 +210,17 @@
   align-content: center;
   gap: 2px;
   min-width: 0;
-  padding: 9px;
+  padding: 11px 9px;
   border: 1px solid var(--line);
   border-radius: 5px;
   background: #fff;
   font: 600 clamp(12px, 1.14vw, 16px)/1.18 var(--sans);
 }
 
-.theory-node small { color: var(--muted); font-size: 11px; font-weight: 500; }
+.theory-node--acts { background: #eaf1fa; border-color: #b9cbe4; color: #223c61; }
+.theory-node--scene { background: #e8f2f0; border-color: #b9d4cd; color: #254f48; }
+.theory-node--latent { background: #f2edf8; border-color: #d5c7e3; color: #503765; }
+.theory-state-output .theory-node--outcome { background: #f7f0e4; border-color: #e1d0ad; color: #5a421b; }
 .theory-node--outcome, .theory-capabilities .theory-node:last-child { background: #e7e7e7; }
 .theory-node--future { border-style: dashed; }
 
@@ -219,31 +241,13 @@
   clip-path: polygon(0 40%, 65% 40%, 65% 0, 100% 50%, 65% 100%, 65% 60%, 0 60%);
 }
 
-.theory-branches {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 3px;
-  position: relative;
-  margin-left: 6px;
-  padding-left: 8px;
-  border-left: 1px dashed #929292;
-}
-
-.theory-branches span {
-  padding: 3px;
-  border-radius: 3px;
-  background: #eee;
-  color: var(--graphite);
-  font-size: 11px;
-}
-
 @media (prefers-reduced-motion: no-preference) {
   .theory-ready:not(.theory-playing) .theory-board { visibility: hidden; }
   .theory-cued .theory-entry a span { animation: theory-pull 1.55s ease-in-out 2; }
   .theory-playing .theory-curtain { animation: theory-white 1.05s ease-in-out both; }
   .theory-playing .theory-heading { animation: theory-heading-in .7s .96s both; }
-  .theory-playing .theory-stack { display: block; animation: theory-stack-in 1.85s .88s both; }
-  .theory-playing .theory-visual { animation: theory-expand 1.16s calc(1.64s + var(--beat)) cubic-bezier(.16,1,.3,1) both; }
+  .theory-playing .theory-stack { animation: theory-stack-in .95s .88s both; }
+  .theory-playing .theory-visual { animation: theory-develop .58s calc(2.54s + var(--beat) * .75) ease-out both; }
   .theory-playing .theory-arrow { animation: theory-draw .52s calc(3.34s + var(--beat)) ease-out both; }
   .theory-playing .theory-row { animation: theory-explain .68s calc(3.63s + var(--beat)) cubic-bezier(.16,1,.3,1) both; }
 }
@@ -259,14 +263,10 @@
 }
 @keyframes theory-heading-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
 @keyframes theory-stack-in {
-  0% { opacity: 0; transform: scale(.78); }
-  32%, 60% { opacity: .62; transform: scale(.93); }
-  100% { opacity: 0; transform: scale(1.04); }
+  0%, 100% { opacity: 0; }
+  35%, 65% { opacity: .62; }
 }
-@keyframes theory-expand {
-  from { opacity: 0; transform: translateY(var(--fold)) scale(.55); }
-  to { opacity: 1; transform: none; }
-}
+@keyframes theory-develop { from { opacity: 0; } to { opacity: 1; } }
 @keyframes theory-draw {
   from { opacity: 0; clip-path: inset(-44px 100% -6px 0); }
   to { opacity: 1; clip-path: inset(-44px -5px -6px 0); }
@@ -284,6 +284,7 @@
   }
   .theory-row { padding: 10px; }
   .theory-arrow span { display: none; }
+  .theory-mobile-bridge { display: block; margin: 0 0 6px; color: var(--muted); font: 650 12px/1.25 var(--sans); }
   .theory-visual img { height: auto; }
   .theory-visual figcaption { margin-top: 1px; font-size: 11px; }
   .theory-row-title { display: block; }

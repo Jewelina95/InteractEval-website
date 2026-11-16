@@ -56,9 +56,12 @@ function atlasWorldFigure(){
         <span class="atlas-world-core"></span>
       </span>
     </div>
-    <button type="button" class="atlas-world-replay" hidden aria-label="Replay layer animation" title="Replay layer animation">
-      <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5v5h5M4.4 10a8 8 0 1 1 .8 6"/></svg>
-    </button>
+    <div class="atlas-world-controls">
+      <button type="button" class="atlas-world-sound" hidden aria-pressed="false">Sound</button>
+      <button type="button" class="atlas-world-replay" hidden aria-label="Replay layer animation" title="Replay layer animation">
+        <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5v5h5M4.4 10a8 8 0 1 1 .8 6"/></svg>
+      </button>
+    </div>
   </figure>`;
 }
 
@@ -97,12 +100,31 @@ function animateAtlasWorldImpact(layer, delay, width, layerIndex){
   return [haze, ring, ...drift];
 }
 
-let atlasWorldObserver;
+function playAtlasWorldChime(context, output, time, layer){
+  const pitch = [784, 988, 880, 740, 330][layer];
+  const city = layer === atlasWorldLayers.length - 1;
+  const tones = [[pitch, .115, city ? .52 : .29], [pitch * 2.01, .035, .18]];
+  if(city) tones.push([pitch * .5, .055, .34]);
+  for(const [frequency, volume, length] of tones){
+    const oscillator = context.createOscillator();
+    const envelope = context.createGain();
+    oscillator.frequency.value = frequency;
+    envelope.gain.setValueAtTime(.0001, time);
+    envelope.gain.exponentialRampToValueAtTime(volume, time + .014);
+    envelope.gain.exponentialRampToValueAtTime(.0001, time + length);
+    oscillator.connect(envelope).connect(output);
+    oscillator.start(time);
+    oscillator.stop(time + length + .02);
+  }
+}
+
+let atlasWorldCleanup;
 
 function setupAtlasWorld(){
   const figure = document.querySelector('.atlas-world');
   if(figure?.dataset.ready) return;
-  atlasWorldObserver?.disconnect();
+  atlasWorldCleanup?.();
+  atlasWorldCleanup = undefined;
   if(!figure) return;
   figure.dataset.ready = 'true';
 
@@ -112,7 +134,9 @@ function setupAtlasWorld(){
   const signal = stage.querySelector('.atlas-world-signal');
   const core = signal.querySelector('.atlas-world-core');
   const trail = signal.querySelector('.atlas-world-trail');
-  const replay = figure.querySelector('button');
+  const replay = figure.querySelector('.atlas-world-replay');
+  const sound = figure.querySelector('.atlas-world-sound');
+  const AudioContext = window.AudioContext || window.webkitAudioContext;
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
   const start = atlasWorldLayers[0].hit;
   const end = 93;
@@ -120,20 +144,52 @@ function setupAtlasWorld(){
   const duration = 6200;
   let animations = [];
   let started = false;
+  let audio;
+  let output;
+  let soundEnabled = false;
+  let observer;
+
+  function stopSound(){
+    output?.disconnect();
+    output = undefined;
+  }
+
+  function onVisibility(){
+    if(document.hidden) stopSound();
+  }
+
+  document.addEventListener('visibilitychange', onVisibility);
+  atlasWorldCleanup = () => {
+    observer?.disconnect();
+    animations.forEach(animation => animation.cancel());
+    stopSound();
+    if(audio) void audio.close();
+    document.removeEventListener('visibilitychange', onVisibility);
+  };
 
   function play(){
     started = true;
     animations.forEach(animation => animation.cancel());
     animations = [];
+    stopSound();
     const still = reducedMotion.matches || typeof stage.animate !== 'function';
     figure.classList.toggle('atlas-world-static', still);
     replay.hidden = still;
+    sound.hidden = still || !AudioContext;
     if(still) return;
     const width = stage.clientWidth;
+    const audible = soundEnabled && audio?.state === 'running' && !document.hidden;
+    const soundStart = audible ? audio.currentTime : 0;
+    if(audible){
+      output = audio.createGain();
+      output.gain.value = .7;
+      output.connect(audio.destination);
+    }
 
     animations = layers.flatMap((layer, index) => {
       const {hit} = atlasWorldLayers[index];
       const delay = leadIn + duration * (hit - start) / (end - start);
+      if(output) playAtlasWorldChime(audio, output, soundStart + delay / 1000, index);
       const reveal = layer.querySelector('.atlas-world-ink').animate([
         {opacity:0}, {opacity:1}
       ], {duration:760, delay, fill:'forwards', easing:'ease-out'});
@@ -167,19 +223,41 @@ function setupAtlasWorld(){
     );
   }
 
-  replay.addEventListener('click', play);
+  replay.addEventListener('click', async () => {
+    if(soundEnabled && audio?.state === 'suspended'){
+      await audio.resume().catch(() => {});
+    }
+    if(figure.isConnected) play();
+  });
+  sound.addEventListener('click', async () => {
+    soundEnabled = !soundEnabled;
+    sound.setAttribute('aria-pressed', String(soundEnabled));
+    if(!soundEnabled){
+      stopSound();
+      return;
+    }
+    try{
+      audio ??= new AudioContext();
+      await audio.resume();
+      if(soundEnabled && figure.isConnected) play();
+    }catch{
+      soundEnabled = false;
+      sound.setAttribute('aria-pressed', 'false');
+    }
+  });
   if(reducedMotion.matches || !('IntersectionObserver' in window)){
     figure.classList.add('is-in-view');
     play();
     return;
   }
 
-  atlasWorldObserver = new IntersectionObserver(([entry]) => {
+  observer = new IntersectionObserver(([entry]) => {
     const visible = entry.intersectionRatio >= .25;
     figure.classList.toggle('is-in-view', visible);
+    if(!visible) stopSound();
     if(visible && !started) play();
   }, {threshold:.25});
-  atlasWorldObserver.observe(stage);
+  observer.observe(stage);
 }
 
 function atlasMobileScores(){
