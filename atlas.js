@@ -20,6 +20,7 @@ const atlasSymbols={
 function atlasSymbol(name){return `<svg viewBox="0 0 80 80" fill="none" aria-hidden="true">${atlasSymbols[name]}</svg>`;}
 function atlasHero(){return `<section class="atlas-hero"><div><h1>The measure of intelligence is the ability to change</h1><div class="atlas-intelligence-definitions"><p><strong>Responsive intelligence</strong> is the ability to respond appropriately within a direction set by the partner, following instructions and adapting to new information.</p><p><strong>Interactive intelligence</strong> additionally involves understanding the evolving situation, initiating justified new directions, and following through coherently across turns.</p><p>InteractNet evaluates this progression across six capability levels.</p></div><a href="#response-interaction" data-research-section="response-interaction">Why interact <span aria-hidden="true">&#8595;</span></a></div>${atlasWorldFigure()}</section>`;}
 const atlasWorldLayers = [
+  {name:'galaxy', hit:11.3},
   {name:'mountain', hit:30},
   {name:'timeline', hit:44},
   {name:'waves', hit:60},
@@ -28,22 +29,17 @@ const atlasWorldLayers = [
 
 function atlasWorldFigure(){
   const art = './assets/hero/layered-city.webp';
-  return `<figure class="atlas-world">
+  return `<figure class="atlas-world" style="--world-image:url('${art}')">
     <div class="atlas-world-stage" role="img" aria-label="A particle descends from a galaxy and illuminates four layers in sequence: mountains, a timeline, waves, and a city.">
       <img class="atlas-world-art" src="${art}" width="1280" height="854" alt="" fetchpriority="high" decoding="async"/>
-      <svg class="atlas-world-filters" width="0" height="0" aria-hidden="true">
-        <filter id="atlas-world-shade" color-interpolation-filters="sRGB">
-          <feColorMatrix type="saturate" values="0"/>
-          <feComponentTransfer>
-            <feFuncR type="gamma" amplitude="1.105" exponent="1.7"/>
-            <feFuncG type="gamma" amplitude="1.105" exponent="1.7"/>
-            <feFuncB type="gamma" amplitude="1.105" exponent="1.7"/>
-          </feComponentTransfer>
-        </filter>
-      </svg>
-      ${atlasWorldLayers.map(({name,hit}) => `<span aria-hidden="true" class="atlas-world-layer atlas-world-layer--${name}" style="--hit:${hit}%"><span class="atlas-world-shade"></span><span class="atlas-world-pulse"></span></span>`).join('')}
-      <span aria-hidden="true" class="atlas-world-trail"></span>
-      <span aria-hidden="true" class="atlas-world-particle"></span>
+      ${atlasWorldLayers.map(({name,hit}) => `<span aria-hidden="true" class="atlas-world-layer atlas-world-layer--${name}" style="--hit:${hit}%"><span class="atlas-world-ink"></span><span class="atlas-world-pulse"></span></span>`).join('')}
+      <span aria-hidden="true" class="atlas-world-signal">
+        <span class="atlas-world-trail"></span>
+        <span class="atlas-world-mote"></span>
+        <span class="atlas-world-mote"></span>
+        <span class="atlas-world-mote"></span>
+        <span class="atlas-world-core"></span>
+      </span>
     </div>
     <button type="button" class="atlas-world-replay" hidden aria-label="Replay layer animation" title="Replay layer animation">
       <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5v5h5M4.4 10a8 8 0 1 1 .8 6"/></svg>
@@ -62,12 +58,15 @@ function setupAtlasWorld(){
   const stage = figure.querySelector('.atlas-world-stage');
   const art = stage.querySelector('img');
   const layers = Array.from(stage.querySelectorAll('.atlas-world-layer'));
-  const trail = stage.querySelector('.atlas-world-trail');
-  const particle = stage.querySelector('.atlas-world-particle');
+  const signal = stage.querySelector('.atlas-world-signal');
+  const core = signal.querySelector('.atlas-world-core');
+  const trail = signal.querySelector('.atlas-world-trail');
+  const motes = [...signal.querySelectorAll('.atlas-world-mote')];
   const replay = figure.querySelector('button');
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
-  const start = 11.3;
+  const start = atlasWorldLayers[0].hit;
   const end = 93;
+  const leadIn = 540;
   const duration = 5600;
   let animations = [];
 
@@ -78,27 +77,53 @@ function setupAtlasWorld(){
 
     animations = layers.flatMap(layer => {
       const hit = parseFloat(layer.style.getPropertyValue('--hit'));
-      const delay = duration * (hit - start) / (end - start);
-      const reveal = layer.querySelector('.atlas-world-shade').animate([{opacity:1}, {opacity:0}], {
-        duration:420, delay, fill:'both', easing:'ease-out'
-      });
+      const delay = leadIn + duration * (hit - start) / (end - start);
+      const reveal = layer.querySelector('.atlas-world-ink').animate([
+        {opacity:0}, {opacity:1}
+      ], {duration:640, delay, fill:'forwards', easing:'ease-out'});
       const pulse = layer.querySelector('.atlas-world-pulse').animate([
-        {opacity:0}, {opacity:.85, offset:.18}, {opacity:0}
-      ], {duration:680, delay, fill:'both'});
+        {opacity:0, scale:'.18 1'},
+        {opacity:.78, scale:'.55 1', offset:.24},
+        {opacity:0, scale:'1.1 1.9'}
+      ], {duration:860, delay, easing:'ease-out'});
       return [reveal,pulse];
     });
 
-    for(const light of [trail,particle]){
-      animations.push(light.animate([
-        {top:`${start}%`, opacity:0},
-        {top:`${start + (end - start) * .05}%`, opacity:1, offset:.05},
-        {top:`${start + (end - start) * .94}%`, opacity:1, offset:.94},
-        {top:`${end}%`, opacity:0}
-      ], {duration}));
-    }
+    const travel = {duration, delay:leadIn};
+    const position = progress => `${start + (end - start) * progress}%`;
+    animations.push(
+      signal.animate([
+        {top:position(0), opacity:0},
+        {top:position(.047), opacity:1, offset:.047},
+        {top:position(.94), opacity:1, offset:.94},
+        {top:position(1), opacity:0}
+      ], travel),
+      core.animate(
+        [.35,1.25,.72,1.38,.86,1.18,.67,1.52,.48]
+          .map(scale => ({scale:String(scale), easing:'ease-in-out'})),
+        travel
+      ),
+      trail.animate(
+        ['.4 .15','1.1 .65','.65 1','1.25 .72','.7 1.18','.5 .55']
+          .map(scale => ({scale, easing:'ease-in-out'})),
+        travel
+      )
+    );
+
+    motes.forEach((mote, index) => {
+      const drift = [-13, 10, -6][index];
+      animations.push(mote.animate([
+        {translate:'0 0', opacity:0},
+        {translate:`${drift * .55}px -11px`, opacity:.9, offset:.24},
+        {translate:`${drift}px -33px`, opacity:0}
+      ], {duration:800 + index * 170, delay:leadIn + index * 140, iterations:4}));
+    });
   }
 
-  if(typeof stage.animate !== 'function') return;
+  if(typeof stage.animate !== 'function'){
+    figure.classList.add('atlas-world-static');
+    return;
+  }
   replay.hidden = false;
   replay.addEventListener('click', play);
   const begin = () => {

@@ -432,37 +432,37 @@ html[data-ui-input=keyboard] select,html[data-ui-input=keyboard] select::picker-
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  border-radius: 14px;
-  background: #f2f3f2;
 }
 
 .atlas-world-art {
-  filter: saturate(.26) contrast(1.12) brightness(1.018);
+  filter: grayscale(1) brightness(1.1) blur(.45px);
+  opacity: .18;
 }
 
-.atlas-world-filters,
 .atlas-world-layer,
-.atlas-world-shade,
+.atlas-world-ink,
 .atlas-world-pulse {
   position: absolute;
+  inset: 0;
   pointer-events: none;
 }
 
-.atlas-world-layer,
-.atlas-world-shade,
-.atlas-world-pulse {
-  inset: 0;
-}
-
-.atlas-world-shade,
+.atlas-world-ink,
 .atlas-world-pulse {
   opacity: 0;
 }
 
-.atlas-world-shade {
-  background: url("./assets/hero/layered-city.webp") center / 100% 100% no-repeat;
-  filter: url(#atlas-world-shade);
-  mask-image: linear-gradient(90deg, transparent 4%, #000 13% 87%, transparent 96%);
+.atlas-world-ink {
+  background: var(--world-image) center / 100% 100% no-repeat;
+  filter: saturate(.26) brightness(1.1);
+}
+
+.atlas-world-static .atlas-world-ink {
+  opacity: 1;
+}
+
+.atlas-world-layer--galaxy {
+  clip-path: inset(0 0 81% 0);
 }
 
 .atlas-world-layer--mountain {
@@ -483,35 +483,57 @@ html[data-ui-input=keyboard] select,html[data-ui-input=keyboard] select::picker-
 }
 
 .atlas-world-pulse {
-  background: radial-gradient(ellipse 31% 5% at 50% var(--hit), #f7fff3 0%, #a5f4c9 24%, transparent 100%);
+  background: radial-gradient(ellipse 35% 5% at 50% var(--hit), #fffefa 0%, #bcf2ddaa 34%, transparent 100%);
+  transform-origin: 50% var(--hit);
   mix-blend-mode: screen;
 }
 
-.atlas-world-trail,
-.atlas-world-particle {
+.atlas-world-signal {
   position: absolute;
   top: 11.3%;
   left: 50%;
+  width: 0;
+  height: 100%;
   opacity: 0;
   pointer-events: none;
 }
 
-.atlas-world-trail {
-  width: 4px;
-  height: 11%;
-  transform: translate(-50%, -100%);
-  background: linear-gradient(transparent, #66a68e, #f4fff7);
-  box-shadow: 0 4px 11px #b6e6ce6b;
-  border-radius: 999px;
+.atlas-world-core,
+.atlas-world-trail,
+.atlas-world-mote {
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
-.atlas-world-particle {
-  width: clamp(6px, .9vw, 10px);
+.atlas-world-trail {
+  top: auto;
+  bottom: 100%;
+  left: -2.5px;
+  width: 5px;
+  height: 13%;
+  transform-origin: 50% 100%;
+  background: linear-gradient(transparent, #8fc3b477 55%, #a6e4ce);
+  filter: blur(.7px);
+  border-radius: 80% 80% 45% 45%;
+}
+
+.atlas-world-core {
+  width: clamp(6px, .7vw, 9px);
   aspect-ratio: 1;
-  transform: translate(-50%, -50%);
+  translate: -50% -50%;
   border-radius: 50%;
   background: #fffefa;
-  box-shadow: 0 0 4px 2px #d6ffe8, 0 0 11px 6px #63d8a58f, 0 0 23px 8px #64ab895c;
+  box-shadow: 0 0 3px 1px #6ca18b, 0 0 10px 5px #80c6ab99, 0 0 20px 8px #a0e8cf6b;
+}
+
+.atlas-world-mote {
+  width: 3px;
+  aspect-ratio: 1;
+  opacity: 0;
+  border-radius: 50%;
+  background: #73b7a0;
+  box-shadow: 0 0 4px #bde8d6;
 }
 
 .atlas-world-replay {
@@ -523,10 +545,10 @@ html[data-ui-input=keyboard] select,html[data-ui-input=keyboard] select::picker-
   width: 36px;
   height: 36px;
   padding: 0;
-  border: 1px solid #bcc7c0;
+  border: 0;
   border-radius: 50%;
-  color: #254536;
-  background: #f9fbf9ee;
+  color: #527666;
+  background: transparent;
   cursor: pointer;
 }
 
@@ -560,10 +582,12 @@ html[data-ui-input=keyboard] select,html[data-ui-input=keyboard] select::picker-
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .atlas-world-layer,
-  .atlas-world-trail,
-  .atlas-world-particle,
+  .atlas-world-pulse,
+  .atlas-world-signal,
   .atlas-world-replay {
     display: none;
+  }
+  .atlas-world-ink {
+    opacity: 1 !important;
   }
 }
