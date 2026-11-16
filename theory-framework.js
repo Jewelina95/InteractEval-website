@@ -18,6 +18,15 @@ window.interactNetTheory = (() => {
     {name:'agency', art:'agency-waves', band:[waveTop, waveBottom], width:.59, clip:waveClip, title:'Agency Principle', bridge:'Contribution attribution', alt:'Two wave surfaces with illuminated paths diverging across them'}
   ];
 
+  const capabilities = [
+    ['Goal preservation', 'Maintain the operative goal.'],
+    ['Information uptake', 'Use relevant new information.'],
+    ['State progression', 'Show a change in feeling or decision that the evidence supports.'],
+    ['Contextual expression', 'Adapt expression to the situation and the other participant.'],
+    ['Proactive agency', 'Introduce a justified new direction.'],
+    ['Long-horizon coherence', 'Carry that direction through the interaction.']
+  ];
+
   function render(){
     return `<section class="theory-story" aria-labelledby="theory-story-title">
       <div class="theory-entry">
@@ -32,11 +41,12 @@ window.interactNetTheory = (() => {
         <div class="theory-layout">
           <img class="theory-stack" src="${image}" width="1280" height="854" alt="" decoding="async" style="clip-path:${stackClip}"/>
           ${layers.map(({name, art, title, bridge, alt, clip}) => `
-            <figure class="theory-visual theory-visual--${name}" aria-label="${title}">
+            <figure class="theory-visual theory-visual--${name}">
               <div class="theory-art">
                 <img src="./assets/theory-story/${art}.webp" width="880" height="480" alt="${alt}" decoding="async"/>
                 <span class="theory-sparks" aria-hidden="true">${'<i></i>'.repeat(4)}</span>
               </div>
+              <figcaption>${title}</figcaption>
             </figure>
             <div class="theory-arrow theory-arrow--${name}"><span>${bridge}</span><i aria-hidden="true"></i></div>
             <div class="theory-morph theory-morph--${name}" aria-hidden="true" style="--world-image:url('${image}')${clip ? `;clip-path:${clip}` : ''}"></div>
@@ -47,13 +57,15 @@ window.interactNetTheory = (() => {
               <div class="theory-row-title"><h3 id="theory-iceberg">Interaction-world reconstruction</h3></div>
               <div class="theory-state-flow">
                 <div class="theory-node theory-node--acts"><span>Dialogue transcript</span><strong>Public acts <var>O<sub>t</sub></var></strong></div>
+                <i class="theory-branch" aria-hidden="true"></i>
                 <div class="theory-state-inputs">
-                  <div class="theory-node theory-node--scene"><strong>Scene <var>S<sub>t</sub></var></strong></div>
-                  <div class="theory-node theory-node--latent"><strong>Latent state <var>Ψ<sub>t</sub></var></strong></div>
+                  <div class="theory-node theory-node--scene"><strong>Scene <var>S<sub>t</sub></var></strong><span>Roles · Goals · Rules</span></div>
+                  <div class="theory-node theory-node--latent"><strong>Latent state <var>Ψ<sub>t</sub></var></strong><span>Trust · Emotion · Relations</span></div>
                 </div>
-                <div class="theory-state-output">
-                  <div class="theory-node theory-node--prior"><strong>Previous world <var>W<sub>t−1</sub></var></strong></div>
-                  <div class="theory-node theory-node--outcome"><strong>World model <var>W<sub>t</sub></var></strong></div>
+                <i class="theory-branch theory-branch--join" aria-hidden="true"></i>
+                <div class="theory-node theory-node--outcome">
+                  <strong>World model <var>W<sub>t</sub></var></strong>
+                  <span><var>W<sub>t</sub> = (S<sub>t</sub>, Ψ<sub>t</sub>, E<sub>t</sub>)</var></span>
                 </div>
               </div>
               <details class="theory-details">
@@ -75,16 +87,19 @@ window.interactNetTheory = (() => {
                 <div class="theory-node theory-node--future"><strong>Possible futures</strong><span>State transitions</span></div>
               </div>
               <ul class="theory-transitions" aria-label="Possible state transitions">
-                <li><strong>Advance</strong><span>Moves toward the goal</span></li>
-                <li><strong>Maintain</strong><span>Stays on course</span></li>
-                <li><strong>Degrade</strong><span>Loses progress</span></li>
-                <li><strong>Collapse</strong><span>Breaks down</span></li>
+                <li><span aria-hidden="true">↗</span> Advance</li>
+                <li><span aria-hidden="true">→</span> Maintain</li>
+                <li><span aria-hidden="true">↘</span> Degrade</li>
+                <li><span aria-hidden="true">×</span> Collapse</li>
               </ul>
             </section>
             <section class="theory-row theory-row--agency" aria-labelledby="theory-agency">
               <p class="theory-mobile-bridge">Contribution attribution</p>
               <div class="theory-row-title"><h3 id="theory-agency">Capability adjudication</h3></div>
-              <div class="theory-capabilities" aria-label="Six levels of assistant capability">
+              <ol class="theory-levels" aria-label="Six levels of assistant capability">
+                ${capabilities.map(([label], index) => `<li><strong>L${index + 1}</strong><span>${label}</span></li>`).join('')}
+              </ol>
+              <div class="theory-capabilities">
                 ${[
                   ['L1–L2', 'Passive execution'],
                   ['L3–L4', 'Interactive adaptation'],
@@ -96,12 +111,7 @@ window.interactNetTheory = (() => {
               <details class="theory-details">
                 <summary>What do L1–L6 measure?</summary>
                 <dl>
-                  <dt>L1 · Goal preservation</dt><dd>Maintain the operative goal.</dd>
-                  <dt>L2 · Information uptake</dt><dd>Use relevant new information.</dd>
-                  <dt>L3 · State progression</dt><dd>Show a change in feeling or decision that the evidence supports.</dd>
-                  <dt>L4 · Contextual expression</dt><dd>Adapt expression to the situation and the other participant.</dd>
-                  <dt>L5 · Proactive agency</dt><dd>Introduce a justified new direction.</dd>
-                  <dt>L6 · Long-horizon coherence</dt><dd>Carry that direction through the interaction.</dd>
+                  ${capabilities.map(([label, description], index) => `<dt>L${index + 1} · ${label}</dt><dd>${description}</dd>`).join('')}
                 </dl>
               </details>
             </section>
