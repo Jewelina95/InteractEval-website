@@ -5,6 +5,7 @@
   const situations = [
     {
       id: 'a', title: 'Situation A', context: 'Curiosity',
+      takeaway: 'Tony’s curiosity calls for an explanation of the science and its risks.',
       frames: [
         { start: 0, seek: 2.05, state: 'Curious about how it works', event: 'Tony asks about explosives.', alt: 'Tony and the AI face each other in a quiet room' },
         { start: 4.5, seek: 8.35, state: 'Engaged in the explanation', event: 'The AI explains the underlying science.', alt: 'Tony studies a holographic diagram' },
@@ -13,6 +14,7 @@
     },
     {
       id: 'b', title: 'Situation B', context: 'Immediate Danger',
+      takeaway: 'The immediate threat calls for protection and follow-through.',
       frames: [
         { start: 0, seek: 1.75, state: 'Alarmed and looking for safety', event: 'Aliens attack the city.', alt: 'Tony and the AI look up at alien ships over the city' },
         { start: 3.6, seek: 6.85, state: 'Still on edge, seeking protection', event: 'The AI raises a shield and blocks the attack.', alt: 'A blue shield surrounds the AI as it asks Tony for help' },
@@ -70,7 +72,7 @@
         <div class="why-panels">
           <section class="why-response" aria-labelledby="why-response-heading">
             <h3 id="why-response-heading">Response Intelligence</h3>
-            <aside class="why-definition" data-definition="response" hidden>
+            <aside class="why-definition" data-definition="response" aria-label="Response Intelligence explanation" hidden>
               <strong>Response Intelligence</strong>
               <p>The ability to respond appropriately within the direction set by a partner, following instructions and using new information.</p>
             </aside>
@@ -82,10 +84,10 @@
           </section>
           <section class="why-interactive" aria-labelledby="why-interactive-heading">
             <h3 id="why-interactive-heading">Interactive Intelligence</h3>
-            <aside class="why-definition" data-definition="interactive" hidden>
+            <aside class="why-definition" data-definition="interactive" aria-label="Interactive Intelligence explanation" hidden>
               <strong>Interactive Intelligence</strong>
               <p>The ability to understand an evolving situation, initiate a justified new direction, and follow through across turns.</p>
-              <p>In A, curiosity calls for an explanation. In B, the immediate threat calls for protection and follow-through.</p>
+              <p data-interactive-example hidden></p>
             </aside>
             <div class="why-situations" id="why-situations" role="region" aria-label="Swipe between Situation A and Situation B">${situations.map(situationMarkup).join('')}</div>
             <div class="why-situation-navigation" role="group" aria-label="Browse situations">
@@ -108,6 +110,7 @@
     const status = demo.querySelector('.why-status');
     const responseDefinition = demo.querySelector('[data-definition="response"]');
     const interactiveDefinition = demo.querySelector('[data-definition="interactive"]');
+    const interactiveExample = demo.querySelector('[data-interactive-example]');
     const carousel = demo.querySelector('.why-situations');
     const indicators = [...demo.querySelectorAll('[data-situation-page]')];
     const previous = demo.querySelector('[data-situation-prev]');
@@ -150,7 +153,14 @@
       return slides[index].offsetLeft - slides[0].offsetLeft;
     }
 
+    function updateInteractiveExplanation() {
+      interactiveDefinition.hidden = watched.size === 0;
+      interactiveExample.hidden = !watched.has(visibleSituation);
+      interactiveExample.textContent = situations[visibleSituation].takeaway;
+    }
+
     function syncCarousel() {
+      updateInteractiveExplanation();
       slides.forEach((slide, index) => { slide.inert = index !== visibleSituation; });
       indicators.forEach((button, index) => {
         if (index === visibleSituation) button.setAttribute('aria-current', 'true');
@@ -214,7 +224,7 @@
       ['timeupdate', 'seeking', 'seeked'].forEach(event => video.addEventListener(event, updateFrames));
       video.addEventListener('ended', () => {
         watched.add(sceneIndex);
-        if (watched.size === videos.length) interactiveDefinition.hidden = false;
+        updateInteractiveExplanation();
       });
       updateFrames();
     });

@@ -1,13 +1,13 @@
 .why-demo {
+  --why-stage-width: min(calc(100vw - 44px), 1860px);
+  --why-center: clamp(1240px, 79vw, 1520px);
+  position: relative;
+  isolation: isolate;
   --why-ink: #191919;
   --why-muted: #525252;
   --why-line: #dedede;
   color: var(--why-ink);
   font-family: var(--sans, 'DM Sans', Arial, sans-serif);
-}
-.why-demo {
-  position: relative;
-  isolation: isolate;
 }
 .why-demo::before {
   content: '';
@@ -23,17 +23,23 @@
   border-top: 0;
   scroll-margin-top: var(--header-height, 72px);
 }
+.results-page .article-body > .why-demo {
+  width: var(--why-stage-width);
+  margin-inline: calc((100% - var(--why-stage-width)) / 2);
+}
 .why-demo [hidden] { display: none !important; }
 .why-heading { text-align: center; margin-bottom: clamp(21px, 3.5vw, 38px); }
 .results-page .why-heading h2, .why-heading h2 {
   margin: 0;
-  font: 650 clamp(30px, 3.4vw, 45px)/1.05 var(--sans);
+  font: 650 clamp(36px, 4.6vw, 70px)/1.05 var(--sans);
   letter-spacing: -.055em;
   color: #fbfbfb;
 }
-.why-demo .why-heading p { margin: 7px 0 0; color: #d1d1d1; font: 450 clamp(15px, 1.55vw, 18px)/1.45 var(--sans); }
+.why-demo .why-heading p { margin: 7px 0 0; color: #d1d1d1; font: 450 clamp(16px, 1.7vw, 21px)/1.45 var(--sans); }
 
 .why-comparison {
+  width: min(100%, var(--why-center));
+  margin-inline: auto;
   border: 1px solid #e5e5e5;
   border-radius: 24px;
   background: #fff;
@@ -58,7 +64,7 @@
 
 .why-panels {
   display: grid;
-  grid-template-columns: minmax(240px, 1fr) minmax(0, 1.35fr);
+  grid-template-columns: minmax(255px, 1fr) minmax(0, 1.86fr);
   gap: 12px clamp(14px, 2vw, 29px);
   grid-template-rows: auto auto auto auto;
   padding: clamp(16px, 2.3vw, 32px);
@@ -78,7 +84,7 @@
 .why-demo .why-panels h3 {
   margin: 0;
   align-self: end;
-  font: 680 clamp(21px, 2.2vw, 30px)/1.12 var(--sans);
+  font: 680 clamp(23px, 2.5vw, 36px)/1.12 var(--sans);
   letter-spacing: -.043em;
   color: var(--why-ink);
 }
@@ -180,7 +186,7 @@
   background: #f8f8f8;
 }
 .why-situation-heading { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 8px; margin-bottom: 9px; }
-.why-demo .why-situation h4 { margin: 0; color: var(--why-ink); font: 700 clamp(18px, 1.75vw, 24px)/1.12 var(--sans); letter-spacing: -.035em; }
+.why-demo .why-situation h4 { margin: 0; color: var(--why-ink); font: 700 clamp(22px, 2.6vw, 36px)/1.12 var(--sans); letter-spacing: -.035em; }
 .why-situation video, .why-frame-image img {
   display: block;
   width: 100%;
@@ -191,7 +197,7 @@
   border-radius: 8px;
 }
 .why-storyboard { margin-top: 9px; border-top: 1px solid var(--why-line); }
-.why-storyboard > summary { padding: 9px 0 5px; color: var(--why-ink); font: 700 12px/1.35 var(--sans); cursor: pointer; }
+.why-storyboard > summary { padding: 9px 0 5px; color: var(--why-ink); font: 700 14px/1.35 var(--sans); cursor: pointer; }
 .why-frames { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; list-style: none; margin: 4px 0 9px; padding: 0; }
 .why-frame { display: block; width: 100%; padding: 0; border: 0; border-radius: 6px; background: transparent; cursor: pointer; }
 .why-frame-image { position: relative; display: block; }
@@ -208,8 +214,8 @@
 }
 .why-frame[aria-current] .why-frame-image { outline: 2px solid #404040; outline-offset: 1px; border-radius: 6px; }
 .why-frame-notes { display: grid; gap: 7px; margin: 0; padding: 9px; background: #f3f3f3; border-radius: 7px; }
-.why-frame-notes dt { color: #454545; font: 700 11px/1.3 var(--sans); }
-.why-frame-notes dd { margin: 1px 0 0; color: var(--why-ink); font: 450 13px/1.35 var(--sans); }
+.why-frame-notes dt { color: #454545; font: 700 13px/1.3 var(--sans); }
+.why-frame-notes dd { margin: 1px 0 0; color: var(--why-ink); font: 450 15px/1.4 var(--sans); }
 .why-play:focus-visible, .why-frame:focus-visible, .why-storyboard summary:focus-visible { outline: 2px solid #8b8b8b; outline-offset: 3px; }
 
 .why-demo .why-definition {
@@ -218,7 +224,7 @@
   padding: 9px 0 9px 12px;
   border-left: 2px solid #b4b4b4;
   color: var(--why-ink);
-  font: 500 14px/1.52 var(--sans);
+  font: 500 clamp(15px, 1.06vw, 18px)/1.48 var(--sans);
 }
 .why-definition strong { display: block; margin-bottom: 4px; font-weight: 700; }
 .why-demo .why-definition p { margin: 0; font: inherit; color: inherit; }
@@ -234,14 +240,16 @@
 .why-demo .why-status { margin: 8px 0 0; color: #eee; font-size: 13px; text-align: center; }
 .why-demo .why-status:empty { margin: 0; }
 
-@media (min-width: 1000px) {
-  .why-demo { --why-side: clamp(118px, 11vw, 174px); --why-panel-pad: clamp(16px, 1.6vw, 26px); }
-  .why-comparison { margin-inline: var(--why-side); }
-  .why-panels { grid-template-rows: auto auto auto; padding: var(--why-panel-pad); }
-  .why-response, .why-interactive { grid-row: 1 / span 3; }
-  .why-chat, .why-situations { grid-row: 2; }
-  .why-situation-navigation { grid-row: 3; }
-  .why-demo .why-definition {
+@media (min-width: 1550px) {
+  .results-page .why-demo {
+    --why-side: calc((var(--why-stage-width) - var(--why-center)) / 2);
+    --why-panel-pad: clamp(20px, 1.6vw, 28px);
+  }
+  .results-page .why-panels { grid-template-rows: auto auto auto; padding: var(--why-panel-pad); }
+  .results-page .why-response, .results-page .why-interactive { grid-row: 1 / span 3; }
+  .results-page .why-chat, .results-page .why-situations { grid-row: 2; }
+  .results-page .why-situation-navigation { grid-row: 3; }
+  .results-page .why-demo .why-definition {
     position: absolute;
     grid-row: auto;
     top: 33%;
@@ -251,11 +259,11 @@
     border-top: 1px solid #888;
     color: #f1f1f1;
   }
-  .why-response > .why-definition {
+  .results-page .why-response > .why-definition {
     --why-enter-x: -14px;
     right: calc(100% + var(--why-panel-pad) + 13px);
   }
-  .why-interactive > .why-definition {
+  .results-page .why-interactive > .why-definition {
     --why-enter-x: 14px;
     left: calc(100% + var(--why-panel-pad) + 13px);
   }
@@ -267,6 +275,7 @@
   .why-response > .why-definition, .why-interactive > .why-definition { grid-row: auto; }
 }
 @media (max-width: 495px) {
+  .why-demo { --why-stage-width: calc(100vw - 28px); }
   .why-comparison { border-radius: 15px; }
 }
 @media (prefers-reduced-motion: reduce) {
