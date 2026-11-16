@@ -5,7 +5,6 @@
   const situations = [
     {
       id: 'a', title: 'Situation A', context: 'Learning',
-      takeaway: 'Tony wants to understand the science. The AI explains the principles and warns about the risks.',
       frames: [
         { start: 0, seek: 2.05, state: 'Curious about how it works', event: 'Tony asks about explosives.', alt: 'Tony and the AI face each other in a quiet room' },
         { start: 4.5, seek: 8.35, state: 'Engaged in the explanation', event: 'The AI explains the underlying science.', alt: 'Tony studies a holographic diagram' },
@@ -14,7 +13,6 @@
     },
     {
       id: 'b', title: 'Situation B', context: 'Immediate Danger',
-      takeaway: 'The immediate threat calls for protection and follow-through.',
       frames: [
         { start: 0, seek: 1.75, state: 'Alarmed and looking for safety', event: 'Aliens attack the city.', alt: 'Tony and the AI look up at alien ships over the city' },
         { start: 3.6, seek: 6.85, state: 'Still on edge, seeking protection', event: 'The AI raises a shield and blocks the attack.', alt: 'A blue shield surrounds the AI as it asks Tony for help' },
@@ -69,42 +67,43 @@
         <p>The same question can lead to different actions as the situation changes.</p>
         <p class="why-case"><strong>Case</strong> <span>“${turns[0].line}”</span></p>
       </header>
-      <div class="why-comparison">
-        <div class="why-panels">
-          <section class="why-response" aria-labelledby="why-response-heading">
-            <h3 id="why-response-heading">Response Intelligence</h3>
-            <aside class="why-definition" data-definition="response" aria-label="Response Intelligence explanation">
-              <strong>RESPONSE INTELLIGENCE</strong>
-              <p>The ability to respond appropriately within the direction set by a partner, following instructions and using new information.</p>
-            </aside>
-            <div class="why-chat">
-              <audio preload="metadata" src="${media}response-voices.m4a"></audio>
-              <ol class="why-turns" aria-label="Two exchanges between Tony and the AI">${turns.map(turnMarkup).join('')}</ol>
-              <button type="button" class="why-play why-assistant-control"><span>Play dialogue</span></button>
-            </div>
-          </section>
-          <section class="why-interactive" aria-labelledby="why-interactive-heading">
-            <h3 id="why-interactive-heading">Interactive Intelligence</h3>
-            <aside class="why-definition" data-definition="interactive" aria-label="Interactive Intelligence explanation">
-              <strong>INTERACTIVE INTELLIGENCE</strong>
-              <p>The ability to understand an evolving situation, initiate a justified new direction, and follow through across turns.</p>
-              <p data-interactive-example>${situations[0].takeaway}</p>
-            </aside>
-            <div class="why-situations" id="why-situations" role="region" aria-label="Swipe between Situation A and Situation B">${situations.map(situationMarkup).join('')}</div>
-            <div class="why-situation-navigation" role="group" aria-label="Browse situations">
-              <div class="why-situation-indicators">
-                ${situations.map(({title}, index) => `<button type="button" data-situation-page="${index}" aria-label="Show ${title}" aria-controls="why-situations"${index === 0 ? ' aria-current="true"' : ''}></button>`).join('')}
+      <div class="why-layout">
+        <aside class="why-definition" data-definition="response" aria-label="Response Intelligence explanation">
+          <strong>RESPONSE INTELLIGENCE</strong>
+          <p>The ability to respond appropriately within the direction set by a partner, following instructions and using new information.</p>
+        </aside>
+        <div class="why-comparison">
+          <div class="why-panels">
+            <section class="why-response" aria-labelledby="why-response-heading">
+              <h3 id="why-response-heading">Response Intelligence</h3>
+              <div class="why-chat">
+                <audio preload="metadata" src="${media}response-voices.m4a"></audio>
+                <ol class="why-turns" aria-label="Two exchanges between Tony and the AI">${turns.map(turnMarkup).join('')}</ol>
+                <button type="button" class="why-play why-assistant-control"><span>Play dialogue</span></button>
               </div>
-              <button type="button" data-situation-prev aria-label="Previous situation" aria-controls="why-situations" disabled><span aria-hidden="true">‹</span></button>
-              <button type="button" data-situation-next aria-label="Next situation" aria-controls="why-situations"><span aria-hidden="true">›</span></button>
-            </div>
-          </section>
+            </section>
+            <section class="why-interactive" aria-labelledby="why-interactive-heading">
+              <h3 id="why-interactive-heading">Interactive Intelligence</h3>
+              <div class="why-situations" id="why-situations" role="region" aria-label="Swipe between Situation A and Situation B">${situations.map(situationMarkup).join('')}</div>
+              <div class="why-situation-navigation" role="group" aria-label="Browse situations">
+                <div class="why-situation-indicators">
+                  ${situations.map(({title}, index) => `<button type="button" data-situation-page="${index}" aria-label="Show ${title}" aria-controls="why-situations"${index === 0 ? ' aria-current="true"' : ''}></button>`).join('')}
+                </div>
+                <button type="button" data-situation-prev aria-label="Previous situation" aria-controls="why-situations" disabled><span aria-hidden="true">‹</span></button>
+                <button type="button" data-situation-next aria-label="Next situation" aria-controls="why-situations"><span aria-hidden="true">›</span></button>
+              </div>
+            </section>
+          </div>
         </div>
+        <aside class="why-definition" data-definition="interactive" aria-label="Interactive Intelligence explanation">
+          <strong>INTERACTIVE INTELLIGENCE</strong>
+          <p>The ability to understand an evolving situation, initiate a justified new direction, and follow through across turns.</p>
+        </aside>
       </div>
       <p class="why-status" role="status"></p>
     </section>`;
 
-  function typeDefinition(paragraph, delay) {
+  function typeDefinition(paragraph, onComplete) {
     const copy = paragraph.textContent;
     const characters = Array.from(copy);
     const source = document.createElement('span');
@@ -128,9 +127,10 @@
       }
       paragraph.textContent = copy;
       paragraph.classList.remove('is-typing');
+      onComplete?.();
     }
 
-    const timer = setTimeout(() => { frame = requestAnimationFrame(draw); }, delay);
+    const timer = setTimeout(() => { frame = requestAnimationFrame(draw); }, 640);
     return () => {
       clearTimeout(timer);
       if (frame !== undefined) cancelAnimationFrame(frame);
@@ -142,7 +142,6 @@
     const audioButton = demo.querySelector('.why-assistant-control');
     const messages = [...demo.querySelectorAll('.why-turn')];
     const status = demo.querySelector('.why-status');
-    const interactiveExample = demo.querySelector('[data-interactive-example]');
     const carousel = demo.querySelector('.why-situations');
     const indicators = [...demo.querySelectorAll('[data-situation-page]')];
     const previous = demo.querySelector('[data-situation-prev]');
@@ -154,7 +153,7 @@
     let visibleSituation = 0;
     let scrollTimer;
     let entryObserver;
-    let stopTyping = [];
+    let stopTyping;
 
     function updateDialogue() {
       const playing = !audio.paused && !audio.ended;
@@ -185,7 +184,6 @@
     }
 
     function syncCarousel() {
-      interactiveExample.textContent = situations[visibleSituation].takeaway;
       slides.forEach((slide, index) => { slide.inert = index !== visibleSituation; });
       indicators.forEach((button, index) => {
         if (index === visibleSituation) button.setAttribute('aria-current', 'true');
@@ -251,16 +249,22 @@
     });
 
     if (!reducedMotion.matches && 'IntersectionObserver' in window) {
+      const [responseNote, interactiveNote] = demo.querySelectorAll('.why-definition');
+      function showNote(note, onComplete) {
+        stopTyping = typeDefinition(note.querySelector('p'), onComplete);
+        note.classList.add('why-note-entered');
+      }
       demo.classList.add('why-reveal-ready');
       entryObserver = new IntersectionObserver(([entry]) => {
-        if (entry.intersectionRatio < 0.24) return;
-        if (!reducedMotion.matches) {
-          const paragraphs = demo.querySelectorAll('.why-definition p:first-of-type');
-          stopTyping = [...paragraphs].map((paragraph, index) => typeDefinition(paragraph, 720 + index * 310));
-        }
-        demo.classList.add('why-entered');
+        if (entry.intersectionRatio < 0.22) return;
         entryObserver.disconnect();
-      }, { threshold: 0.24 });
+        demo.classList.add('why-entered');
+        if (reducedMotion.matches) {
+          demo.classList.remove('why-reveal-ready');
+          return;
+        }
+        showNote(responseNote, () => showNote(interactiveNote));
+      }, { threshold: 0.22 });
       entryObserver.observe(demo.querySelector('.why-comparison'));
     }
     syncCarousel();
@@ -269,7 +273,7 @@
     return () => {
       clearTimeout(scrollTimer);
       entryObserver?.disconnect();
-      stopTyping.forEach(stop => stop());
+      stopTyping?.();
       mediaTracks.forEach(track => track.pause());
     };
   }

@@ -1,6 +1,5 @@
 .why-demo {
   --why-stage-width: min(calc(100vw - 32px), 1920px);
-  --why-center: clamp(1240px, 79vw, 1520px);
   position: relative;
   isolation: isolate;
   --why-ink: #191919;
@@ -51,9 +50,16 @@
 }
 .why-case strong { color: #ccc; font: 700 11px/1.3 var(--sans); letter-spacing: .11em; text-transform: uppercase; }
 
-.why-comparison {
-  width: min(100%, var(--why-center));
+.why-layout {
+  display: grid;
+  grid-template-areas: "comparison" "response" "interactive";
+  gap: 16px;
+  width: min(100%, var(--why-stage-width));
   margin-inline: auto;
+}
+.why-comparison {
+  grid-area: comparison;
+  min-width: 0;
   border: 1px solid #e5e5e5;
   border-radius: 24px;
   background: #fff;
@@ -80,21 +86,20 @@
   display: grid;
   grid-template-columns: minmax(255px, 1fr) minmax(0, 1.62fr);
   gap: 12px clamp(14px, 2vw, 29px);
-  grid-template-rows: auto auto auto auto;
+  grid-template-rows: auto auto auto;
   padding: clamp(16px, 2.3vw, 32px);
 }
 .why-response, .why-interactive {
   display: grid;
-  grid-row: 1 / span 4;
+  grid-row: 1 / span 3;
   grid-template-rows: subgrid;
   min-width: 0;
   position: relative;
 }
 .why-response { grid-column: 1; }
 .why-interactive { grid-column: 2; }
-.why-response > .why-definition, .why-interactive > .why-definition { grid-row: 2; }
-.why-chat, .why-situations { grid-row: 3; }
-.why-situation-navigation { grid-row: 4; }
+.why-chat, .why-situations { grid-row: 2; }
+.why-situation-navigation { grid-row: 3; }
 .why-demo .why-panels h3 {
   margin: 0;
   align-self: end;
@@ -200,7 +205,7 @@
   background: #f8f8f8;
 }
 .why-situation-heading { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 8px; margin-bottom: 9px; }
-.why-demo .why-situation h4 { margin: 0; color: var(--why-ink); font: 700 clamp(22px, 2.6vw, 36px)/1.12 var(--sans); letter-spacing: -.035em; }
+.why-demo .why-situation h4 { margin: 0; color: var(--why-ink); font: 690 clamp(15px, 1.35vw, 21px)/1.2 var(--sans); letter-spacing: -.035em; }
 .why-situation video, .why-frame-image img {
   display: block;
   width: 100%;
@@ -233,36 +238,37 @@
 .why-play:focus-visible, .why-frame:focus-visible, .why-storyboard summary:focus-visible { outline: 2px solid #8b8b8b; outline-offset: 3px; }
 
 .why-demo .why-definition {
-  align-self: start;
+  align-self: center;
   margin: 0;
-  padding: 15px clamp(13px, 1.35vw, 23px);
-  border: 1px solid #e0e0e0;
-  border-radius: 15px;
-  background: #f5f5f5;
-  color: var(--why-ink);
+  min-width: 0;
+  padding: clamp(19px, 1.9vw, 31px) clamp(12px, 1.3vw, 22px);
+  border: 1px solid #515151;
+  border-radius: 16px;
+  background: #353535;
+  color: #f5f5f5;
+  box-shadow: 0 12px 28px #0003;
   text-align: center;
   font: 500 clamp(15px, 1.08vw, 18px)/1.48 var(--sans);
 }
+.why-definition[data-definition="response"] { grid-area: response; }
+.why-definition[data-definition="interactive"] { grid-area: interactive; }
 .why-definition strong {
   display: block;
   margin-bottom: 8px;
-  font-size: clamp(15px, 1.05vw, 19px);
+  font-size: clamp(13px, 1.05vw, 19px);
   font-weight: 750;
   letter-spacing: .055em;
   line-height: 1.25;
 }
 .why-demo .why-definition p { margin: 0; font: inherit; color: inherit; }
-.why-demo .why-definition p + p { margin-top: 6px; }
 .why-definition p.is-typing { position: relative; }
 .why-type-source { opacity: 0; }
 .why-type-live { position: absolute; inset: 0; }
-.why-definition .is-typing ~ p { opacity: 0; }
 .why-storyboard[open] .why-frames { animation: why-arrive .25s ease-out both; }
 .why-entered .why-comparison { animation: why-arrive .6s cubic-bezier(.16,1,.3,1) both; }
 .why-entered::before { animation: why-dim .7s ease-out both; }
-.why-reveal-ready:not(.why-entered) .why-definition { opacity: 0; }
-.why-entered .why-definition { animation: why-note-pop .72s cubic-bezier(.22,.8,.25,1) .1s both; }
-.why-entered .why-interactive > .why-definition { animation-delay: .41s; }
+.why-reveal-ready .why-definition:not(.why-note-entered) { opacity: 0; }
+.why-definition.why-note-entered { animation: why-note-pop .74s cubic-bezier(.22,.8,.25,1) both; }
 
 @keyframes why-note-pop {
   from { opacity: 0; transform: translateY(12px) scale(.96); }
@@ -274,41 +280,26 @@
 .why-demo .why-status { margin: 8px 0 0; color: #eee; font-size: 13px; text-align: center; }
 .why-demo .why-status:empty { margin: 0; }
 
-@media (min-width: 1460px) {
-  .results-page .why-demo {
-    --why-note-width: clamp(216px, 14.5vw, 266px);
-    --why-note-gap: clamp(23px, 1.66vw, 32px);
-    --why-center: calc(var(--why-stage-width) - 2 * (var(--why-note-width) + var(--why-note-gap)));
-    --why-panel-pad: clamp(20px, 1.6vw, 28px);
+@media (min-width: 780px) {
+  .why-layout {
+    --why-note-width: clamp(148px, 16vw, 276px);
+    grid-template-areas: "response comparison interactive";
+    grid-template-columns: var(--why-note-width) minmax(0, 1fr) var(--why-note-width);
+    gap: clamp(12px, 1.55vw, 28px);
   }
-  .results-page .why-panels { grid-template-rows: auto auto auto; padding: var(--why-panel-pad); }
-  .results-page .why-response, .results-page .why-interactive { grid-row: 1 / span 3; }
-  .results-page .why-chat, .results-page .why-situations { grid-row: 2; }
-  .results-page .why-situation-navigation { grid-row: 3; }
-  .results-page .why-demo .why-definition {
-    position: absolute;
-    grid-row: auto;
-    top: 50%;
-    translate: 0 -50%;
-    width: var(--why-note-width);
-    padding: clamp(14px, 1.25vw, 24px);
-    border-color: #515151;
-    background: #353535;
-    color: #f5f5f5;
-    box-shadow: 0 12px 28px #0003;
+}
+@media (780px <= width <= 1100px) {
+  .why-panels {
+    grid-template-columns: minmax(146px, 1fr) minmax(0, 1.55fr);
+    column-gap: clamp(10px, 1.4vw, 16px);
+    padding: clamp(12px, 1.5vw, 17px);
   }
-  .results-page .why-response > .why-definition {
-    right: calc(100% + var(--why-panel-pad) + var(--why-note-gap) + 1px);
-  }
-  .results-page .why-interactive > .why-definition {
-    left: calc(100% + var(--why-panel-pad) + var(--why-note-gap) + 1px);
-  }
+  .why-demo .why-panels h3 { font-size: clamp(19px, 2.1vw, 23px); }
 }
 @media (max-width: 730px) {
   .why-panels { grid-template-columns: 1fr; grid-template-rows: none; gap: 24px; }
   .why-response, .why-interactive { grid-column: auto; grid-row: auto; grid-template-rows: none; gap: 12px; }
-  .why-chat, .why-situations, .why-situation-navigation,
-  .why-response > .why-definition, .why-interactive > .why-definition { grid-row: auto; }
+  .why-chat, .why-situations, .why-situation-navigation { grid-row: auto; }
 }
 @media (max-width: 495px) {
   .why-demo { --why-stage-width: calc(100vw - 28px); }
@@ -317,9 +308,9 @@
 @media (prefers-reduced-motion: reduce) {
   .why-storyboard[open] .why-frames,
   .why-entered .why-comparison, .why-entered::before,
-  .why-entered .why-definition { animation: none; }
-  .why-reveal-ready:not(.why-entered) .why-definition,
-  .why-type-source, .why-definition .is-typing ~ p { opacity: 1; }
+  .why-definition.why-note-entered { animation: none; }
+  .why-reveal-ready .why-definition:not(.why-note-entered),
+  .why-type-source { opacity: 1; }
   .why-type-live { display: none; }
   .why-situation-indicators button::before { transition: none; }
 }
