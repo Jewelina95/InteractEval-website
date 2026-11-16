@@ -462,14 +462,15 @@ body.interactnet-home.nav-on-hero .wordmark .brand-accent { color: #e9c27e; }
   justify-content: center;
   align-items: center;
   gap: 12px;
-  min-height: 54px;
+  min-inline-size: 212px;
+  min-height: 64px;
   margin: 0;
-  padding: 0 25px;
+  padding: 0 28px;
   border: 1px solid #8d6a36;
   border-radius: 40px;
   background: linear-gradient(140deg, #322516, #17130f 76%);
   color: #fff2d7;
-  font: 650 16px/1.2 var(--sans);
+  font: 650 19px/1.2 var(--sans);
   text-decoration: none;
   transition: border-color .18s ease, background-color .18s ease;
 }
