@@ -36,7 +36,7 @@ window.interactNetTheory = (() => {
       <div class="theory-board" id="theoretical-framework">
         <header class="theory-heading">
           <h2 id="theory-story-title">Three theories of interaction</h2>
-          <button class="theory-replay" type="button" hidden>Replay animation</button>
+          <button class="theory-replay" type="button" hidden aria-label="Replay animation" title="Replay animation"><span class="replay-glyph" aria-hidden="true"></span></button>
         </header>
         <div class="theory-layout">
           <img class="theory-stack" src="${image}" width="1280" height="854" alt="" decoding="async" style="clip-path:${stackClip}"/>

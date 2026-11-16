@@ -28,11 +28,11 @@ function atlasHero(){
   </section>`;
 }
 const atlasWorldLayers = [
-  {name:'galaxy', hit:11.3},
+  {name:'voice', hit:11.3},
   {name:'mountain', hit:30},
   {name:'timeline', hit:44},
-  {name:'waves', hit:60},
-  {name:'city', hit:84}
+  {name:'waves', hit:60, motion:true},
+  {name:'city', hit:84, motion:true}
 ];
 
 const atlasWorldDustCount = 20;
@@ -41,16 +41,21 @@ function atlasWorldFigure(){
   const art = './assets/hero/layered-city-black-gold.webp';
   const current = '<span class="atlas-world-glint"></span>'.repeat(3);
   const dust = '<span class="atlas-world-dust"></span>'.repeat(atlasWorldDustCount);
+  const bars = [12, 24, 50, 71, 42, 82, 64, 42, 78, 100, 82, 56, 68, 88, 56, 72, 48, 29, 14];
+  const waveform = `<span class="atlas-world-waveform">${bars.map((height, index) =>
+    `<i style="--bar-height:${height}%;--bar-delay:${index * -73}ms"></i>`
+  ).join('')}</span>`;
+  const pedestrians = '<img class="atlas-world-pedestrians" src="./assets/hero/city-pedestrians.webp" alt="" decoding="async"/>'.repeat(4);
   return `<figure class="atlas-world" style="--world-image:url('${art}')">
-    <div class="atlas-world-stage" role="img" aria-label="A beam descends from a galaxy through four floating layers, revealing each in a cloud of light. Points of light travel around the illuminated layers.">
+    <div class="atlas-world-stage" role="img" aria-label="A beam from a voice waveform lights four floating layers. Particles ripple across the third layer before the beam reaches a city with pedestrians.">
       <img class="atlas-world-art" src="${art}" width="1280" height="853" alt="" fetchpriority="high" decoding="async"/>
-      ${atlasWorldLayers.map(({name,hit}) => `
+      ${atlasWorldLayers.map(({name,hit,motion}) => `
         <span aria-hidden="true" class="atlas-world-layer atlas-world-layer--${name}" style="--hit:${hit}%">
-          <span class="atlas-world-slice"><span class="atlas-world-ink"></span></span>
-          <span class="atlas-world-current">${current}</span>
-          <span class="atlas-world-impact">
-            <span class="atlas-world-mist"></span><span class="atlas-world-ripple"></span>${dust}
-          </span>
+          <span class="atlas-world-slice"><span class="atlas-world-ink">${name === 'voice' ? waveform : name === 'city' ? pedestrians : ''}</span></span>
+          ${motion ? `<span class="atlas-world-current">${current}</span>
+            <span class="atlas-world-impact">
+              <span class="atlas-world-mist"></span><span class="atlas-world-ripple"></span>${dust}
+            </span>` : ''}
         </span>`).join('')}
       <span aria-hidden="true" class="atlas-world-beam"></span>
       <span aria-hidden="true" class="atlas-world-signal">
@@ -61,7 +66,7 @@ function atlasWorldFigure(){
     <div class="atlas-world-controls">
       <button type="button" class="atlas-world-sound" hidden aria-pressed="false">Sound</button>
       <button type="button" class="atlas-world-replay" hidden aria-label="Replay layer animation" title="Replay layer animation">
-        <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5v5h5M4.4 10a8 8 0 1 1 .8 6"/></svg>
+        <span class="replay-glyph" aria-hidden="true"></span>
       </button>
     </div>
   </figure>`;
@@ -247,12 +252,13 @@ function setupAtlasWorld(){
     }
 
     animations = layers.flatMap((layer, index) => {
-      const {hit} = atlasWorldLayers[index];
+      const {hit, motion} = atlasWorldLayers[index];
       const delay = leadIn + duration * (hit - start) / (end - start);
       if(output) playAtlasWorldImpact(audio, output, ambience, soundStart + delay / 1000, index);
       const reveal = layer.querySelector('.atlas-world-ink').animate([
         {opacity:0}, {opacity:1}
       ], {duration:760, delay, fill:'forwards', easing:'ease-out'});
+      if(!motion) return [reveal];
       const current = layer.querySelector('.atlas-world-current').animate(
         [{opacity:0}, {opacity:1}],
         {duration:1100, delay:delay + 200, fill:'forwards', easing:'ease-out'}

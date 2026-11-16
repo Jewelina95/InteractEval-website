@@ -54,16 +54,20 @@
 }
 
 .theory-replay {
+  display: grid;
   flex: none;
-  padding: 7px 0;
-  border: 0;
-  background: transparent;
-  color: var(--graphite);
-  font: 600 13px/1.2 var(--sans);
-  text-decoration: underline;
-  text-underline-offset: 3px;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  border: 1px solid #ddc59d;
+  border-radius: 50%;
+  background: #fbf5e8;
+  color: #805423;
   cursor: pointer;
 }
+.theory-replay[hidden] { display: none; }
+.theory-replay:hover { background: #f3e5ca; }
 
 .theory-layout {
   display: grid;

@@ -461,19 +461,20 @@ body.interactnet-home.nav-on-hero .wordmark .brand-accent { color: #e9c27e; }
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  gap: 8px;
-  min-height: 40px;
+  gap: 12px;
+  min-height: 54px;
   margin: 0;
-  padding: 0 15px;
-  border: 1px solid #505050;
+  padding: 0 25px;
+  border: 1px solid #8d6a36;
   border-radius: 40px;
-  background: #151515;
-  color: #f5f5f5;
-  font: 650 13px/1.2 var(--sans);
+  background: linear-gradient(140deg, #322516, #17130f 76%);
+  color: #fff2d7;
+  font: 650 16px/1.2 var(--sans);
   text-decoration: none;
+  transition: border-color .18s ease, background-color .18s ease;
 }
 
-.atlas-hero--animated .atlas-hero-actions a:hover { background: #282828; }
+.atlas-hero--animated .atlas-hero-actions a:hover { border-color: #e6be76; }
 
 .atlas-hero .atlas-world {
   position: relative;
@@ -521,16 +522,66 @@ body.interactnet-home.nav-on-hero .wordmark .brand-accent { color: #e9c27e; }
   opacity: 0;
 }
 
-.atlas-world-layer--galaxy .atlas-world-ink {
-  filter: saturate(1.18) contrast(1.13);
+.atlas-world-layer--voice .atlas-world-slice::before { content: none; }
+.atlas-world-layer--voice .atlas-world-ink { background: none; filter: none; }
+
+.atlas-world-waveform {
+  position: absolute;
+  top: 10.6%;
+  left: 50%;
+  width: 22%;
+  height: 11%;
+  display: flex;
+  align-items: center;
+  gap: 3%;
+  transform: translate(-50%, -50%);
 }
+
+.atlas-world-waveform i {
+  flex: 1 1 0;
+  height: var(--bar-height);
+  border-radius: 999px;
+  color: #edd0a0;
+  background: linear-gradient(0deg, currentColor, #fff4d6 49%, currentColor);
+  box-shadow: 0 0 7px currentColor;
+  opacity: .87;
+}
+
+.atlas-world-waveform i:nth-child(-n+5) { color: #ba9ddf; opacity: .76; }
+.atlas-world-waveform i:nth-last-child(-n+5) { color: #9aadda; opacity: .75; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .atlas-world.is-in-view .atlas-world-waveform i {
+    animation: atlas-voice-pulse 1.65s var(--bar-delay) ease-in-out infinite alternate;
+  }
+}
+
+@keyframes atlas-voice-pulse {
+  0% { transform: scaleY(.54); }
+  58% { transform: scaleY(.92); }
+  100% { transform: scaleY(.7); }
+}
+
+.atlas-world-ink .atlas-world-pedestrians {
+  position: absolute;
+  left: var(--pedestrian-x);
+  top: var(--pedestrian-y);
+  height: var(--pedestrian-size, 4.6%);
+  width: auto;
+  transform: translate(-50%, -100%);
+  filter: brightness(1.52) drop-shadow(0 0 1px #e4af6980);
+}
+.atlas-world-pedestrians:nth-child(1) { --pedestrian-x: 35%; --pedestrian-y: 86.4%; }
+.atlas-world-pedestrians:nth-child(2) { --pedestrian-x: 49%; --pedestrian-y: 81.8%; --pedestrian-size: 3.3%; scale: -1 1; }
+.atlas-world-pedestrians:nth-child(3) { --pedestrian-x: 64.9%; --pedestrian-y: 86%; --pedestrian-size: 4.1%; }
+.atlas-world-pedestrians:nth-child(4) { --pedestrian-x: 76%; --pedestrian-y: 84.4%; --pedestrian-size: 3.7%; scale: -1 1; }
 
 .atlas-world-static .atlas-world-ink {
   opacity: 1;
 }
 
 
-.atlas-world-layer--galaxy .atlas-world-slice { clip-path: inset(0 0 81% 0); }
+.atlas-world-layer--voice .atlas-world-slice { clip-path: inset(0 0 81% 0); }
 .atlas-world-layer--mountain .atlas-world-slice { clip-path: inset(19% 0 65% 0); }
 .atlas-world-layer--timeline .atlas-world-slice { clip-path: inset(35% 0 50% 0); }
 
@@ -541,24 +592,6 @@ body.interactnet-home.nav-on-hero .wordmark .brand-accent { color: #e9c27e; }
 
 .atlas-world-layer--city .atlas-world-slice {
   clip-path: polygon(0 69%, 26% 64.3%, 36% 66%, 50% 67%, 100% 69%, 100% 100%, 0 100%);
-}
-
-.atlas-world-layer--galaxy {
-  --flow-path: ellipse(10.5% 3.5% at 50% 10.8%);
-  --flow-duration: 7.5s;
-  --flow-color: #c78bf4;
-}
-
-.atlas-world-layer--mountain {
-  --flow-path: ellipse(20.4% 3.5% at 50% 29.6%);
-  --flow-duration: 10s;
-}
-
-.atlas-world-layer--timeline {
-  --flow-path: ellipse(24% 4.5% at 50% 43.7%);
-  --flow-duration: 11.5s;
-  --flow-color: #aac8ff;
-  --flow-direction: reverse;
 }
 
 .atlas-world-layer--waves {
@@ -628,6 +661,16 @@ body.interactnet-home.nav-on-hero .wordmark .brand-accent { color: #e9c27e; }
   }
 }
 
+@supports (offset-path: shape(from 20% 60%, line to 80% 60%)) {
+  .atlas-world-layer--waves .atlas-world-glint:nth-child(2) {
+    offset-path: shape(from 27% 60%, curve to 50% 60% with 37% 43% / 44% 49%, curve to 73% 60% with 57% 54% / 62% 44%);
+  }
+  .atlas-world-layer--waves .atlas-world-glint:nth-child(3) {
+    offset-path: shape(from 27% 61%, curve to 50% 60% with 38% 48% / 43% 64%, curve to 73% 61% with 57% 58% / 62% 49%);
+    animation-direction: reverse;
+  }
+}
+
 .atlas-world-impact {
   position: absolute;
   top: var(--hit);
@@ -639,9 +682,7 @@ body.interactnet-home.nav-on-hero .wordmark .brand-accent { color: #e9c27e; }
   --warm-haze: #f0bc7b63;
 }
 
-.atlas-world-layer--galaxy .atlas-world-impact,
 .atlas-world-layer--waves .atlas-world-impact { --cool-haze: #ac78f96b; }
-.atlas-world-layer--timeline .atlas-world-impact { --cool-haze: #679bf577; }
 .atlas-world-layer--city .atlas-world-impact { --warm-haze: #e9ad5969; }
 
 .atlas-world-mist,
@@ -791,13 +832,13 @@ body.interactnet-home.nav-on-hero .wordmark .brand-accent { color: #e9c27e; }
 .atlas-world-replay {
   display: grid;
   place-items: center;
-  width: 36px;
-  height: 36px;
+  width: 34px;
+  height: 34px;
   padding: 0;
-  border: 0;
+  border: 1px solid #6e5735;
   border-radius: 50%;
-  color: #ddd;
-  background: transparent;
+  color: #f0d3a3;
+  background: #211a12;
   cursor: pointer;
 }
 
@@ -805,9 +846,26 @@ body.interactnet-home.nav-on-hero .wordmark .brand-accent { color: #e9c27e; }
   background: #282828;
 }
 
-.atlas-world-replay svg {
-  width: 18px;
-  height: 18px;
+.replay-glyph {
+  position: relative;
+  display: block;
+  width: 13px;
+  height: 13px;
+  border: 1.5px solid currentColor;
+  border-left-color: transparent;
+  border-radius: 50%;
+  transform: rotate(-18deg);
+}
+
+.replay-glyph::after {
+  content: "";
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  width: 5px;
+  height: 5px;
+  border-left: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
 }
 
 .atlas-world-replay[hidden],
