@@ -8,7 +8,7 @@ const context = vm.createContext({
     currentScript: { src: 'https://worldeology.com/InteractNet/why-interaction.js' },
     body: { hasAttribute: () => false }
   },
-  window: {},
+  window: { interactNetTheory: { render: () => '<section id="theoretical-framework"></section>' } },
   location: { hash: '' },
   URL, URLSearchParams,
   safe: value => String(value),
@@ -29,7 +29,7 @@ vm.runInContext(source.slice(source.indexOf('function resultResources('), source
 vm.runInContext(source.slice(start, end), context);
 
 const home = vm.runInContext('resultsHomeV2()', context);
-const order = ['id="main-hero"', 'id="response-interaction"', 'id="why-response-heading"', 'id="why-situation-a"', 'id="why-situation-b"', 'data-definition="interactive"', 'id="key-findings"', 'id="system-overview"', 'id="resources"'];
+const order = ['id="main-hero"', 'id="response-interaction"', 'id="why-response-heading"', 'id="why-situation-a"', 'id="why-situation-b"', 'data-definition="interactive"', 'id="theoretical-framework"', 'id="key-findings"', 'id="system-overview"', 'id="resources"'];
 assert.ok(order.every(id => home.includes(id)));
 for (let i = 1; i < order.length; i++) assert.ok(home.indexOf(order[i - 1]) < home.indexOf(order[i]), order[i]);
 assert.doesNotMatch(home, /main-results-rail|figure1-field-aligned|why-teardown/);
