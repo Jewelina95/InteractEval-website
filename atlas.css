@@ -419,16 +419,18 @@ html[data-ui-input=keyboard] select,html[data-ui-input=keyboard] select::picker-
   align-content: center;
   justify-items: center;
   gap: clamp(10px, 2svh, 24px);
-  width: min(1296px, calc(100% - 48px));
+  width: 100%;
+  box-sizing: border-box;
+  background: #000;
   min-height: calc(100svh - var(--header-height, 80px));
-  padding: clamp(22px, 3.5svh, 45px) 0;
+  padding: clamp(22px, 3.5svh, 45px) clamp(16px, 4vw, 40px);
   border: 0;
   text-align: center;
 }
 
 .atlas-hero--animated h1 {
   margin: 0;
-  color: #171717;
+  color: #f7f7f7;
   font-size: clamp(38px, min(5.8vw, 9svh), 82px);
   line-height: 1;
   letter-spacing: -.06em;
@@ -442,15 +444,15 @@ html[data-ui-input=keyboard] select,html[data-ui-input=keyboard] select::picker-
   min-height: 40px;
   margin: 0;
   padding: 0 15px;
-  border: 1px solid #d4d4d4;
+  border: 1px solid #505050;
   border-radius: 40px;
-  background: #fff;
-  color: #242424;
+  background: #151515;
+  color: #f5f5f5;
   font: 650 13px/1.2 var(--sans);
   text-decoration: none;
 }
 
-.atlas-hero--animated .atlas-hero-actions a:hover { background: #f1f1f1; }
+.atlas-hero--animated .atlas-hero-actions a:hover { background: #282828; }
 
 .atlas-hero .atlas-world {
   position: relative;
@@ -462,7 +464,7 @@ html[data-ui-input=keyboard] select,html[data-ui-input=keyboard] select::picker-
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  background: #fff;
+  background: #000;
 }
 
 .atlas-world-art {
@@ -479,7 +481,7 @@ html[data-ui-input=keyboard] select,html[data-ui-input=keyboard] select::picker-
 }
 
 .atlas-world-slice {
-  mix-blend-mode: multiply;
+  mix-blend-mode: screen;
 }
 
 .atlas-world-slice::before,
@@ -489,13 +491,17 @@ html[data-ui-input=keyboard] select,html[data-ui-input=keyboard] select::picker-
 
 .atlas-world-slice::before {
   content: "";
-  filter: grayscale(.82) brightness(1.09) blur(.45px);
-  opacity: .17;
+  filter: grayscale(1) contrast(1.12) blur(.45px);
+  opacity: .2;
 }
 
 .atlas-world-ink {
-  filter: saturate(.88) contrast(1.1) brightness(1.03);
+  filter: saturate(.68) contrast(1.13);
   opacity: 0;
+}
+
+.atlas-world-layer--galaxy .atlas-world-ink {
+  filter: saturate(1.18) contrast(1.13);
 }
 
 .atlas-world-static .atlas-world-ink {
@@ -539,8 +545,8 @@ html[data-ui-input=keyboard] select,html[data-ui-input=keyboard] select::picker-
 }
 
 .atlas-world-layer--galaxy .atlas-world-impact,
-.atlas-world-layer--waves .atlas-world-impact { --cool-haze: #b6a6ec52; }
-.atlas-world-layer--timeline .atlas-world-impact { --cool-haze: #95d5eb63; }
+.atlas-world-layer--waves .atlas-world-impact { --cool-haze: #ac78f96b; }
+.atlas-world-layer--timeline .atlas-world-impact { --cool-haze: #679bf577; }
 .atlas-world-layer--city .atlas-world-impact { --warm-haze: #e9ad5969; }
 
 .atlas-world-mist,
@@ -568,7 +574,7 @@ html[data-ui-input=keyboard] select,html[data-ui-input=keyboard] select::picker-
   width: 60%;
   aspect-ratio: 6.8;
   border-radius: 50%;
-  border: 1px solid #d4aa6a8c;
+  border: 1px solid #edb86d9c;
   box-shadow: 0 0 8px #fff, inset 0 0 9px #fff;
   filter: blur(.45px);
 }
@@ -673,18 +679,18 @@ html[data-ui-input=keyboard] select,html[data-ui-input=keyboard] select::picker-
 .atlas-world-sound {
   min-height: 32px;
   padding: 4px 10px;
-  border: 1px solid #cecece;
+  border: 1px solid #505050;
   border-radius: 20px;
-  background: #fff;
-  color: #343434;
+  background: #151515;
+  color: #f0f0f0;
   font: 650 12px/1.1 var(--sans);
   cursor: pointer;
 }
 
 .atlas-world-sound[aria-pressed="true"] {
-  background: #282828;
-  border-color: #282828;
-  color: #fff;
+  background: #f1e4d0;
+  border-color: #f1e4d0;
+  color: #171717;
 }
 
 .atlas-world-replay {
@@ -695,13 +701,13 @@ html[data-ui-input=keyboard] select,html[data-ui-input=keyboard] select::picker-
   padding: 0;
   border: 0;
   border-radius: 50%;
-  color: #646464;
+  color: #ddd;
   background: transparent;
   cursor: pointer;
 }
 
 .atlas-world-replay:hover {
-  background: #f1f1f1;
+  background: #282828;
 }
 
 .atlas-world-replay svg {
@@ -716,7 +722,6 @@ html[data-ui-input=keyboard] select,html[data-ui-input=keyboard] select::picker-
 
 @media (max-width: 650px) {
   .atlas-hero.atlas-hero--animated {
-    width: calc(100% - 32px);
     min-height: min(570px, calc(100svh - var(--header-height, 70px)));
     gap: 16px;
   }

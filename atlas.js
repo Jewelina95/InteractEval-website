@@ -38,11 +38,11 @@ const atlasWorldLayers = [
 const atlasWorldDustCount = 20;
 
 function atlasWorldFigure(){
-  const art = './assets/hero/layered-city-silver-gold.webp';
+  const art = './assets/hero/layered-city-black-gold.webp';
   const dust = '<span class="atlas-world-dust"></span>'.repeat(atlasWorldDustCount);
   return `<figure class="atlas-world" style="--world-image:url('${art}')">
     <div class="atlas-world-stage" role="img" aria-label="A beam descends from a galaxy through four floating layers, revealing each in a cloud of light.">
-      <img class="atlas-world-art" src="${art}" width="1280" height="854" alt="" fetchpriority="high" decoding="async"/>
+      <img class="atlas-world-art" src="${art}" width="1280" height="853" alt="" fetchpriority="high" decoding="async"/>
       ${atlasWorldLayers.map(({name,hit}) => `
         <span aria-hidden="true" class="atlas-world-layer atlas-world-layer--${name}" style="--hit:${hit}%">
           <span class="atlas-world-slice"><span class="atlas-world-ink"></span></span>
