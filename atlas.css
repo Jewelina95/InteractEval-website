@@ -548,6 +548,17 @@ html[data-ui-input=keyboard] select,html[data-ui-input=keyboard] select::picker-
   clip-path: polygon(0 50%, 100% 50%, 100% 69%, 50% 67%, 36% 66%, 26% 64.3%, 0 69%);
 }
 
+@media (prefers-reduced-motion: no-preference) {
+  .atlas-world-dialog[open] .atlas-world-layer--city {
+    animation: atlas-world-city-hover 8.9s ease-in-out infinite;
+  }
+
+  @keyframes atlas-world-city-hover {
+    0%, 100% { transform: translateY(clamp(3px, .55vw, 6px)); }
+    50% { transform: translateY(clamp(-12px, -1.25vw, -7px)); }
+  }
+}
+
 .atlas-world-layer--city .atlas-world-slice {
   clip-path: polygon(0 69%, 26% 64.3%, 36% 66%, 50% 67%, 100% 69%, 100% 100%, 0 100%);
 }
