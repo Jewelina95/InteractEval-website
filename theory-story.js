@@ -13,7 +13,7 @@ window.interactNetTheory = (() => {
   const stackClip = clipBand(stackTop, 0, 1);
   const waveClip = clipBand(waveTop, waveTop, waveBottom - waveTop);
   const layers = [
-    {name:'state', art:'iceberg', band:[stackTop, .349], width:.43, title:'Data Iceberg Theory', bridge:'State understanding', alt:'Cutaway of a glacier above and below the waterline', caption:'Public acts O<sub>t</sub> · Scene S<sub>t</sub> · Latent state Ψ<sub>t</sub>'},
+    {name:'state', art:'iceberg', band:[stackTop, .349], width:.43, title:'Data Iceberg Theory', bridge:'State understanding', alt:'Cutaway of a glacier above and below the waterline'},
     {name:'time', art:'trajectory', band:[.349, waveTop], width:.49, title:'Movie Evaluation Theory', bridge:'Process understanding', alt:'A branching illuminated trajectory crosses three film frames'},
     {name:'agency', art:'agency-waves', band:[waveTop, waveBottom], width:.59, clip:waveClip, title:'Agency Principle', bridge:'Contribution attribution', alt:'Two wave surfaces with illuminated paths diverging across them'}
   ];
@@ -31,13 +31,13 @@ window.interactNetTheory = (() => {
         </header>
         <div class="theory-layout">
           <img class="theory-stack" src="${image}" width="1280" height="854" alt="" decoding="async" style="clip-path:${stackClip}"/>
-          ${layers.map(({name, art, title, bridge, alt, caption, clip}) => `
+          ${layers.map(({name, art, title, bridge, alt, clip}) => `
             <figure class="theory-visual theory-visual--${name}">
               <div class="theory-art">
                 <img src="./assets/theory-story/${art}.webp" width="880" height="480" alt="${alt}" decoding="async"/>
                 <span class="theory-sparks" aria-hidden="true">${'<i></i>'.repeat(4)}</span>
               </div>
-              <figcaption><strong>${title}</strong>${caption ? `<span>${caption}</span>` : ''}</figcaption>
+              <figcaption>${title}</figcaption>
             </figure>
             <div class="theory-arrow theory-arrow--${name}"><span>${bridge}</span><i aria-hidden="true"></i></div>
             <div class="theory-morph theory-morph--${name}" aria-hidden="true" style="--world-image:url('${image}')${clip ? `;clip-path:${clip}` : ''}"></div>
