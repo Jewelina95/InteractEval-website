@@ -413,6 +413,27 @@ html[data-ui-input=keyboard] select,html[data-ui-input=keyboard] select::picker-
   .main-rail-comparisons > .main-rail-direct { min-height: 44px; }
 }
 
+body.interactnet-home.nav-on-hero {
+  background: #000;
+  color: #f7f7f7;
+}
+
+body.interactnet-home.nav-on-hero .masthead {
+  --nav-ink: #f1f1f1;
+  --nav-muted: #b3b3b3;
+  --nav-surface: #161616;
+  --nav-hover: #272727;
+  --nav-line: #464646;
+  background: #000;
+  border-bottom-color: #242424;
+  box-shadow: none;
+}
+
+body.interactnet-home.nav-on-hero .wordmark { color: #f1f1f1; }
+body.interactnet-home.nav-on-hero .wordmark > img {
+  filter: grayscale(1) invert(1) brightness(1.35);
+}
+
 .atlas-hero.atlas-hero--animated {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
@@ -741,3 +762,5 @@ html[data-ui-input=keyboard] select,html[data-ui-input=keyboard] select::picker-
     opacity: 1 !important;
   }
 }
+
+.results-page .atlas-hero--animated + article > .article-shell { padding-top: 0; }

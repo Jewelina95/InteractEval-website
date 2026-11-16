@@ -79,7 +79,7 @@ setupSiteMenu();
 let headerHeroObserver;
 function syncEditorialHeader(){
   if(headerHeroObserver)headerHeroObserver.disconnect();
-  const hero=document.querySelector('.journal-hero'),header=document.querySelector('.masthead');
+  const hero=document.querySelector('.atlas-hero--animated, .journal-hero'),header=document.querySelector('.masthead');
   if(!hero){document.body.classList.remove('nav-on-hero');return;}
   const height=header.offsetHeight;
   const update=()=>document.body.classList.toggle('nav-on-hero',hero.getBoundingClientRect().bottom>height);
