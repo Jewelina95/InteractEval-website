@@ -27,17 +27,24 @@ const atlasWorldLayers = [
   {name:'city', hit:84}
 ];
 
+const atlasWorldDustCount = 16;
+
 function atlasWorldFigure(){
   const art = './assets/hero/layered-city.webp';
+  const dust = '<span class="atlas-world-dust"></span>'.repeat(atlasWorldDustCount);
   return `<figure class="atlas-world" style="--world-image:url('${art}')">
-    <div class="atlas-world-stage" role="img" aria-label="A particle descends from a galaxy and illuminates four layers in sequence: mountains, a timeline, waves, and a city.">
+    <div class="atlas-world-stage" role="img" aria-label="A beam descends from a galaxy through four floating layers, revealing each in a cloud of light.">
       <img class="atlas-world-art" src="${art}" width="1280" height="854" alt="" fetchpriority="high" decoding="async"/>
-      ${atlasWorldLayers.map(({name,hit}) => `<span aria-hidden="true" class="atlas-world-layer atlas-world-layer--${name}" style="--hit:${hit}%"><span class="atlas-world-ink"></span><span class="atlas-world-pulse"></span></span>`).join('')}
+      ${atlasWorldLayers.map(({name,hit}) => `
+        <span aria-hidden="true" class="atlas-world-layer atlas-world-layer--${name}" style="--hit:${hit}%">
+          <span class="atlas-world-slice"><span class="atlas-world-ink"></span></span>
+          <span class="atlas-world-impact">
+            <span class="atlas-world-mist"></span><span class="atlas-world-ripple"></span>${dust}
+          </span>
+        </span>`).join('')}
+      <span aria-hidden="true" class="atlas-world-beam"></span>
       <span aria-hidden="true" class="atlas-world-signal">
         <span class="atlas-world-trail"></span>
-        <span class="atlas-world-mote"></span>
-        <span class="atlas-world-mote"></span>
-        <span class="atlas-world-mote"></span>
         <span class="atlas-world-core"></span>
       </span>
     </div>
@@ -45,6 +52,38 @@ function atlasWorldFigure(){
       <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5v5h5M4.4 10a8 8 0 1 1 .8 6"/></svg>
     </button>
   </figure>`;
+}
+
+function animateAtlasWorldImpact(layer, delay, width, layerIndex){
+  const mist = layer.querySelector('.atlas-world-mist');
+  const ripple = layer.querySelector('.atlas-world-ripple');
+  const dust = [...layer.querySelectorAll('.atlas-world-dust')];
+  const spread = width * (.14 + layerIndex * .035);
+  const haze = mist.animate([
+    {opacity:0, scale:'.13 .55'},
+    {opacity:.9, scale:'.65 .9', offset:.19},
+    {opacity:0, scale:'1.34 1.6'}
+  ], {duration:1620, delay, easing:'ease-out'});
+  const ring = ripple.animate([
+    {opacity:0, scale:'.08 .13'},
+    {opacity:.52, scale:'.48 .6', offset:.22},
+    {opacity:0, scale:'1.18 1.2'}
+  ], {duration:1340, delay:delay + 60, easing:'ease-out'});
+
+  const drift = dust.map((mote, index) => {
+    const angle = index * 2.39996 + layerIndex * .8;
+    const distance = .34 + (index % 7) * .11;
+    const x = Math.cos(angle) * spread * distance;
+    const y = (Math.sin(angle) * .22 - .06) * spread * distance;
+    const size = .48 + (index % 5) * .24;
+    return mote.animate([
+      {opacity:0, transform:'translate(0, 0) scale(.35)'},
+      {opacity:.71, transform:`translate(${x * .23}px, ${y * .18}px) scale(${size})`, offset:.19},
+      {opacity:.28, transform:`translate(${x * .77}px, ${y * .7}px) scale(${size * .72})`, offset:.63},
+      {opacity:0, transform:`translate(${x}px, ${y - 6}px) scale(.24)`}
+    ], {delay:delay + index % 6 * 42, duration:1060 + index % 7 * 115, easing:'ease-out'});
+  });
+  return [haze, ring, ...drift];
 }
 
 let atlasWorldObserver;
@@ -57,67 +96,60 @@ function setupAtlasWorld(){
 
   const stage = figure.querySelector('.atlas-world-stage');
   const art = stage.querySelector('img');
-  const layers = Array.from(stage.querySelectorAll('.atlas-world-layer'));
+  const layers = [...stage.querySelectorAll('.atlas-world-layer')];
+  const beam = stage.querySelector('.atlas-world-beam');
   const signal = stage.querySelector('.atlas-world-signal');
   const core = signal.querySelector('.atlas-world-core');
   const trail = signal.querySelector('.atlas-world-trail');
-  const motes = [...signal.querySelectorAll('.atlas-world-mote')];
   const replay = figure.querySelector('button');
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
   const start = atlasWorldLayers[0].hit;
   const end = 93;
-  const leadIn = 540;
-  const duration = 5600;
+  const leadIn = 480;
+  const duration = 6200;
   let animations = [];
+  let started = false;
 
   function play(){
     animations.forEach(animation => animation.cancel());
     animations = [];
     if(reducedMotion.matches) return;
+    started = true;
+    const width = stage.clientWidth;
 
-    animations = layers.flatMap(layer => {
-      const hit = parseFloat(layer.style.getPropertyValue('--hit'));
+    animations = layers.flatMap((layer, index) => {
+      const {hit} = atlasWorldLayers[index];
       const delay = leadIn + duration * (hit - start) / (end - start);
       const reveal = layer.querySelector('.atlas-world-ink').animate([
         {opacity:0}, {opacity:1}
-      ], {duration:640, delay, fill:'forwards', easing:'ease-out'});
-      const pulse = layer.querySelector('.atlas-world-pulse').animate([
-        {opacity:0, scale:'.18 1'},
-        {opacity:.78, scale:'.55 1', offset:.24},
-        {opacity:0, scale:'1.1 1.9'}
-      ], {duration:860, delay, easing:'ease-out'});
-      return [reveal,pulse];
+      ], {duration:760, delay, fill:'forwards', easing:'ease-out'});
+      return [reveal, ...animateAtlasWorldImpact(layer, delay, width, index)];
     });
 
     const travel = {duration, delay:leadIn};
     const position = progress => `${start + (end - start) * progress}%`;
     animations.push(
+      beam.animate([
+        {scale:'1 0', opacity:0},
+        {scale:'1 .14', opacity:.8, offset:.14},
+        {scale:'1 .86', opacity:.68, offset:.86},
+        {scale:'1 1', opacity:0}
+      ], travel),
       signal.animate([
         {top:position(0), opacity:0},
-        {top:position(.047), opacity:1, offset:.047},
-        {top:position(.94), opacity:1, offset:.94},
+        {top:position(.055), opacity:1, offset:.055},
+        {top:position(.92), opacity:1, offset:.92},
         {top:position(1), opacity:0}
       ], travel),
-      core.animate(
-        [.35,1.25,.72,1.38,.86,1.18,.67,1.52,.48]
-          .map(scale => ({scale:String(scale), easing:'ease-in-out'})),
-        travel
-      ),
-      trail.animate(
-        ['.4 .15','1.1 .65','.65 1','1.25 .72','.7 1.18','.5 .55']
-          .map(scale => ({scale, easing:'ease-in-out'})),
-        travel
-      )
+      core.animate([
+        {scale:'.5 .9'}, {scale:'1.04 1.4'}, {scale:'.86 1'},
+        {scale:'1.17 1.52'}, {scale:'.72 .88'}, {scale:'1.14 1.28'}, {scale:'.55 .9'}
+      ], {...travel, easing:'ease-in-out'}),
+      trail.animate([
+        {scale:'.6 .27'}, {scale:'1 .8'}, {scale:'.78 1.13'},
+        {scale:'1.18 .9'}, {scale:'.82 1.18'}, {scale:'.52 .52'}
+      ], travel)
     );
-
-    motes.forEach((mote, index) => {
-      const drift = [-13, 10, -6][index];
-      animations.push(mote.animate([
-        {translate:'0 0', opacity:0},
-        {translate:`${drift * .55}px -11px`, opacity:.9, offset:.24},
-        {translate:`${drift}px -33px`, opacity:0}
-      ], {duration:800 + index * 170, delay:leadIn + index * 140, iterations:4}));
-    });
   }
 
   if(typeof stage.animate !== 'function'){
@@ -128,11 +160,15 @@ function setupAtlasWorld(){
   replay.addEventListener('click', play);
   const begin = () => {
     if(!figure.isConnected) return;
-    if(typeof IntersectionObserver === 'undefined'){play();return;}
-    atlasWorldObserver = new IntersectionObserver(([entry], observer) => {
-      if(entry.intersectionRatio < .35) return;
-      observer.disconnect();
+    if(typeof IntersectionObserver === 'undefined'){
+      figure.classList.add('is-in-view');
       play();
+      return;
+    }
+    atlasWorldObserver = new IntersectionObserver(([entry]) => {
+      const visible = entry.intersectionRatio >= .35;
+      figure.classList.toggle('is-in-view', visible);
+      if(visible && !started) play();
     }, {threshold:.35});
     atlasWorldObserver.observe(figure);
   };

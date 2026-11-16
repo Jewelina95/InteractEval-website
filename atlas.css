@@ -429,108 +429,181 @@ html[data-ui-input=keyboard] select,html[data-ui-input=keyboard] select::picker-
   position: relative;
   isolation: isolate;
   overflow: hidden;
+  background: #fff;
 }
 
 .atlas-world-art {
-  filter: grayscale(1) brightness(1.1) blur(.45px);
-  opacity: .18;
+  opacity: 0;
 }
 
 .atlas-world-layer,
-.atlas-world-ink,
-.atlas-world-pulse {
+.atlas-world-slice,
+.atlas-world-slice::before,
+.atlas-world-ink {
   position: absolute;
   inset: 0;
   pointer-events: none;
 }
 
-.atlas-world-ink,
-.atlas-world-pulse {
-  opacity: 0;
+.atlas-world-layer {
+  --float: 4px;
+  --period: 7.6s;
+  --phase: -1s;
+  animation: atlas-world-hover var(--period) var(--phase) ease-in-out infinite;
+  animation-play-state: paused;
+}
+
+.atlas-world.is-in-view .atlas-world-layer {
+  animation-play-state: running;
+}
+
+@keyframes atlas-world-hover {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(calc(-1 * var(--float))); }
+}
+
+.atlas-world-slice {
+  mix-blend-mode: multiply;
+}
+
+.atlas-world-slice::before,
+.atlas-world-ink {
+  background: var(--world-image) center / 100% 100% no-repeat;
+}
+
+.atlas-world-slice::before {
+  content: "";
+  filter: grayscale(1) brightness(1.11) blur(.45px);
+  opacity: .17;
 }
 
 .atlas-world-ink {
-  background: var(--world-image) center / 100% 100% no-repeat;
   filter: grayscale(1) brightness(1.1);
+  opacity: 0;
 }
 
 .atlas-world-static .atlas-world-ink {
   opacity: 1;
 }
 
-.atlas-world-layer--galaxy {
-  clip-path: inset(0 0 81% 0);
-}
+.atlas-world-layer--galaxy { --float: 3px; --period: 8.2s; --phase: -.5s; }
+.atlas-world-layer--mountain { --float: 6px; --period: 7.1s; --phase: -2s; }
+.atlas-world-layer--timeline { --float: 5px; --period: 8.3s; --phase: -4s; }
+.atlas-world-layer--waves { --float: 7px; --period: 9.2s; --phase: -.8s; }
+.atlas-world-layer--city { --float: 5px; --period: 10.4s; --phase: -2.8s; }
 
-.atlas-world-layer--mountain {
-  clip-path: inset(19% 0 65% 0);
-}
+.atlas-world-layer--galaxy .atlas-world-slice { clip-path: inset(0 0 81% 0); }
+.atlas-world-layer--mountain .atlas-world-slice { clip-path: inset(19% 0 65% 0); }
+.atlas-world-layer--timeline .atlas-world-slice { clip-path: inset(35% 0 50% 0); }
 
-.atlas-world-layer--timeline {
-  clip-path: inset(35% 0 50% 0);
-}
-
-.atlas-world-layer--waves {
-  /* Follow the front edge of the wave disk above the two tallest towers. */
+.atlas-world-layer--waves .atlas-world-slice {
+  /* Keep the taller foreground towers with the city slice. */
   clip-path: polygon(0 50%, 100% 50%, 100% 69%, 50% 67%, 36% 66%, 26% 64.3%, 0 69%);
 }
 
-.atlas-world-layer--city {
+.atlas-world-layer--city .atlas-world-slice {
   clip-path: polygon(0 69%, 26% 64.3%, 36% 66%, 50% 67%, 100% 69%, 100% 100%, 0 100%);
 }
 
-.atlas-world-pulse {
-  background: radial-gradient(ellipse 35% 5% at 50% var(--hit), #fff 0%, #dfdfdfaa 34%, transparent 100%);
-  transform-origin: 50% var(--hit);
-  mix-blend-mode: screen;
+.atlas-world-impact {
+  position: absolute;
+  top: var(--hit);
+  left: 50%;
+  width: 100%;
+  height: 0;
+  translate: -50% 0;
 }
 
+.atlas-world-mist,
+.atlas-world-ripple,
+.atlas-world-dust {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  translate: -50% -50%;
+  opacity: 0;
+}
+
+.atlas-world-mist {
+  width: 66%;
+  height: clamp(20px, 5vw, 54px);
+  background: radial-gradient(ellipse, #fff 0%, #fdfdfdf7 15%, #d5d5d580 35%, #9992 53%, transparent 72%);
+  filter: blur(2px);
+}
+
+.atlas-world-ripple {
+  width: 60%;
+  aspect-ratio: 6.8;
+  border-radius: 50%;
+  border: 1px solid #96969691;
+  box-shadow: 0 0 8px #fff, inset 0 0 9px #fff;
+  filter: blur(.45px);
+}
+
+.atlas-world-dust {
+  width: 3px;
+  aspect-ratio: 1;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: 0 0 2px 1px #848484b3, 0 0 7px 2px #d0d0d0cc;
+}
+
+.atlas-world-dust:nth-child(3n) {
+  width: 2px;
+  filter: blur(.3px);
+}
+
+.atlas-world-beam,
 .atlas-world-signal {
   position: absolute;
   top: 11.3%;
   left: 50%;
-  width: 0;
-  height: 100%;
   opacity: 0;
   pointer-events: none;
 }
 
+.atlas-world-beam {
+  width: clamp(23px, 5vw, 52px);
+  height: 81.7%;
+  translate: -50% 0;
+  transform-origin: center top;
+  background: linear-gradient(90deg,
+    transparent 4%, #aaa2 30%, #bbb7 43%, #fffdfdf0 49%,
+    #fffd 51%, #bbb7 57%, #aaa2 70%, transparent 96%);
+  mask-image: linear-gradient(transparent, #000 9%, #000 94%, transparent);
+  filter: blur(.8px);
+}
+
+.atlas-world-signal {
+  width: 0;
+  height: 100%;
+}
+
 .atlas-world-core,
-.atlas-world-trail,
-.atlas-world-mote {
+.atlas-world-trail {
   position: absolute;
-  top: 0;
   left: 0;
+  top: 0;
+  translate: -50% -50%;
 }
 
 .atlas-world-trail {
   top: auto;
   bottom: 100%;
-  left: -2.5px;
-  width: 5px;
-  height: 13%;
+  translate: -50% 0;
+  width: clamp(12px, 3vw, 29px);
+  height: 20%;
   transform-origin: 50% 100%;
-  background: linear-gradient(transparent, #bcbcbc77 55%, #cfcfcf);
-  filter: blur(.7px);
-  border-radius: 80% 80% 45% 45%;
+  background: radial-gradient(ellipse at bottom, #fff 5%, #ddd8 26%, #aaa3 46%, transparent 72%);
+  filter: blur(1.1px);
 }
 
 .atlas-world-core {
-  width: clamp(6px, .7vw, 9px);
-  aspect-ratio: 1;
-  translate: -50% -50%;
+  width: clamp(5px, .62vw, 8px);
+  aspect-ratio: .65;
   border-radius: 50%;
   background: #fff;
-  box-shadow: 0 0 3px 1px #888, 0 0 10px 5px #aaa9, 0 0 20px 8px #ddd9;
-}
-
-.atlas-world-mote {
-  width: 3px;
-  aspect-ratio: 1;
-  opacity: 0;
-  border-radius: 50%;
-  background: #959595;
-  box-shadow: 0 0 4px #d7d7d7;
+  box-shadow: 0 0 4px 1px #989898, 0 0 13px 5px #b4b4b495, 0 0 26px 10px #d6d6d688;
 }
 
 .atlas-world-replay {
@@ -579,10 +652,14 @@ html[data-ui-input=keyboard] select,html[data-ui-input=keyboard] select::picker-
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .atlas-world-pulse,
+  .atlas-world-impact,
+  .atlas-world-beam,
   .atlas-world-signal,
   .atlas-world-replay {
     display: none;
+  }
+  .atlas-world-layer {
+    animation: none;
   }
   .atlas-world-ink {
     opacity: 1 !important;
