@@ -2,10 +2,20 @@
 
 window.interactNetTheory = (() => {
   const image = './assets/hero/layered-city.webp';
+  const waveEdge = [[100, .675], [53, .675], [36, .66], [31.8, .65], [28.5, .649], [26, .657], [0, .675]];
+  const stackTop = .21;
+  const waveTop = .503;
+  const waveBottom = .68;
+  function clipBand(top, origin, height){
+    const localY = y => `${100 * (y - origin) / height}%`;
+    return `polygon(0 ${localY(top)}, 100% ${localY(top)}, ${waveEdge.map(([x, y]) => `${x}% ${localY(y)}`).join(', ')})`;
+  }
+  const stackClip = clipBand(stackTop, 0, 1);
+  const waveClip = clipBand(waveTop, waveTop, waveBottom - waveTop);
   const layers = [
-    {name:'state', art:'iceberg', band:[.19, .35], width:.43, title:'Data Iceberg Theory', bridge:'State understanding', alt:'Cutaway of a glacier above and below the waterline', caption:'Public acts O<sub>t</sub> · Scene S<sub>t</sub> · Latent state Ψ<sub>t</sub>'},
-    {name:'time', art:'trajectory', band:[.35, .69], width:.59, title:'Movie Evaluation Theory', bridge:'Process understanding', alt:'A branching illuminated trajectory crosses three film frames'},
-    {name:'agency', art:'city', band:[.643, .98], width:.81, title:'Agency Principle', bridge:'Contribution attribution', alt:'A floating city with illuminated routes through its buildings'}
+    {name:'state', art:'iceberg', band:[stackTop, .349], width:.43, title:'Data Iceberg Theory', bridge:'State understanding', alt:'Cutaway of a glacier above and below the waterline', caption:'Public acts O<sub>t</sub> · Scene S<sub>t</sub> · Latent state Ψ<sub>t</sub>'},
+    {name:'time', art:'trajectory', band:[.349, waveTop], width:.49, title:'Movie Evaluation Theory', bridge:'Process understanding', alt:'A branching illuminated trajectory crosses three film frames'},
+    {name:'agency', art:'agency-waves', band:[waveTop, waveBottom], width:.59, clip:waveClip, title:'Agency Principle', bridge:'Contribution attribution', alt:'Two wave surfaces with illuminated paths diverging across them'}
   ];
 
   function render(){
@@ -20,21 +30,22 @@ window.interactNetTheory = (() => {
           <button class="theory-replay" type="button" hidden>Replay animation</button>
         </header>
         <div class="theory-layout">
-          <img class="theory-stack" src="${image}" width="1280" height="854" alt="" decoding="async"/>
-          ${layers.map(({name, art, title, bridge, alt, caption}) => `
+          <img class="theory-stack" src="${image}" width="1280" height="854" alt="" decoding="async" style="clip-path:${stackClip}"/>
+          ${layers.map(({name, art, title, bridge, alt, caption, clip}) => `
             <figure class="theory-visual theory-visual--${name}">
               <div class="theory-art">
                 <img src="./assets/theory-story/${art}.webp" width="880" height="480" alt="${alt}" decoding="async"/>
+                <span class="theory-sparks" aria-hidden="true">${'<i></i>'.repeat(4)}</span>
               </div>
               <figcaption><strong>${title}</strong>${caption ? `<span>${caption}</span>` : ''}</figcaption>
             </figure>
             <div class="theory-arrow theory-arrow--${name}"><span>${bridge}</span><i aria-hidden="true"></i></div>
-            <div class="theory-morph theory-morph--${name}" aria-hidden="true" style="--world-image:url('${image}')"></div>
+            <div class="theory-morph theory-morph--${name}" aria-hidden="true" style="--world-image:url('${image}')${clip ? `;clip-path:${clip}` : ''}"></div>
           `).join('')}
           <div class="theory-diagrams">
             <section class="theory-row theory-row--state" aria-labelledby="theory-iceberg">
               <p class="theory-mobile-bridge">State understanding</p>
-              <div class="theory-row-title"><h3 id="theory-iceberg">Interaction-world reconstruction</h3></div>
+              <div class="theory-row-title"><h3 id="theory-iceberg">Interaction-world reconstruction</h3><span>${layers[0].title}</span></div>
               <div class="theory-state-flow">
                 <div class="theory-node theory-node--acts"><span>Dialogue transcript</span><strong>Public acts <var>O<sub>t</sub></var></strong></div>
                 <div class="theory-state-inputs">
@@ -58,19 +69,22 @@ window.interactNetTheory = (() => {
             </section>
             <section class="theory-row theory-row--time" aria-labelledby="theory-movie">
               <p class="theory-mobile-bridge">Process understanding</p>
-              <div class="theory-row-title"><h3 id="theory-movie">Trajectory understanding</h3></div>
+              <div class="theory-row-title"><h3 id="theory-movie">Trajectory understanding</h3><span>${layers[1].title}</span></div>
               <div class="theory-timeline">
                 <div class="theory-node"><strong>Past</strong><span>Event chain <var>E<sub>t</sub></var></span></div>
                 <div class="theory-node"><strong>Present</strong><span>Current turn</span></div>
                 <div class="theory-node theory-node--future"><strong>Possible futures</strong><span>State transitions</span></div>
               </div>
               <ul class="theory-transitions" aria-label="Possible state transitions">
-                <li>Advance</li><li>Maintain</li><li>Degrade</li><li>Collapse</li>
+                <li><strong>Advance</strong><span>Moves toward the goal</span></li>
+                <li><strong>Maintain</strong><span>Stays on course</span></li>
+                <li><strong>Degrade</strong><span>Loses progress</span></li>
+                <li><strong>Collapse</strong><span>Breaks down</span></li>
               </ul>
             </section>
             <section class="theory-row theory-row--agency" aria-labelledby="theory-agency">
               <p class="theory-mobile-bridge">Contribution attribution</p>
-              <div class="theory-row-title"><h3 id="theory-agency">Capability adjudication</h3></div>
+              <div class="theory-row-title"><h3 id="theory-agency">Capability adjudication</h3><span>${layers[2].title}</span></div>
               <div class="theory-capabilities" aria-label="Six levels of assistant capability">
                 ${[
                   ['L1–L2', 'Passive execution'],
