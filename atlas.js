@@ -18,7 +18,103 @@ const atlasSymbols={
   agency:'<path d="M12 61V42h18V27h18V12h19v12H58v15H40v15H22v7Z" fill="currentColor" opacity=".22"/><path d="M12 61h12V49h18V34h18V19h7" stroke="currentColor" stroke-width="6" stroke-linejoin="round"/><circle cx="65" cy="18" r="7" fill="currentColor"/>'
 };
 function atlasSymbol(name){return `<svg viewBox="0 0 80 80" fill="none" aria-hidden="true">${atlasSymbols[name]}</svg>`;}
-function atlasHero(){return `<section class="atlas-hero"><div><h1>The measure of intelligence is the ability to change</h1><div class="atlas-intelligence-definitions"><p><strong>Responsive intelligence</strong> is the ability to respond appropriately within a direction set by the partner, following instructions and adapting to new information.</p><p><strong>Interactive intelligence</strong> additionally involves understanding the evolving situation, initiating justified new directions, and following through coherently across turns.</p><p>InteractNet evaluates this progression across six capability levels.</p></div><a href="#response-interaction" data-research-section="response-interaction">Why interact <span aria-hidden="true">&#8595;</span></a></div><figure><img src="./assets/brand/iceberg.svg" width="405" height="365" alt="An iceberg separates spoken words from a participant’s uncertain understanding, trust, and goals."/></figure></section>`;}
+function atlasHero(){return `<section class="atlas-hero"><div><h1>The measure of intelligence is the ability to change</h1><div class="atlas-intelligence-definitions"><p><strong>Responsive intelligence</strong> is the ability to respond appropriately within a direction set by the partner, following instructions and adapting to new information.</p><p><strong>Interactive intelligence</strong> additionally involves understanding the evolving situation, initiating justified new directions, and following through coherently across turns.</p><p>InteractNet evaluates this progression across six capability levels.</p></div><a href="#response-interaction" data-research-section="response-interaction">Why interact <span aria-hidden="true">&#8595;</span></a></div>${atlasWorldFigure()}</section>`;}
+const atlasWorldLayers = [
+  {name:'mountain', hit:30},
+  {name:'timeline', hit:44},
+  {name:'waves', hit:60},
+  {name:'city', hit:84}
+];
+
+function atlasWorldFigure(){
+  const art = './assets/hero/layered-city.webp';
+  return `<figure class="atlas-world">
+    <div class="atlas-world-stage" role="img" aria-label="A particle descends from a galaxy and illuminates four layers in sequence: mountains, a timeline, waves, and a city.">
+      <img class="atlas-world-art" src="${art}" width="1280" height="854" alt="" fetchpriority="high" decoding="async"/>
+      <svg class="atlas-world-filters" width="0" height="0" aria-hidden="true">
+        <filter id="atlas-world-shade" color-interpolation-filters="sRGB">
+          <feColorMatrix type="saturate" values="0"/>
+          <feComponentTransfer>
+            <feFuncR type="gamma" amplitude="1.105" exponent="1.7"/>
+            <feFuncG type="gamma" amplitude="1.105" exponent="1.7"/>
+            <feFuncB type="gamma" amplitude="1.105" exponent="1.7"/>
+          </feComponentTransfer>
+        </filter>
+      </svg>
+      ${atlasWorldLayers.map(({name,hit}) => `<span aria-hidden="true" class="atlas-world-layer atlas-world-layer--${name}" style="--hit:${hit}%"><span class="atlas-world-shade"></span><span class="atlas-world-pulse"></span></span>`).join('')}
+      <span aria-hidden="true" class="atlas-world-trail"></span>
+      <span aria-hidden="true" class="atlas-world-particle"></span>
+    </div>
+    <button type="button" class="atlas-world-replay" hidden aria-label="Replay layer animation" title="Replay layer animation">
+      <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5v5h5M4.4 10a8 8 0 1 1 .8 6"/></svg>
+    </button>
+  </figure>`;
+}
+
+let atlasWorldObserver;
+function setupAtlasWorld(){
+  const figure = document.querySelector('.atlas-world');
+  if(figure?.dataset.ready) return;
+  atlasWorldObserver?.disconnect();
+  if(!figure) return;
+  figure.dataset.ready = 'true';
+
+  const stage = figure.querySelector('.atlas-world-stage');
+  const art = stage.querySelector('img');
+  const layers = Array.from(stage.querySelectorAll('.atlas-world-layer'));
+  const trail = stage.querySelector('.atlas-world-trail');
+  const particle = stage.querySelector('.atlas-world-particle');
+  const replay = figure.querySelector('button');
+  const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+  const start = 11.3;
+  const end = 93;
+  const duration = 5600;
+  let animations = [];
+
+  function play(){
+    animations.forEach(animation => animation.cancel());
+    animations = [];
+    if(reducedMotion.matches) return;
+
+    animations = layers.flatMap(layer => {
+      const hit = parseFloat(layer.style.getPropertyValue('--hit'));
+      const delay = duration * (hit - start) / (end - start);
+      const reveal = layer.querySelector('.atlas-world-shade').animate([{opacity:1}, {opacity:0}], {
+        duration:420, delay, fill:'both', easing:'ease-out'
+      });
+      const pulse = layer.querySelector('.atlas-world-pulse').animate([
+        {opacity:0}, {opacity:.85, offset:.18}, {opacity:0}
+      ], {duration:680, delay, fill:'both'});
+      return [reveal,pulse];
+    });
+
+    for(const light of [trail,particle]){
+      animations.push(light.animate([
+        {top:`${start}%`, opacity:0},
+        {top:`${start + (end - start) * .05}%`, opacity:1, offset:.05},
+        {top:`${start + (end - start) * .94}%`, opacity:1, offset:.94},
+        {top:`${end}%`, opacity:0}
+      ], {duration}));
+    }
+  }
+
+  if(typeof stage.animate !== 'function') return;
+  replay.hidden = false;
+  replay.addEventListener('click', play);
+  const begin = () => {
+    if(!figure.isConnected) return;
+    if(typeof IntersectionObserver === 'undefined'){play();return;}
+    atlasWorldObserver = new IntersectionObserver(([entry], observer) => {
+      if(entry.intersectionRatio < .35) return;
+      observer.disconnect();
+      play();
+    }, {threshold:.35});
+    atlasWorldObserver.observe(figure);
+  };
+  if(art.complete && art.naturalWidth) begin();
+  else art.addEventListener('load', begin, {once:true});
+}
+
 function atlasKeyFindings(){return coreFindings();}
 
 function atlasMobileScores(){
@@ -26,6 +122,7 @@ function atlasMobileScores(){
  return `<div class="atlas-mobile-switch" role="group" aria-label="Displayed capability levels">${['Overview','L1–L3','L4–L6'].map((label,i)=>`<button type="button" data-atlas-mobile="${i}" aria-pressed="${atlasMobileGroup===i}">${label}</button>`).join('')}</div><div>${publication.models.map(m=>`<div class="atlas-mobile-model"><a href="#model/${encodeURIComponent(m.name)}">${modelIdentity(m.name)}</a><div>${columns.map(i=>{const v=[m.composite,...m.levels][i];return `<button type="button" data-main-level="${i?'L'+i:'composite'}" style="--score-fill:${.06+v*.4}"><span>${names[i]}</span><b>${number(v)}</b></button>`;}).join('')}</div></div>`).join('')}</div>`;
 }
 function syncAtlasLayout(){
+ setupAtlasWorld();
  setupInteractionFigures();
  window.InteractEvalMotion?.unmountAll();window.InteractEvalMotion?.scan();
  const header=document.querySelector('.masthead');

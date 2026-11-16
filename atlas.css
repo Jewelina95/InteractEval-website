@@ -415,3 +415,155 @@ html[data-ui-input=keyboard] select,html[data-ui-input=keyboard] select::picker-
 @media (max-width: 600px) {
   .main-rail-comparisons > .main-rail-direct { min-height: 44px; }
 }
+
+.atlas-hero:has(.atlas-world) {
+  grid-template-columns: minmax(0, 1fr) minmax(350px, 1.1fr);
+  gap: clamp(24px, 4vw, 64px);
+}
+
+.atlas-hero .atlas-world {
+  position: relative;
+  width: 100%;
+  max-width: 720px;
+  justify-self: end;
+}
+
+.atlas-world-stage {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border-radius: 14px;
+  background: #f2f3f2;
+}
+
+.atlas-world-art {
+  filter: saturate(.26) contrast(1.12) brightness(1.018);
+}
+
+.atlas-world-filters,
+.atlas-world-layer,
+.atlas-world-shade,
+.atlas-world-pulse {
+  position: absolute;
+  pointer-events: none;
+}
+
+.atlas-world-layer,
+.atlas-world-shade,
+.atlas-world-pulse {
+  inset: 0;
+}
+
+.atlas-world-shade,
+.atlas-world-pulse {
+  opacity: 0;
+}
+
+.atlas-world-shade {
+  background: url("./assets/hero/layered-city.webp") center / 100% 100% no-repeat;
+  filter: url(#atlas-world-shade);
+  mask-image: linear-gradient(90deg, transparent 4%, #000 13% 87%, transparent 96%);
+}
+
+.atlas-world-layer--mountain {
+  clip-path: inset(19% 0 65% 0);
+}
+
+.atlas-world-layer--timeline {
+  clip-path: inset(35% 0 50% 0);
+}
+
+.atlas-world-layer--waves {
+  /* Follow the front edge of the wave disk above the two tallest towers. */
+  clip-path: polygon(0 50%, 100% 50%, 100% 69%, 50% 67%, 36% 66%, 26% 64.3%, 0 69%);
+}
+
+.atlas-world-layer--city {
+  clip-path: polygon(0 69%, 26% 64.3%, 36% 66%, 50% 67%, 100% 69%, 100% 100%, 0 100%);
+}
+
+.atlas-world-pulse {
+  background: radial-gradient(ellipse 31% 5% at 50% var(--hit), #f7fff3 0%, #a5f4c9 24%, transparent 100%);
+  mix-blend-mode: screen;
+}
+
+.atlas-world-trail,
+.atlas-world-particle {
+  position: absolute;
+  top: 11.3%;
+  left: 50%;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.atlas-world-trail {
+  width: 4px;
+  height: 11%;
+  transform: translate(-50%, -100%);
+  background: linear-gradient(transparent, #66a68e, #f4fff7);
+  box-shadow: 0 4px 11px #b6e6ce6b;
+  border-radius: 999px;
+}
+
+.atlas-world-particle {
+  width: clamp(6px, .9vw, 10px);
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: #fffefa;
+  box-shadow: 0 0 4px 2px #d6ffe8, 0 0 11px 6px #63d8a58f, 0 0 23px 8px #64ab895c;
+}
+
+.atlas-world-replay {
+  position: absolute;
+  z-index: 1;
+  inset: auto 10px 10px auto;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 1px solid #bcc7c0;
+  border-radius: 50%;
+  color: #254536;
+  background: #f9fbf9ee;
+  cursor: pointer;
+}
+
+.atlas-world-replay:hover {
+  background: #e9f0eb;
+}
+
+.atlas-world-replay svg {
+  width: 18px;
+  height: 18px;
+}
+
+.atlas-world-replay[hidden] {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  .atlas-hero:has(.atlas-world) {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 650px) {
+  .atlas-hero:has(.atlas-world) {
+    grid-template-columns: 1fr;
+  }
+
+  .atlas-hero .atlas-world {
+    justify-self: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .atlas-world-layer,
+  .atlas-world-trail,
+  .atlas-world-particle,
+  .atlas-world-replay {
+    display: none;
+  }
+}
