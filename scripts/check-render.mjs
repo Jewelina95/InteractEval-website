@@ -36,7 +36,8 @@ assert.doesNotMatch(home, /class="method-steps?"/);
 assert.match(home, /<figure id="evaluation-diagram" class="method-diagram"/);
 assert.ok(home.indexOf('id="system-overview-heading"') < home.indexOf('id="evaluation-diagram"'));
 assert.match(home, /href="[^"]*interactnet-pipeline-v168\.svg/);
-assert.match(home, /src="[^"]*interactnet-world-architecture-v168\.svg/);
+assert.match(home, /src="[^"]*interactnet-pipeline-v168\.svg[^"]*" width="2265" height="925"/);
+assert.doesNotMatch(home, /interactnet-world-architecture-v168/);
 assert.doesNotMatch(home, /interactnet-pipeline-v168-black-gold/);
 assert.match(home, /<div id="comparisons" data-initial-topic="main-results"/);
 assert.doesNotMatch(home, /result-carousel|result-library/);
@@ -63,4 +64,4 @@ for (const [hash, group, measure, topic] of [
   assert.equal(vm.runInContext('mainComparisonGroup', context), group);
   assert.equal(vm.runInContext('mainComparisonMeasure', context), measure);
 }
-console.log('Main renders both videos and the chat dialogue, six timeline frames, definitions, findings, the focused architecture, and its transition to results. Direct comparison links still open the selected measure.');
+console.log('Main renders both videos and the chat dialogue, six timeline frames, definitions, findings, the full evaluation diagram, and its transition to results. Direct comparison links still open the selected measure.');

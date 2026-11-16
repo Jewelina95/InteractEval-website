@@ -94,7 +94,7 @@
     height: clamp(220px, 48svh, 420px);
   }
   .method-sequence.is-scroll-animated .method-layout {
-    --diagram-max: min(100%, max(76%, calc((100svh - var(--header-height, 0px) - 98px) * 1.63)));
+    --diagram-max: min(100%, max(76%, calc((100svh - var(--header-height, 0px) - 98px) * 2.448)));
     position: sticky;
     top: var(--header-height, 0px);
     display: grid;
@@ -106,7 +106,7 @@
     content: "";
     grid-area: 1 / 1;
     width: var(--diagram-max);
-    aspect-ratio: 1350 / 825;
+    aspect-ratio: 2265 / 925;
     margin-top: calc(36px + clamp(12px, 1.5vw, 20px));
     pointer-events: none;
   }
@@ -177,5 +177,5 @@
   }
 }
 @media (max-width: 800px) {
-  .method-diagram .pipeline-picture img { width: 820px; }
+  .method-diagram .pipeline-picture img { width: 100%; }
 }

@@ -1,7 +1,6 @@
 "use strict";
 
 const systemImage = './assets/research/pipeline/interactnet-pipeline-v168.svg?v=light-design';
-const architectureImage = './assets/research/pipeline/interactnet-world-architecture-v168.svg';
 
 function interactionFigure(kind) {
   if (kind === 'motivation') return window.whyInteractionFigure();
@@ -18,9 +17,9 @@ function interactionFigure(kind) {
             <a class="method-full-image" href="${systemImage}" target="_blank" rel="noopener"
               aria-label="Open the full evaluation diagram in a new tab">Full diagram <span aria-hidden="true">↗</span></a>
           </figcaption>
-          <div class="interaction-picture pipeline-picture" tabindex="0" role="region" aria-label="Evaluation pipeline; scroll horizontally on smaller screens">
-            <img src="${architectureImage}" width="1350" height="825" loading="lazy" decoding="async"
-              alt="Interaction-world architecture showing scene context, participant-state inference, the event chain, and the previous world carried across turns."/>
+          <div class="interaction-picture pipeline-picture" tabindex="0" role="region" aria-label="Full evaluation pipeline">
+            <img src="${systemImage}" width="2265" height="925" loading="lazy" decoding="async"
+              alt="Full evaluation pipeline, from dialogue and background on the left, through interaction-world reconstruction in the center, to capability adjudication and terminal decisions on the right."/>
           </div>
         </figure>
       </div>
