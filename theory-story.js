@@ -80,7 +80,7 @@ window.interactNetTheory = (() => {
         left: `${mark.right - layout.left}px`,
         top: `${top - layout.top}px`,
         width: `${Math.max(0, row.left - mark.right)}px`,
-        height: `${Math.max(1, Math.abs(from - to))}px`
+        height: `${Math.abs(from - to) + 1}px`
       });
       leader.style.setProperty('--start-line', `${from - top}px`);
       leader.style.setProperty('--end-line', `${to - top}px`);
