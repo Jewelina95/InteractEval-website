@@ -172,13 +172,6 @@
   .theory-sparks i:nth-child(4) { --spark-color: #f3b971; --spark-shift: -9.3s; }
 }
 
-.theory-visual figcaption {
-  margin-top: 7px;
-  color: var(--ink);
-  font: 700 clamp(17px, 1.8vw, 25px)/1.25 var(--sans);
-  text-wrap: balance;
-}
-
 .theory-arrow {
   grid-column: 2;
   position: relative;
@@ -240,24 +233,23 @@
 }
 
 .theory-row {
-  --panel-gold: #f2cf86;
-  --panel-text: #f9f1e2;
-  --panel-muted: #d5c6ae;
-  --panel-line: #685032;
+  --panel-gold: #735322;
+  --panel-text: #232322;
+  --panel-muted: #56524e;
+  --panel-line: #dfdbd4;
   --panel-unroll: 1.38s;
   grid-column: 3;
   align-self: center;
   position: relative;
   isolation: isolate;
   min-width: 0;
-  border: 1px solid #88663b;
+  border: 1px solid #dedbd5;
   border-radius: 15px;
   padding: clamp(15px, 1.85vw, 25px);
   background:
-    radial-gradient(ellipse at 3% 0, #5a3b205e, transparent 60%),
-    linear-gradient(145deg, #1d1813, #0b0a09 76%);
+    radial-gradient(ellipse at 2% 0, #f5efe473, transparent 63%), #fff;
   color: var(--panel-text);
-  box-shadow: 0 0 0 1px #ffe0a232 inset;
+  box-shadow: 0 12px 28px -22px #51413255;
 }
 
 .theory-row::before {
@@ -265,8 +257,8 @@
   position: absolute;
   inset: 0 10% auto;
   height: 1px;
-  background: linear-gradient(90deg, transparent 38%, #b67530 46%, #fff3bd 50%, #c18748 54%, transparent 62%) 100% 0 / 260% 100%;
-  filter: drop-shadow(0 0 4px #ffbf5b);
+  background: linear-gradient(90deg, transparent 38%, #d8a456 46%, #fbe3ac 50%, #bd8b4b 54%, transparent 62%) 100% 0 / 260% 100%;
+  filter: drop-shadow(0 0 3px #f3bf6199);
   pointer-events: none;
 }
 
@@ -276,27 +268,11 @@
 
 .theory-mobile-bridge { display: none; }
 
-.theory-row-title {
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 3px 14px;
-  align-items: baseline;
-  margin-bottom: 13px;
-}
-
 .theory-row-title h3 {
-  margin: 0;
+  margin: 0 0 13px;
   color: var(--panel-text);
   font: 700 clamp(20px, 2.3vw, 31px)/1.13 var(--sans);
   overflow-wrap: anywhere;
-}
-
-.theory-row-title > span {
-  display: block;
-  margin-block: 2px 4px;
-  color: var(--panel-gold);
-  font: 650 clamp(13px, 1.2vw, 15px)/1.4 var(--sans);
 }
 
 .theory-transitions {
@@ -313,7 +289,7 @@
   gap: 2px;
   padding: 7px 9px;
   border-inline-start: 2px solid var(--transition-color);
-  background: #221b13;
+  background: #f8f7f4;
   color: var(--panel-muted);
   font: 500 14px/1.28 var(--sans);
 }
@@ -352,18 +328,19 @@
   padding: 11px 9px;
   border: 1px solid var(--panel-line);
   border-radius: 7px;
-  background: #211b15;
+  background: #fbfaf8;
   color: var(--panel-text);
   font: 600 clamp(14px, 1.27vw, 17px)/1.26 var(--sans);
   overflow-wrap: anywhere;
 }
 
 .theory-node > span { color: var(--panel-muted); font-size: .91em; }
-.theory-node--acts, .theory-node--latent { background: #24201c; }
-.theory-node--scene { background: #2b2216; }
+.theory-node--acts { background: #eef4fc; border-color: #ccd9eb; color: #253d58; }
+.theory-node--scene { background: #f9f3e6; border-color: #e7d8b6; color: #5c451f; }
+.theory-node--latent { background: #f4eff8; border-color: #ded1eb; color: #4f3b62; }
 .theory-state-output .theory-node--outcome, .theory-capabilities .theory-node:last-child {
-  border-color: #ac7e42;
-  background: linear-gradient(135deg, #49331b, #21180e);
+  border-color: #e0ccaa;
+  background: #fbf4e7;
   color: var(--panel-gold);
 }
 .theory-node--future { border-style: dashed; }
@@ -415,8 +392,8 @@
     inset-block: -1px;
     width: clamp(9px, 4%, 20px);
     border-radius: 45%;
-    background: linear-gradient(90deg, transparent, #bb793747, #edb967bd 82%, #fff5cf);
-    filter: drop-shadow(0 0 7px #ffe1a47d);
+    background: linear-gradient(90deg, transparent, #e5bc753d, #d4a45eb8 82%, #fff2ce);
+    filter: drop-shadow(0 0 5px #e5bd7480);
     pointer-events: none;
     animation: theory-roll-edge var(--panel-unroll) calc(4.78s + var(--beat)) cubic-bezier(.25,.65,.25,1) both;
   }
@@ -486,8 +463,6 @@
   .theory-arrow span, .theory-arrow::before, .theory-arrow::after { display: none; }
   .theory-mobile-bridge { display: block; margin: 0 0 6px; color: var(--panel-gold); font: 650 13px/1.25 var(--sans); }
   .theory-art { width: 100%; }
-  .theory-visual figcaption { margin-top: 3px; font-size: clamp(15px, 3.5vw, 20px); }
-  .theory-row-title { display: block; }
   .theory-row-title h3 { font-size: clamp(17px, 4.1vw, 23px); }
   .theory-transitions { grid-template-columns: 1fr; }
   .theory-state-flow, .theory-timeline, .theory-capabilities { grid-template-columns: 1fr; gap: 6px; }

@@ -21,23 +21,22 @@ window.interactNetTheory = (() => {
   function render(){
     return `<section class="theory-story" aria-labelledby="theory-story-title">
       <div class="theory-entry">
-        <a href="#theoretical-framework" aria-label="Continue to the three-layer framework"><span aria-hidden="true">↓</span></a>
+        <a href="#theoretical-framework" aria-label="Continue to the three theories of interaction"><span aria-hidden="true">↓</span></a>
       </div>
       <div class="theory-curtain" aria-hidden="true"></div>
       <div class="theory-board" id="theoretical-framework">
         <header class="theory-heading">
-          <h2 id="theory-story-title">The three-layer framework</h2>
+          <h2 id="theory-story-title">Three theories of interaction</h2>
           <button class="theory-replay" type="button" hidden>Replay animation</button>
         </header>
         <div class="theory-layout">
           <img class="theory-stack" src="${image}" width="1280" height="854" alt="" decoding="async" style="clip-path:${stackClip}"/>
           ${layers.map(({name, art, title, bridge, alt, clip}) => `
-            <figure class="theory-visual theory-visual--${name}">
+            <figure class="theory-visual theory-visual--${name}" aria-label="${title}">
               <div class="theory-art">
                 <img src="./assets/theory-story/${art}.webp" width="880" height="480" alt="${alt}" decoding="async"/>
                 <span class="theory-sparks" aria-hidden="true">${'<i></i>'.repeat(4)}</span>
               </div>
-              <figcaption>${title}</figcaption>
             </figure>
             <div class="theory-arrow theory-arrow--${name}"><span>${bridge}</span><i aria-hidden="true"></i></div>
             <div class="theory-morph theory-morph--${name}" aria-hidden="true" style="--world-image:url('${image}')${clip ? `;clip-path:${clip}` : ''}"></div>
@@ -45,7 +44,7 @@ window.interactNetTheory = (() => {
           <div class="theory-diagrams">
             <section class="theory-row theory-row--state" aria-labelledby="theory-iceberg">
               <p class="theory-mobile-bridge">State understanding</p>
-              <div class="theory-row-title"><h3 id="theory-iceberg">Interaction-world reconstruction</h3><span>${layers[0].title}</span></div>
+              <div class="theory-row-title"><h3 id="theory-iceberg">Interaction-world reconstruction</h3></div>
               <div class="theory-state-flow">
                 <div class="theory-node theory-node--acts"><span>Dialogue transcript</span><strong>Public acts <var>O<sub>t</sub></var></strong></div>
                 <div class="theory-state-inputs">
@@ -69,7 +68,7 @@ window.interactNetTheory = (() => {
             </section>
             <section class="theory-row theory-row--time" aria-labelledby="theory-movie">
               <p class="theory-mobile-bridge">Process understanding</p>
-              <div class="theory-row-title"><h3 id="theory-movie">Trajectory understanding</h3><span>${layers[1].title}</span></div>
+              <div class="theory-row-title"><h3 id="theory-movie">Trajectory understanding</h3></div>
               <div class="theory-timeline">
                 <div class="theory-node"><strong>Past</strong><span>Event chain <var>E<sub>t</sub></var></span></div>
                 <div class="theory-node"><strong>Present</strong><span>Current turn</span></div>
@@ -84,7 +83,7 @@ window.interactNetTheory = (() => {
             </section>
             <section class="theory-row theory-row--agency" aria-labelledby="theory-agency">
               <p class="theory-mobile-bridge">Contribution attribution</p>
-              <div class="theory-row-title"><h3 id="theory-agency">Capability adjudication</h3><span>${layers[2].title}</span></div>
+              <div class="theory-row-title"><h3 id="theory-agency">Capability adjudication</h3></div>
               <div class="theory-capabilities" aria-label="Six levels of assistant capability">
                 ${[
                   ['L1–L2', 'Passive execution'],
