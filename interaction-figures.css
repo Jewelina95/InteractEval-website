@@ -146,10 +146,19 @@
 }
 
 .method-why {
+  position: relative;
+  isolation: isolate;
   overflow: hidden;
-  background: linear-gradient(180deg, #fff 0%, #f0ede6 48%, #8e8270 72%, #090807 100%);
+  background: linear-gradient(180deg, #fff 0%, #f0ede6 55%, #8e8270 77%, #090807 100%);
   color: #222426;
-  padding: clamp(36px, 7vw, 92px) clamp(20px, 5vw, 72px) clamp(124px, 15vw, 220px);
+  padding: clamp(78px, 10vw, 140px) clamp(20px, 5vw, 72px) clamp(124px, 14vw, 196px);
+}
+.method-why::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background: radial-gradient(ellipse at 24% 43%, #e7cfa24a, transparent 57%);
 }
 .method-why-content {
   max-width: 1260px;
@@ -163,17 +172,21 @@
   font: 450 clamp(16px, 1.6vw, 21px)/1.5 var(--sans);
 }
 @media (prefers-reduced-motion: no-preference) {
-  @supports (animation-timeline: view()) {
-    .method-why-content {
-      animation: method-why-enter ease-out both;
-      animation-timeline: view(block 0% 16%);
-      animation-range: entry 5% entry 100%;
-    }
-    @keyframes method-why-enter {
-      from { opacity: 0; translate: 0 24px; }
-      to { opacity: 1; translate: 0 0; }
-    }
+  .method-why.has-reveal::before {
+    transition: opacity 1.2s ease-out, transform 1.2s ease-out;
   }
+  .method-why.has-reveal :is(h2, p) {
+    transition: opacity .65s ease-out, transform .75s cubic-bezier(.2,.75,.24,1);
+  }
+  .method-why.has-reveal:not(.is-revealed)::before {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  .method-why.has-reveal:not(.is-revealed) :is(h2, p) {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  .method-why.has-reveal.is-revealed p { transition-delay: 140ms; }
 }
 @media (max-width: 800px) {
   .method-diagram .pipeline-picture img { width: 100%; }

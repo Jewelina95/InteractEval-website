@@ -27,9 +27,28 @@ function interactionFigure(kind) {
   </section>`;
 }
 
+let whyTransitionObserver;
+
+function setupWhyTransition() {
+  whyTransitionObserver?.disconnect();
+  const bridge = document.querySelector('.method-why');
+  const content = bridge?.querySelector('.method-why-content');
+  if (!content || !('IntersectionObserver' in window)) return;
+
+  bridge.classList.add('has-reveal');
+  whyTransitionObserver = new IntersectionObserver(([entry]) => {
+    if (entry.isIntersecting) bridge.classList.add('is-revealed');
+    else if (entry.rootBounds && entry.boundingClientRect.top >= entry.rootBounds.bottom) {
+      bridge.classList.remove('is-revealed');
+    }
+  }, { rootMargin: '0px 0px -18% 0px', threshold: .15 });
+  whyTransitionObserver.observe(content);
+}
+
 let stopDiagramScroll;
 function setupInteractionFigures() {
   window.setupTheoryProcessFigures?.();
+  setupWhyTransition();
   stopDiagramScroll?.();
   stopDiagramScroll = undefined;
   const sequence = document.querySelector('.method-sequence:not(.is-static)');
