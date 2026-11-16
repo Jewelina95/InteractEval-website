@@ -36,8 +36,6 @@ function cascadeDemo(){let ceiling=1;const scores=cascadeValues.map(raw=>{const 
 function scenarioPanel(){const f=facetContent[scenarioFacet];return `<div class="scenario-reading"><h3>${f.question}</h3><div>${f.items.map(([label,copy])=>`<article><span>${label}</span><p>${copy}</p></article>`).join('')}</div></div>`;}
 function researchIntroduction(){return researchFeaturePage();}
 
-function renderPageNavigation(){renderEditorialNavigation();}
-
 document.addEventListener('click',event=>{
   const principle=event.target.closest('[data-theory-principle]');if(principle){theoryPrinciple=principle.dataset.theoryPrinciple;$('#principle-panel').innerHTML=principlePanel();document.querySelectorAll('[data-theory-principle]').forEach(b=>b.classList.toggle('active',b.dataset.theoryPrinciple===theoryPrinciple));}
   const stage=event.target.closest('[data-instrument-stage]');if(stage){instrumentStage=Number(stage.dataset.instrumentStage);$('#instrument-panel').innerHTML=instrumentPanel();document.querySelectorAll('[data-instrument-stage]').forEach(b=>b.classList.toggle('active',Number(b.dataset.instrumentStage)===instrumentStage));}

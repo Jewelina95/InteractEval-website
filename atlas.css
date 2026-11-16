@@ -21,7 +21,7 @@ body{background:#fff;font-family:var(--sans);color:#193b30}
 .masthead,body.nav-on-hero .masthead{position:sticky!important;top:0;z-index:80;--nav-ink:#193b30;--nav-muted:#52645b;--nav-surface:#fff;--nav-hover:#edf2ec;--nav-line:#d5ded5;background:#fff;padding:17px max(24px,calc((100% - 1440px)/2));box-shadow:0 1px 0 #193b3005}
 .masthead .wordmark,body.nav-on-hero .wordmark{display:flex;gap:9px;padding:0;border-radius:0;background:none;color:#193b30;font:600 24px/1 var(--sans);letter-spacing:-.9px}
 .masthead .wordmark > img{width:35px;height:35px;flex:none}
-.masthead .primary-nav>a,.masthead .restored-nav-item>a{font-family:var(--sans)!important;font-size:13px!important}
+.masthead .header-tools{margin-left:auto}
 .masthead .source-link{font-family:var(--sans)!important;font-size:13px!important}
 .masthead .restored-nav-menu{top:calc(100% + 18px);background:#fff}
 .paper-footer{font-size:13px;color:#52645b}

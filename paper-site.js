@@ -14,7 +14,6 @@ const format=(v,m)=>m.decimals!==undefined?Number(v).toFixed(m.decimals):m.signe
 function chart(id,limit=10){const m=metricOf(id);const rows=[...publication.models].sort((a,b)=>m.get(b)-m.get(a)).slice(0,limit);const max=Math.max(...rows.map(r=>Math.abs(m.get(r))),.01);return `<div class="paper-bars" aria-label="${safe(m.label)}">${rows.map(row=>`<a class="paper-bar-row" href="#model/${encodeURIComponent(row.name)}"><span><img src="${assets(row.name)}" alt=""/>${safe(row.name)}</span><i class="${m.signed?'signed-track':''}"><em style="width:${Math.abs(m.get(row))/max*(m.signed?50:100)}%;${m.signed?'left:'+(m.get(row)<0?50-Math.abs(m.get(row))/max*50:50)+'% ;':''}background:${color(row.name)}"></em></i><b>${format(m.get(row),m)}</b></a>`).join('')}</div>`;}
 function metricCard(id,limit=5){const m=metricOf(id);return `<article class="paper-card"><div class="card-heading"><h3><i></i><a href="#models?metric=${id}">${safe(m.label)} ↗</a></h3></div>${measureExplanation(id,true)}${chart(id,limit)}</article>`;}
 function scopeNote(){return `<div class="publication-scope"><span><b>27</b> scenario cells</span><span><b>3</b> independent passes</span><span><b>2,430</b> episodes per base model</span><span>Standard user: <b>claude-opus-5</b></span></div>`;}
-function masthead(){richMasthead();}
 function home(){return resultsHome();}
 function modelTable(){const m=metricOf(metric);const rows=[...publication.models].sort((a,b)=>(m.get(b)-m.get(a))*(sortDown?1:-1));return `<div class="paper-table-wrap"><table class="paper-table"><thead><tr><th>Assessed model</th><th><button id="sort-paper">${safe(m.label)} ${sortDown?'↓':'↑'}</button></th><th>Composite</th><th>Passive</th><th>Responsive</th><th>Active</th><th>Episodes</th></tr></thead><tbody>${rows.map(r=>`<tr><th><a href="#model/${r.name}"><img src="${assets(r.name)}" alt=""/>${r.name}</a></th><td class="score">${format(m.get(r),m)}</td><td>${number(r.composite)}</td>${r.stages.map(v=>`<td>${number(v)}</td>`).join('')}<td>2,430</td></tr>`).join('')}</tbody></table></div>`;}
 function legacyLeaderboard(){return curatedLeaderboard();}
@@ -62,7 +61,6 @@ function render(){
  if(route==='architecture')route='cases';
  if(params.has('architecture')&&['All','MetaMind','Cognizer','Claude Code'].includes(params.get('architecture')))architecture=params.get('architecture');
  if(params.has('purpose'))casePurpose=params.get('purpose');
- masthead();
  document.title=({home:'Main',findings:'Findings',research:'Research',cases:'Showcase',models:'Measures',agents:'Agents',leaderboards:'Leaderboards'}[route]|| (route.startsWith('model/')?decodeURIComponent(route.slice(6)):route))+' - InteractNet';
  let content;
  if(route.startsWith('model/'))content=modelProfile(decodeURIComponent(route.slice(6)));

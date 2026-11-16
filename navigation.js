@@ -24,49 +24,6 @@ const navigationIcons={
 };
 function navigationIcon(name){return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${navigationIcons[name]||navigationIcons.overview}</svg>`;}
 
-function renderEditorialNavigation(){
-  const base='./index.html#',groups={
-    models:{label:'Models',title:'Model evaluations',intro:'Explore the measures, with a guide to what each one tells you.',href:base+'models',items:[
-      ['All evaluations','Every measure in one workspace.','models','overview'],
-      ['Capabilities','Six levels, from goals to sustained initiative.','models?category=Capabilities','capability'],
-      ['Scenario conditions','Purpose, information, and world setting.','models?category=Scenarios','scenario'],
-      ['Behavior','How systems handle missing information.','models?category=Behavior','behavior'],
-      ['Outcomes','Completion and interest exhaustion.','models?category=Outcomes','outcome'],
-      ['Conversation length','Typical duration and longer runs.','models?category=Duration','duration'],
-      ['Partners & roles','Pairings, self-play, and the user role.','models?category=Partners','partner'],
-      ['Repeatability','Independent passes and judge changes.','models?category=Reliability','repeat']
-    ]},
-    agents:{label:'Agents',title:'Agent architectures',intro:'Compare three architectures across the same ten base models.',href:base+'agents',items:[
-      ['Compare architectures','Explore all configurations side by side.','agents','agent'],
-      ...['MetaMind','Cognizer','Claude Code'].map(name=>[name,({MetaMind:'Explore MetaMind across ten base models.',Cognizer:'Explore Cognizer across ten base models.','Claude Code':'Explore Claude Code across ten base models.'})[name],'agents?architecture='+encodeURIComponent(name),name])
-    ]},
-    multimodal:{label:'Image, Speech, Video',title:'Multimodal evaluations',intro:'Multimodal evaluation is in preparation.',href:base+'multimodal',items:[['Multimodal evaluations','Image, speech, and video · Pending','multimodal','media']]},
-    showcase:{label:'Showcase',title:'Conversation library',intro:'Read the dialogue, then inspect the evidence at each turn.',href:'./showcase.html',items:[
-      ['All conversations','Explore the complete example library.','./showcase.html','conversation'],
-      ['Task-oriented','Follow a concrete objective to its ending.','./showcase.html#cases?purpose=functional','outcome'],
-      ['Open-ended','See how a conversation sustains its value.','./showcase.html#cases?purpose=nonfunctional','partner']
-    ]},
-    leaderboards:{label:'Leaderboards',title:'Model rankings',intro:'Start with the ranking. Explore the capabilities behind it.',href:base+'leaderboards',items:[
-      ['Overall ranking','Compare scores on the same scale.','leaderboards','overview'],
-      ['Interaction stages','Passive, responsive, and proactive promotion.','leaderboards?metric=stage2','capability'],
-      ['Scenario performance','Compare task-oriented and open-ended settings.','leaderboards?metric=nonfunctional','scenario'],
-      ['Partner-role capability','Compare systems playing the user role.','leaderboards?metric=user-composite','partner']
-    ]},
-    research:{label:'Research',title:'Research',intro:'The ideas, components, and rules behind InteractNet.',href:'./research.html',items:[
-      ['Three theoretical ideas','State, trajectory, and initiative.','./research.html#theory','theory'],
-      ['Instrument architecture','Four stages with distinct responsibilities.','./research.html#architecture','agent'],
-      ['World components','Scene, latent state, and event chain.','./research.html#components','scenario'],
-      ['Time-indexed records','Follow real states and paths across turns.','./research.html#temporal-records','duration'],
-      ['Key findings','What the interaction record reveals.','./research.html#discoveries','overview'],
-      ['Scenario design','Three questions define the situation.','./research.html#scenario-space','capability'],
-      ['Capability rubric','Six levels and their dependency rules.','./research.html#rubric','rubric']
-    ]}
-  };
-  const item=(id,g)=>`<div class="restored-nav-item"><a href="${g.href}" ${route===id||(id==='showcase'&&route==='cases')?'aria-current="page"':''}>${g.label}</a><button data-nav-menu="${id}" aria-label="Open ${g.label} menu" aria-expanded="false" aria-controls="nav-${id}"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="m3 4.5 3 3 3-3"/></svg></button><div class="restored-nav-menu" id="nav-${id}" hidden><header><span>Explore ${g.label}</span><h2>${g.title}</h2><p>${g.intro}</p></header><div class="nav-card-grid">${g.items.map(([title,copy,url,icon])=>`<a class="nav-destination" href="${url.startsWith('./')?url:base+url}"><i>${agentIdentity[icon]?agentIcon(icon):navigationIcon(icon)}</i><span><strong>${title}</strong><small>${copy}</small></span><b aria-hidden="true">&#8599;</b></a>`).join('')}</div></div></div>`;
-  $('.primary-nav').innerHTML=`<a class="results-nav-link" href="./index.html" ${route==='home'?'aria-current="page"':''}>Main</a>`+`<a class="results-nav-link" href="./index.html#key-findings">Findings</a>`+Object.entries(groups).map(([id,g])=>item(id,g)).join('');
-  $('.wordmark').href='./index.html';
-}
-
 let headerHeroObserver;
 function syncEditorialHeader(){
   if(headerHeroObserver)headerHeroObserver.disconnect();
@@ -78,25 +35,3 @@ function syncEditorialHeader(){
   headerHeroObserver=new IntersectionObserver(update,{rootMargin:`-${height}px 0px 0px 0px`,threshold:0});
   headerHeroObserver.observe(hero);
 }
-
-document.addEventListener('keydown',event=>{
-  const trigger=event.target.closest('[data-nav-menu]');
-  if(trigger&&event.key==='ArrowDown'){
-    event.preventDefault();
-    if(trigger.getAttribute('aria-expanded')!=='true')trigger.click();
-    document.getElementById(trigger.getAttribute('aria-controls'))?.querySelector('a')?.focus();
-  }
-  const panel=event.target.closest('.restored-nav-menu');
-  if(!panel)return;
-  if(event.key==='Escape')document.querySelector(`[aria-controls="${panel.id}"]`)?.focus();
-  if(event.key==='ArrowDown'||event.key==='ArrowUp'){
-    event.preventDefault();
-    const links=[...panel.querySelectorAll('a')],index=links.indexOf(event.target.closest('a'));
-    links[(index+(event.key==='ArrowDown'?1:-1)+links.length)%links.length]?.focus();
-  }
-});
-document.addEventListener('focusin',event=>{
-  if(event.target.closest('.restored-nav-item'))return;
-  document.querySelectorAll('.restored-nav-menu').forEach(panel=>panel.hidden=true);
-  document.querySelectorAll('[data-nav-menu]').forEach(button=>button.setAttribute('aria-expanded','false'));
-});
