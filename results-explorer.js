@@ -85,7 +85,11 @@ function resultsHomeV2(){
     if(requestedGroup){mainComparisonGroup=requestedGroup.id;mainComparisonMeasure=measure;if(measure==='information')mainInformationView='conditions';}
   }
   const showResults = anchor === 'comparisons' || Object.hasOwn(aliases, anchor);
-  return `<div class="research-restored results-page">${atlasHero()}<div class="article-shell"><article class="article-body">${interactionFigure('motivation')}${window.interactNetTheory?.render() ?? ""}${coreFindings()}${interactionFigure('system')}${resultResources(showResults)}</article></div></div>`;
+  return `<div class="research-restored results-page">${atlasHero()}<article>
+    <div class="article-shell"><div class="article-body">${interactionFigure('motivation')}${window.interactNetTheory?.render() ?? ""}</div></div>
+    ${coreFindings(true)}
+    <div class="findings-continuation"><div class="article-shell"><div class="article-body">${interactionFigure('system')}${resultResources(showResults)}</div></div></div>
+  </article></div>`;
 }
 function comparisonDataTable(ids,labels=ids.map(id=>metricOf(id).label),rows=publication.models,headerModels=[]){
   return `<div class="comparison-table-wrap" role="region" aria-label="Published comparison values" tabindex="0"><table class="comparison-data-table"><thead><tr><th scope="col">Model</th>${labels.map((label,index)=>`<th scope="col" data-comparison-metric="${ids[index]}">${headerModels[index]?modelIdentity(headerModels[index]):safe(label)}</th>`).join('')}</tr></thead><tbody>${rows.map(model=>`<tr data-comparison-model="${model.name}"><th scope="row"><a href="#model/${encodeURIComponent(model.name)}">${modelIdentity(model.name)}</a></th>${ids.map(id=>`<td data-comparison-metric="${id}">${publishedFormat(metricOf(id).get(model),metricOf(id))}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;

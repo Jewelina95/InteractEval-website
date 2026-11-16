@@ -73,6 +73,7 @@ function researchArticle(){return researchIntroduction();}
 function afterExplorerRender(){
   syncAtlasLayout();
   window.interactNetTheory?.setup();
+  window.interactNetFindingsStory?.setup();
   syncEditorialHeader();
   $('#app').classList.toggle('journal-app',route==='research'||route==='home');
   setupIntroductoryPlayer();

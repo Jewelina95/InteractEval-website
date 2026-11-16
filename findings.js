@@ -50,7 +50,16 @@ function findingColumnsMarkup(rows=publishedFindings()){
  const groups=findingRowsByCategory(rows);let offset=0;
  return `<div class="finding-rows">${groups.map(g=>{const markup=findingCategoryRow(g,offset);offset+=g.findings.length;return markup;}).join('')}</div>`;
 }
-function coreFindings(){
+function coreFindings(animated=false){
+ if(animated)return `<section id="key-findings" class="findings-story" aria-labelledby="findings-story-title">
+   <div class="findings-story-stage">
+     <div class="findings-story-panel" aria-hidden="true"></div>
+     <div class="findings-story-content">
+       <h2 id="findings-story-title">Key Findings</h2>
+       ${findingColumnsMarkup()}
+     </div>
+   </div>
+ </section>`;
  return `<section id="key-findings" class="article-section atlas-key-findings homepage-findings"><div class="findings-section-heading"><h2>Key Findings</h2></div>${findingColumnsMarkup()}</section>`;
 }
 
