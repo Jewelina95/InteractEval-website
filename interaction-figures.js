@@ -1,6 +1,6 @@
 "use strict";
 
-const systemImage = './assets/research/pipeline/interactnet-pipeline-v168.svg?v=larger-labels';
+const systemImage = './assets/research/pipeline/interactnet-pipeline-v168.svg?v=light-design';
 function interactionFigure(kind) {
   if (kind === 'motivation') return window.whyInteractionFigure();
   const directToDiagram = location.hash === '#evaluation-diagram';
@@ -26,8 +26,52 @@ function interactionFigure(kind) {
   </section>`;
 }
 
+let stopDiagramScroll;
 function setupInteractionFigures() {
   window.setupTheoryProcessFigures?.();
+  stopDiagramScroll?.();
+  stopDiagramScroll = undefined;
+  const sequence = document.querySelector('.method-sequence:not(.is-static)');
+  if (!sequence) return;
+
+  const layout = sequence.querySelector('.method-layout');
+  const motion = matchMedia('(min-width: 801px) and (min-height: 480px) and (prefers-reduced-motion: no-preference)');
+  const events = new AbortController();
+  let frame = 0;
+  let previousProgress;
+
+  function update() {
+    frame = 0;
+    if (!motion.matches) return;
+    const stickyTop = parseFloat(getComputedStyle(layout).top) || 0;
+    const travel = sequence.offsetHeight - layout.offsetHeight;
+    const progress = travel > 0
+      ? Math.min(1, Math.max(0, (stickyTop - sequence.getBoundingClientRect().top) / travel))
+      : 1;
+    if (progress !== previousProgress) {
+      sequence.style.setProperty('--method-progress', progress);
+      previousProgress = progress;
+    }
+  }
+
+  function schedule() {
+    if (motion.matches && !frame) frame = requestAnimationFrame(update);
+  }
+
+  function syncMotion() {
+    sequence.classList.toggle('is-scroll-animated', motion.matches);
+    schedule();
+  }
+
+  const {signal} = events;
+  window.addEventListener('scroll', schedule, {passive: true, signal});
+  window.addEventListener('resize', schedule, {signal});
+  motion.addEventListener('change', syncMotion, {signal});
+  syncMotion();
+  stopDiagramScroll = () => {
+    events.abort();
+    cancelAnimationFrame(frame);
+  };
 }
 
 if (document.body.dataset.interactionOnly === 'system') {
