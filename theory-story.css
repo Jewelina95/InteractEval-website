@@ -314,7 +314,7 @@
 .theory-transitions li:nth-child(3) { --transition-color: #77598d; }
 .theory-transitions li:nth-child(4) { --transition-color: #786377; }
 
-.theory-symbols {
+.theory-details .theory-symbols {
   display: grid;
   grid-template-columns: max-content minmax(0, 1fr);
   column-gap: 10px;
@@ -325,8 +325,8 @@
   color: var(--panel-muted);
   font: 500 13px/1.42 var(--sans);
 }
-.theory-symbols dt { color: var(--panel-gold); font-weight: 700; }
-.theory-symbols dd { margin: 0; }
+.theory-details .theory-symbols dt { margin: 0; color: var(--panel-gold); }
+.theory-details .theory-symbols dd { margin: 0; }
 
 .theory-details { margin-top: 14px; font: 500 15px/1.45 var(--sans); }
 .theory-details summary { width: fit-content; color: var(--panel-gold); font-weight: 650; cursor: pointer; }

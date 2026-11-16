@@ -13,8 +13,8 @@ window.interactNetTheory = (() => {
   const stackClip = clipBand(stackTop, 0, 1);
   const waveClip = clipBand(waveTop, waveTop, waveBottom - waveTop);
   const layers = [
-    {name:'state', art:'iceberg', band:[stackTop, .349], width:.43, title:'Data Iceberg Theory', bridge:'State understanding', alt:'Cutaway of a glacier above and below the waterline'},
-    {name:'time', art:'trajectory', band:[.349, waveTop], width:.49, title:'Movie Evaluation Theory', bridge:'Process understanding', alt:'A branching illuminated trajectory crosses three film frames'},
+    {name:'state', art:'iceberg', band:[stackTop, .349], width:.43, title:'Data Iceberg Theory', bridge:'State interpretation', alt:'Cutaway of a glacier above and below the waterline'},
+    {name:'time', art:'trajectory', band:[.349, waveTop], width:.49, title:'Movie Evaluation Theory', bridge:'Casual modeling', alt:'A branching illuminated trajectory crosses three film frames'},
     {name:'agency', art:'agency-waves', band:[waveTop, waveBottom], width:.59, clip:waveClip, title:'Agency Principle', bridge:'Contribution attribution', alt:'Two wave surfaces with illuminated paths diverging across them'}
   ];
 
@@ -53,7 +53,7 @@ window.interactNetTheory = (() => {
           `).join('')}
           <div class="theory-diagrams">
             <section class="theory-row theory-row--state" aria-labelledby="theory-iceberg">
-              <p class="theory-mobile-bridge">State understanding</p>
+              <p class="theory-mobile-bridge">State interpretation</p>
               <div class="theory-row-title"><h3 id="theory-iceberg">Interaction-world reconstruction</h3></div>
               <div class="theory-state-flow">
                 <ol class="theory-state-inputs" aria-label="Reconstruction update order">
@@ -61,8 +61,7 @@ window.interactNetTheory = (() => {
                     <strong>Latent state <var>Ψ<sub>t</sub></var></strong>
                   </li>
                   <li class="theory-node theory-node--event">
-                    <strong>Event chain <var>E<sub>t</sub></var></strong>
-                    <span><var>E<sub>t</sub> = (P<sub>t</sub>, C<sub>t</sub>, F<sub>t</sub>)</var></span>
+                    <strong>Casual Chain <var>E<sub>t</sub></var></strong>
                   </li>
                   <li class="theory-node theory-node--scene">
                     <strong>Scene <var>S<sub>t</sub></var></strong>
@@ -74,18 +73,21 @@ window.interactNetTheory = (() => {
                   <span><var>W<sub>t</sub> = (S<sub>t</sub>, Ψ<sub>t</sub>, E<sub>t</sub>)</var></span>
                 </div>
               </div>
-              <dl class="theory-symbols" aria-label="Reconstruction symbols and equations">
-                <dt><var>t</var></dt><dd>The current exchange.</dd>
-                <dt><var>Ψ<sub>t</sub></var></dt><dd>The evaluator’s estimate of the participants’ states, based on the available evidence.</dd>
-                <dt><var>S<sub>t</sub></var></dt><dd>The effective scene, including roles, objectives, rules, and constraints.</dd>
-                <dt><var>E<sub>t</sub></var></dt><dd>The event chain groups prior events <var>P<sub>t</sub></var>, the current event <var>C<sub>t</sub></var>, and possible future paths <var>F<sub>t</sub></var>.</dd>
-                <dt><var>W<sub>t</sub></var></dt><dd>The world reconstruction combines the effective scene, the estimated latent state, and the event chain.</dd>
-              </dl>
+              <details class="theory-details">
+                <summary>What do the symbols mean?</summary>
+                <dl class="theory-symbols">
+                  <dt><var>W<sub>t</sub></var></dt><dd>An operational reconstruction of the interaction world inferred from observable behavior and available context. It combines the effective scene, the estimated latent state, and the casual chain.</dd>
+                  <dt><var>t</var></dt><dd>The current exchange.</dd>
+                  <dt><var>Ψ<sub>t</sub></var></dt><dd>The evaluator’s estimate of the participants’ states, based on the available evidence.</dd>
+                  <dt><var>S<sub>t</sub></var></dt><dd>The effective scene, including roles, objectives, rules, and constraints.</dd>
+                  <dt><var>E<sub>t</sub></var></dt><dd>The casual chain groups prior events <var>P<sub>t</sub></var>, the current event <var>C<sub>t</sub></var>, and possible future paths <var>F<sub>t</sub></var>.</dd>
+                </dl>
+              </details>
             </section>
             <section class="theory-row theory-row--time" aria-labelledby="theory-movie">
-              <p class="theory-mobile-bridge">Process understanding</p>
+              <p class="theory-mobile-bridge">Casual modeling</p>
               <div class="theory-row-title"><h3 id="theory-movie">Trajectory understanding</h3></div>
-              <p class="theory-timeline-label">Event chain <var>E<sub>t</sub></var></p>
+              <p class="theory-timeline-label">Casual Chain <var>E<sub>t</sub></var></p>
               <div class="theory-timeline">
                 <div class="theory-node"><strong>Past <var>P<sub>t</sub></var></strong></div>
                 <div class="theory-node"><strong>Present <var>C<sub>t</sub></var></strong></div>
