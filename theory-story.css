@@ -1,8 +1,8 @@
 .theory-story {
-  --ink: #14251d;
-  --green: #214e3b;
-  --muted: #4b5d53;
-  --line: #cbd9d0;
+  --ink: #181818;
+  --graphite: #303030;
+  --muted: #515151;
+  --line: #d5d5d5;
   background: #fff;
   color: var(--ink);
   padding-bottom: clamp(44px, 7vh, 84px);
@@ -22,12 +22,12 @@
   height: 44px;
   border: 1px solid var(--line);
   border-radius: 50%;
-  color: var(--green);
+  color: var(--graphite);
   font-size: 23px;
   text-decoration: none;
 }
 
-.theory-entry a:hover { background: #eef6f0; }
+.theory-entry a:hover { background: #f2f2f2; }
 
 .theory-curtain {
   position: fixed;
@@ -58,7 +58,7 @@
   padding: 7px 0;
   border: 0;
   background: transparent;
-  color: var(--green);
+  color: var(--graphite);
   font: 600 13px/1.2 var(--sans);
   text-decoration: underline;
   text-underline-offset: 3px;
@@ -86,7 +86,7 @@
   top: 20px;
   left: 2.5%;
   mix-blend-mode: multiply;
-  filter: brightness(1.1);
+  filter: grayscale(1) brightness(1.16);
   pointer-events: none;
 }
 
@@ -97,12 +97,13 @@
   width: 100%;
   height: clamp(170px, 24vw, 236px);
   object-fit: contain;
+  filter: grayscale(1) contrast(1.13);
   mix-blend-mode: multiply;
 }
 
 .theory-visual figcaption {
   margin-top: -7px;
-  color: var(--green);
+  color: var(--graphite);
   font: 650 clamp(12px, 1.16vw, 16px)/1.35 var(--sans);
 }
 
@@ -110,7 +111,15 @@
   grid-column: 2;
   position: relative;
   height: 2px;
-  background: #7d9c8a;
+  background: #838383;
+}
+
+.theory-arrow span {
+  position: absolute;
+  inset: auto 0 8px;
+  color: var(--graphite);
+  font: 650 11px/1.2 var(--sans);
+  text-align: center;
 }
 
 .theory-arrow::after {
@@ -119,7 +128,7 @@
   right: 0;
   width: 8px;
   height: 8px;
-  border: solid #7d9c8a;
+  border: solid #838383;
   border-width: 2px 2px 0 0;
   transform: rotate(45deg);
   content: "";
@@ -131,7 +140,7 @@
   border: 1px solid var(--line);
   border-radius: 14px;
   padding: clamp(14px, 1.65vw, 24px);
-  background: linear-gradient(125deg, #f0f6f1, #fff 78%);
+  background: linear-gradient(125deg, #f3f3f3, #fff 78%);
 }
 
 .theory-visual--state, .theory-arrow--state, .theory-row--state { grid-row: 1; --beat: 0s; --fold: 18%; }
@@ -149,7 +158,7 @@
 
 .theory-row-title h3 {
   margin: 0;
-  color: var(--green);
+  color: var(--graphite);
   font: 700 clamp(18px, 2.05vw, 29px)/1.1 var(--sans);
 }
 
@@ -174,7 +183,7 @@
 .theory-state-inputs, .theory-state-output { display: grid; gap: 4px; }
 .theory-node--prior { border-style: dashed; }
 .theory-agency-path { margin: 0 0 6px; color: var(--muted); font: 600 11px/1.4 var(--sans); }
-.theory-agency-path span { color: var(--green); }
+.theory-agency-path span { color: var(--graphite); }
 
 .theory-node {
   position: relative;
@@ -190,7 +199,7 @@
 }
 
 .theory-node small { color: var(--muted); font-size: 11px; font-weight: 500; }
-.theory-node--outcome, .theory-capabilities .theory-node:last-child { background: #e2eee6; }
+.theory-node--outcome, .theory-capabilities .theory-node:last-child { background: #e7e7e7; }
 .theory-node--future { border-style: dashed; }
 
 .theory-state-flow > * + *,
@@ -206,7 +215,7 @@
   right: 100%;
   width: 12px;
   height: 6px;
-  background: #648977;
+  background: #777;
   clip-path: polygon(0 40%, 65% 40%, 65% 0, 100% 50%, 65% 100%, 65% 60%, 0 60%);
 }
 
@@ -217,14 +226,14 @@
   position: relative;
   margin-left: 6px;
   padding-left: 8px;
-  border-left: 1px dashed #8daf9d;
+  border-left: 1px dashed #929292;
 }
 
 .theory-branches span {
   padding: 3px;
   border-radius: 3px;
-  background: #ebf2ed;
-  color: var(--green);
+  background: #eee;
+  color: var(--graphite);
   font-size: 11px;
 }
 
@@ -251,7 +260,7 @@
 @keyframes theory-heading-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
 @keyframes theory-stack-in {
   0% { opacity: 0; transform: scale(.78); }
-  32%, 60% { opacity: 1; transform: scale(.93); }
+  32%, 60% { opacity: .62; transform: scale(.93); }
   100% { opacity: 0; transform: scale(1.04); }
 }
 @keyframes theory-expand {
@@ -259,8 +268,8 @@
   to { opacity: 1; transform: none; }
 }
 @keyframes theory-draw {
-  from { opacity: 0; clip-path: inset(-6px 100% -6px 0); }
-  to { opacity: 1; clip-path: inset(-6px -5px -6px 0); }
+  from { opacity: 0; clip-path: inset(-44px 100% -6px 0); }
+  to { opacity: 1; clip-path: inset(-44px -5px -6px 0); }
 }
 @keyframes theory-explain {
   from { opacity: 0; transform: translateX(-24px) scale(.88); transform-origin: left center; }
@@ -274,6 +283,7 @@
     gap: 29px 9px;
   }
   .theory-row { padding: 10px; }
+  .theory-arrow span { display: none; }
   .theory-visual img { height: auto; }
   .theory-visual figcaption { margin-top: 1px; font-size: 11px; }
   .theory-row-title { display: block; }

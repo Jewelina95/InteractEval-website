@@ -3,9 +3,9 @@
 window.interactNetTheory = (() => {
   const image = './assets/hero/layered-city.webp';
   const layers = [
-    {name:'state', art:'iceberg', alt:'Cutaway of a glacier above and below the waterline', caption:'Public acts O<sub>t</sub> · Scene S<sub>t</sub> · Latent state Ψ<sub>t</sub>'},
-    {name:'time', art:'trajectory', alt:'A branching illuminated trajectory crosses three film frames', caption:'Past · Present · Possible futures'},
-    {name:'agency', art:'city', alt:'A floating city with illuminated routes through its buildings', caption:'Contribution · L1–L6'}
+    {name:'state', art:'iceberg', bridge:'State understanding', alt:'Cutaway of a glacier above and below the waterline', caption:'Public acts O<sub>t</sub> · Scene S<sub>t</sub> · Latent state Ψ<sub>t</sub>'},
+    {name:'time', art:'trajectory', bridge:'Process understanding', alt:'A branching illuminated trajectory crosses three film frames', caption:'Past · Present · Possible futures'},
+    {name:'agency', art:'city', bridge:'Contribution attribution', alt:'A floating city with illuminated routes through its buildings', caption:'Contribution · L1–L6'}
   ];
 
   function render(){
@@ -21,12 +21,12 @@ window.interactNetTheory = (() => {
         </header>
         <div class="theory-layout">
           <img class="theory-stack" src="${image}" width="1280" height="854" alt="" decoding="async"/>
-          ${layers.map(({name, art, alt, caption}) => `
+          ${layers.map(({name, art, bridge, alt, caption}) => `
             <figure class="theory-visual theory-visual--${name}">
               <img src="./assets/theory-story/${art}.webp" width="880" height="480" alt="${alt}" decoding="async"/>
               <figcaption>${caption}</figcaption>
             </figure>
-            <div class="theory-arrow theory-arrow--${name}" aria-hidden="true"></div>
+            <div class="theory-arrow theory-arrow--${name}"><span>${bridge}</span></div>
           `).join('')}
           <div class="theory-diagrams">
             <section class="theory-row theory-row--state" aria-labelledby="theory-iceberg">
