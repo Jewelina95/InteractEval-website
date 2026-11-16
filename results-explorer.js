@@ -1,17 +1,19 @@
 'use strict';
 
-// The data explorer follows the paper's Results (4) and Analysis (5) sections.
+// Match the experiment and discussion order in the Chapter 4–5 manuscript.
+const representationMeasures=[
+ ['role-probes','Role-dependent state readouts'],['shared-affection','Shared and independent states'],['shared-miscalibration','Correspondence and accuracy'],['partner-integration','Partner-conditioned computation'],['representation-control','Readouts and behavioral control']
+];
 const mainComparisonGroups=[
  {id:'setup',section:'4.1',title:'Scenario coverage',icon:'scenario',items:[['scenario-coverage','Observed scenario coverage']]},
- {id:'stages',section:'4.2',title:'Model performance',icon:'stages',items:[['capability-profile','L1–L6 capability profiles'],['stage-profile','All three stages'],['stage0','Passive execution'],['stage1','Interactive adaptation'],['stage2','Proactive promotion'],['coherence','L6-to-L5 score ratio'],['weighting-sensitivity','Aggregation sensitivity']]},
+ {id:'stages',section:'4.2',title:'Model performance',icon:'stages',items:[['capability-profile','L1–L6 capability profiles'],['stage-profile','All three stages'],['stage0','Passive execution'],['stage1','Interactive adaptation'],['stage2','Proactive promotion'],['coherence','L6-to-L5 score ratio'],['weighting-sensitivity','Aggregation sensitivity'],['termination-outcomes','Stopping outcomes'],['closure-purpose','Closure by purpose']]},
  {id:'architectures',section:'4.3',title:'Agent evaluation',icon:'architecture',items:[['architecture-purpose','Gains by purpose'],['architecture-stages','Gains by stage'],['architecture-headroom','Proactive gains by base score']]},
- {id:'multi-party',section:'4.4',title:'Multi-party evaluation',icon:'partner',items:[['group-size','Group size']]},
- {id:'reliability',section:'4.5',title:'Robustness analysis',icon:'repeat',items:[['repeats','Independent passes'],['pass-sd','Between-pass variation'],['judges','Judge comparison'],['judge-families','Judge-family preference'],['extractor-stability','Extraction and ranking stability'],['serialization-format','Structured fields vs. prose'],['reconstruction-ablation','Reconstruction and probe separation'],['scene-revision','Scene revision and static rules'],['joint-level-judging','Joint and isolated judgments'],['stopping-ablation','Patience-budget ablation'],['human-audit','Human audit'],['simulated-user-quality','Simulated and human users']],subsections:[{section:'4.5.1',title:'Ablation studies',items:['reconstruction-ablation','scene-revision','joint-level-judging','stopping-ablation']},{section:'4.5.2',title:'Human review',items:['human-audit']}]},
+ {id:'reliability',section:'4.4',title:'Robustness analysis',icon:'repeat',items:[['repeats','Independent passes'],['pass-sd','Between-pass variation'],['judges','Judge comparison'],['judge-families','Judge-family preference'],['extractor-stability','Extraction and ranking stability'],['serialization-format','Structured fields vs. prose'],['reconstruction-ablation','Reconstruction and probe separation'],['scene-revision','Scene revision and static rules'],['joint-level-judging','Joint and isolated judgments'],['stopping-ablation','Patience-budget ablation'],['human-audit','Human audit'],['simulated-user-quality','Simulated and human users'],...representationMeasures],subsections:[{section:'4.4.1',title:'Ablation studies',items:['reconstruction-ablation','scene-revision','joint-level-judging','stopping-ablation']},{section:'4.4.2',title:'Human review',items:['human-audit']},{section:'4.4.3',title:'Representation validation',items:representationMeasures.map(([id])=>id)}]},
  {id:'scenarios',section:'5.1',title:'Scenario effects',icon:'scenario',items:[['functional','Task-oriented'],['mixed','Mixed purpose'],['nonfunctional','Open-ended'],['purpose','Purpose contrast'],['realistic','Realistic worlds'],['stylized','Stylized worlds'],['science-fictional','Science-fictional worlds'],['information','Information gaps']]},
- {id:'partners',section:'5.2',title:'Participant effects',icon:'partner',items:[['pairings','All 100 pairings'],['pairing-summary','Partner comparison'],['self-play','Self-play score'],['self-gap','Self-play contrast'],['self-similarity','Self-similarity'],['user-composite','User-role capability'],['user-active','User-role initiative'],['probing','Probing'],['cooperativeness','Cooperativeness'],['uptake-pressure','Uptake pressure'],['active-pressure','Initiative pressure'],['pressure-difference','Pressure contrast'],['partner-pressure','Pressure by capability'],['role-asymmetry','Partner effects across roles'],['question-vs-agency','Partner change: clarification and L5']]},
- {id:'duration',section:'5.3',title:'Interaction dynamics',icon:'duration',items:[['median-turns','Median assistant turns'],['adaptive-prefix','Score at adaptive stopping'],['fixed8','8-turn episodes'],['fixed16','16-turn episodes'],['fixed32','32-turn episodes'],['case-trajectories','Two interaction trajectories'],['turn-divergence','Score spread at matched turns'],['termination-outcomes','Stopping outcomes'],['closure-purpose','Closure by purpose']]},
- {id:'behavior',section:'5.4',title:'Behavioral patterns',icon:'behavior',items:[['behavior-profile','Clarification and fabrication rates'],['gap-behavior','Fabrication rate by information condition'],['gap-correlation','Passive execution vs. fabrication rate']]},
- {id:'representations',section:'5.5',title:'Representation analysis',icon:'theory',items:[['role-probes','Role-dependent state readouts'],['shared-affection','Shared and independent states'],['shared-miscalibration','Correspondence and accuracy'],['partner-integration','Partner-conditioned computation'],['representation-control','Readouts and behavioral control']]},
+ {id:'behavior',section:'5.2',title:'Model persona',icon:'behavior',items:[['behavior-profile','Clarification and fabrication rates'],['gap-behavior','Fabrication rate by information condition'],['gap-correlation','Passive execution vs. fabrication rate']]},
+ {id:'partners',section:'5.3',title:'Participant effects',icon:'partner',items:[['pairings','All 100 pairings'],['pairing-summary','Partner comparison'],['group-size','Group size'],['self-play','Self-play score'],['self-gap','Self-play contrast'],['self-similarity','Self-similarity'],['user-composite','User-role capability'],['user-active','User-role initiative'],['probing','Probing'],['cooperativeness','Cooperativeness'],['uptake-pressure','Uptake pressure'],['active-pressure','Initiative pressure'],['pressure-difference','Pressure contrast'],['partner-pressure','Pressure by capability'],['role-asymmetry','Partner effects across roles'],['question-vs-agency','Partner change: clarification and L5']]},
+ {id:'duration',section:'5.4',title:'Interaction dynamics',icon:'duration',items:[['median-turns','Median assistant turns'],['adaptive-prefix','Score at adaptive stopping'],['fixed8','8-turn episodes'],['fixed16','16-turn episodes'],['fixed32','32-turn episodes'],['case-trajectories','Two interaction trajectories'],['turn-divergence','Score spread at matched turns']]},
+ {id:'creativity',section:'5.5',title:'Creativity analysis',icon:'behavior',items:[['creative-breakthroughs','Breakthrough rates']]},
  {id:'cost',section:'5.6',title:'Cost',icon:'overview',items:[['evaluation-cost','Evaluation cost']]}
 ];
 let mainComparisonGroup='stages',mainComparisonMeasure='capability-profile';
@@ -31,16 +33,67 @@ const leaderboardGroups=[
 const leaderboardIds=()=>leaderboardGroups.flatMap(group=>group.items);
 function modelNameMarkup(name){return safe(name).replace(/-/g,'-<wbr>');}
 function modelIdentity(name){return `<span class="model-identity"><img src="${assets(name)}" alt=""/><span>${modelNameMarkup(name)}</span></span>`;}
-function resultResources(open) {
-  const choices = mainComparisonGroups.map(group => `<optgroup label="${safe(group.title)}">${group.items.map(([id,label]) =>
-    `<option value="${id}" ${id===mainComparisonMeasure?'selected':''}>${safe(label)}</option>`
-  ).join('')}</optgroup>`).join('');
-  return `<section id="resources" class="article-section" aria-label="Explore InteractNet">
-    <details id="comparisons" class="why-resources" ${open?'open':''}>
-      <summary>Results &amp; analysis</summary>
-      <label class="why-resource-measure">Compare by<select id="main-resource-measure">${choices}</select></label>
-      <div id="main-comparison-body" tabindex="-1" role="region" aria-label="Selected comparison">${mainComparisonPanel()}</div>
-    </details>
+const resultsThemes={setup:'sage',stages:'sage',architectures:'sand',reliability:'blue',scenarios:'sand',behavior:'plum',partners:'blue',duration:'sage',creativity:'plum',cost:'sand'};
+const breakthroughRange=[8.7,12.3]; // Chapter 5.5, percentage of evaluated assistant turns.
+function previewBars(rows,max,format){
+  return `<dl class="result-preview-bars">${rows.map(([label,value])=>`<div><dt>${safe(label)}</dt><dd><span aria-hidden="true"><i style="--bar:${100*value/max}%"></i></span><b>${format(value)}</b></dd></div>`).join('')}</dl>`;
+}
+function resultHighlights(){
+  const spreads=['stage0','stage1','stage2'].map(id=>{
+    const values=publication.models.map(metricOf(id).get);
+    return Math.max(...values)-Math.min(...values);
+  });
+  const gains=publication.architecture_gains.map(g=>[g.architecture,g.stages[2]]);
+  const peak=Math.max(...gains.map(([,value])=>value));
+  const pairs=publication.interaction_matrix;
+  const cards=[
+    {id:'stage-profile',theme:'sage',wide:true,title:'Model differences widen at L5–L6',value:number(spreads[2]),description:'Score range across the ten models at the proactive stage.',chart:previewBars(['Passive · L1–L2','Responsive · L3–L4','Proactive · L5–L6'].map((label,i)=>[label,spreads[i]]),1,value=>number(value))},
+    {id:'architecture-stages',theme:'sand',title:'Agent configurations raise proactive scores',value:'+'+number(peak),description:'Largest mean L5–L6 gain over the matching base models.',chart:previewBars(gains,.08,value=>'+'+number(value))},
+    {id:'pairings',theme:'blue',title:'Changing the interaction partner',value:`${pairs.length} × ${publication.models.length}`,description:'Models evaluated in both roles. Each cell is the assistant score for an ordered pairing.',chart:`<div class="result-preview-matrix" style="--matrix-columns:${publication.models.length}" aria-hidden="true">${pairs.flatMap(row=>row.scores).map(score=>`<i style="--cell:${score}"></i>`).join('')}</div>`},
+    {id:'creative-breakthroughs',theme:'plum',title:'Breakthroughs in evaluated turns',value:breakthroughRange.join('–')+'%',description:'Range across the four Cognizer configurations with nonzero results.',chart:breakthroughScale()}
+  ];
+  return cards.map(card=>`<article class="result-preview ${card.wide?'result-preview-wide':''}" data-result-theme="${card.theme}">
+    <header><h3>${card.title}</h3></header><strong class="result-preview-value">${card.value}</strong><p>${card.description}</p>
+    <div class="result-preview-plot">${card.chart}</div>
+    <button type="button" data-result-measure="${card.id}" data-result-jump aria-label="Explore: ${card.title}">Explore chart <span aria-hidden="true">↗</span></button>
+  </article>`).join('');
+}
+function breakthroughScale(){
+  const [lo,hi]=breakthroughRange;
+  return `<div class="result-range" role="img" aria-label="Cognizer range: ${lo}% to ${hi}% on a scale from 0% to 15%."><div class="result-range-track" aria-hidden="true"><i style="--range-start:${lo/15*100}%;--range-end:${hi/15*100}%"></i></div><div class="result-range-ticks" aria-hidden="true"><span>0%</span><span>5%</span><span>10%</span><span>15%</span></div></div>`;
+}
+function creativityComparison(){
+  return `<header class="comparison-reading"><h4>Breakthrough rates</h4><p>Share of evaluated assistant turns judged to make a substantive new contribution, using the full dialogue history.</p></header>
+    <figure class="result-breakthrough"><figcaption>Cognizer · Four configurations with nonzero rates</figcaption><strong>${breakthroughRange.join('–')}%</strong>${breakthroughScale()}</figure>
+    <div class="result-breakthrough-zero"><span>Ten base models and their matching MetaMind configurations</span><strong>0%</strong></div>
+    <p class="comparison-reading-note">The study reports a range across these four configurations.</p>`;
+}
+function resultTopicButtons(group){
+  const button=([id,label])=>`<button type="button" data-result-measure="${id}" aria-pressed="${id===mainComparisonMeasure}">${safe(label)}</button>`;
+  const base=group.items.filter(([id])=>!paperSubsection(group,id));
+  return `<div class="result-topic-set">${base.map(button).join('')}</div>`+(group.subsections??[]).map(sub=>`<div class="result-topic-set" role="group" aria-label="${sub.title}"><span>${sub.title}</span>${group.items.filter(([id])=>sub.items.includes(id)).map(button).join('')}</div>`).join('');
+}
+function resultResources(){
+  const active=mainComparisonGroups.find(group=>group.id===mainComparisonGroup);
+  const nav=[['4','Experiments'],['5','Discussion']].map(([chapter,title])=>`<div class="result-chapter" role="group" aria-label="${title}">
+    <p>${title}</p>
+    ${mainComparisonGroups.filter(group=>group.section.startsWith(chapter+'.')).map(group=>`<button type="button" data-result-section="${group.id}" data-result-measure="${group.items[0][0]}" aria-current="${group===active}">${group.title}<i aria-hidden="true">›</i></button>`).join('')}
+  </div>`).join('');
+  return `<section id="resources" class="result-gallery" aria-labelledby="results-heading">
+    <header class="result-gallery-header"><h2 id="results-heading">Results &amp; analysis</h2><div class="result-slider-controls" role="group" aria-label="Featured charts">
+      <button type="button" data-result-slide="-1" aria-label="Previous featured chart" aria-controls="result-carousel" aria-disabled="true">←</button>
+      <button type="button" data-result-slide="1" aria-label="Next featured chart" aria-controls="result-carousel">→</button>
+    </div></header>
+    <div class="result-carousel" id="result-carousel" role="region" aria-label="Featured charts" tabindex="0">${resultHighlights()}</div>
+    <div id="comparisons" class="result-library" data-result-theme="${resultsThemes[active.id]}">
+      <nav class="result-chapters" aria-label="Results topics">${nav}</nav>
+      <div class="result-detail">
+        <header><h3 id="result-section-title">${active.title}</h3></header>
+        <div id="result-topics" class="result-topics" role="group" aria-label="Charts in this section">${resultTopicButtons(active)}</div>
+        <p id="result-announcement" class="result-announcement" aria-live="polite"></p>
+        <div id="main-comparison-body" tabindex="-1" role="region" aria-label="Selected comparison">${mainComparisonPanel()}</div>
+      </div>
+    </div>
   </section>`;
 }
 function capabilityMatrix(){
@@ -70,21 +123,23 @@ function mainBehaviorContent(){
 function resultsHomeV2(){
   selectedMainLevel=null;
   const anchor = location.hash.slice(1).split('?')[0];
-  const aliases={duration:'duration',architectures:'architectures',partners:'partners',coverage:'setup',stages:'stages',scenarios:'scenarios',reliability:'reliability','multi-party':'multi-party',behavior:'behavior',representations:'representations',cost:'cost','model-readout':'stages',capability:'stages',process:'behavior',outcomes:'duration'};
+  const aliases={duration:'duration',architectures:'architectures',partners:'partners',coverage:'setup',stages:'stages',scenarios:'scenarios',reliability:'reliability','multi-party':'partners',behavior:'behavior',representations:'reliability',creativity:'creativity',cost:'cost','model-readout':'stages',capability:'stages',process:'behavior',outcomes:'duration'};
   if(lastMainComparisonHash!==location.hash){
     lastMainComparisonHash=location.hash;
     const group=mainComparisonGroups.find(group=>group.id===aliases[anchor]);
-    if(group){mainComparisonGroup=group.id;mainComparisonMeasure=group.items[0][0];}
+    if(group){
+      mainComparisonGroup=group.id;
+      mainComparisonMeasure=({'multi-party':'group-size',representations:'role-probes'})[anchor]??group.items[0][0];
+    } else {mainComparisonGroup='stages';mainComparisonMeasure='capability-profile';}
     const measure=new URLSearchParams(location.hash.split('?')[1]||'').get('measure');
     const requestedGroup=mainComparisonGroups.find(group=>group.items.some(item=>item[0]===measure));
     if(requestedGroup){mainComparisonGroup=requestedGroup.id;mainComparisonMeasure=measure;if(measure==='information')mainInformationView='conditions';}
   }
-  const showResults = anchor === 'comparisons' || Object.hasOwn(aliases, anchor);
   return `<div class="research-restored results-page">${atlasHero()}<article>
     <div class="article-shell"><div class="article-body">${interactionFigure('motivation')}${window.interactNetTheory?.render() ?? ""}</div></div>
     ${coreFindings(true)}
     ${interactionFigure('system')}
-    <div class="method-results"><div class="article-shell"><div class="article-body">${resultResources(showResults)}</div></div></div>
+    <div class="method-results">${resultResources()}</div>
   </article></div>`;
 }
 function comparisonDataTable(ids,labels=ids.map(id=>metricOf(id).label),rows=publication.models,headerModels=[]){
@@ -112,6 +167,7 @@ function mainComparisonContent(){
   if(evidence!==null)return evidence;
   switch(mainComparisonMeasure){
     case 'capability-profile':return capabilityMatrix();
+    case 'creative-breakthroughs':return creativityComparison();
     case 'behavior-profile':return mainBehaviorContent();
     case 'stage-profile':return `<header class="comparison-reading"><h4>Model differences widen at the proactive stage</h4><p>The same ten systems are compared across all three stages. Scores are three-pass means on a 0–1 scale.</p></header>${comparisonDataTable(['stage0','stage1','stage2'],['Passive execution · L1–L2','Interactive adaptation · L3–L4','Proactive promotion · L5–L6'])}<div class="finding-stage-ranges" aria-label="Across-model score ranges">${['Passive execution','Interactive adaptation','Proactive promotion'].map((label,index)=>{const values=publication.models.map(model=>model.stages[index]);return `<span>${label}<strong>${number(Math.max(...values)-Math.min(...values))}</strong></span>`;}).join('')}</div><p class="comparison-reading-note">Range = maximum − minimum across models · Table 5 / Figure 7</p>${findingStageSupplement()}`;
     case 'pairings':return pairingMatrix();
@@ -151,16 +207,46 @@ function refreshMainComparison(){
   const body=document.getElementById('main-comparison-body');if(!body)return;
   window.InteractEvalFindingFocus?.clear();
   body.innerHTML=mainComparisonPanel();
-  const measure=document.getElementById('main-resource-measure');
-  if(measure)measure.value=mainComparisonMeasure;
   atlasResponsiveTables();
 }
 function selectMainComparison(id){
-  const group=mainComparisonGroups.find(group=>group.items.some(item=>item[0]===id));if(!group)return;
-  mainComparisonGroup=group.id;mainComparisonMeasure=id;
-  const params=new URLSearchParams(location.hash.split('?')[1]||''),f=findingById(params.get('finding'));
-  if(f&&f.measure!==id){params.delete('finding');params.set('measure',id);history.replaceState(null,'','#comparisons?'+params);}
+  const group=mainComparisonGroups.find(group=>group.items.some(item=>item[0]===id));
+  if(!group || id===mainComparisonMeasure)return;
+  const changedGroup=group.id!==mainComparisonGroup;
+  mainComparisonGroup=group.id;mainComparisonMeasure=id;selectedMainLevel=null;
+  const params=new URLSearchParams(location.hash.split('?')[1]||'');
+  const finding=findingById(params.get('finding'));
+  if(finding?.measure!==id)params.delete('finding');
+  params.set('measure',id);
+  lastMainComparisonHash='#comparisons?'+params;
+  history.replaceState(history.state,'',lastMainComparisonHash);
+  const library=document.getElementById('comparisons');
+  library.dataset.resultTheme=resultsThemes[group.id];
+  if(changedGroup){
+    document.getElementById('result-section-title').textContent=group.title;
+    document.getElementById('result-topics').innerHTML=resultTopicButtons(group);
+    library.querySelectorAll('[data-result-section]').forEach(button=>button.setAttribute('aria-current',String(button.dataset.resultSection===group.id)));
+  } else {
+    library.querySelectorAll('#result-topics button').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.resultMeasure===id)));
+  }
   refreshMainComparison();
+  document.getElementById('result-announcement').textContent=group.title+': '+group.items.find(([key])=>key===id)[1];
+}
+function updateResultSlider(carousel){
+  const end=carousel.scrollWidth-carousel.clientWidth;
+  const controls=carousel.closest('.result-gallery').querySelectorAll('[data-result-slide]');
+  controls[0].setAttribute('aria-disabled',String(carousel.scrollLeft<=1));
+  controls[1].setAttribute('aria-disabled',String(carousel.scrollLeft>=end-1));
+}
+let resultSliderResize;
+function initResultSlider(){
+  resultSliderResize?.disconnect();
+  const carousel=document.getElementById('result-carousel');
+  if(!carousel)return;
+  const update=()=>updateResultSlider(carousel);
+  carousel.addEventListener('scroll',update,{passive:true});
+  resultSliderResize=new ResizeObserver(update);
+  resultSliderResize.observe(carousel);
 }
 function leaderboardMetricSelect(){
  const rich=CSS.supports('appearance','base-select'),icons=['stages','scenario','scenario','partner'];
@@ -173,6 +259,22 @@ function curatedLeaderboard(){
 }
 
 document.addEventListener('click',event=>{
+  const slide=event.target.closest('[data-result-slide]');
+  if(slide && slide.getAttribute('aria-disabled')!=='true'){
+    const carousel=document.getElementById('result-carousel'),forward=Number(slide.dataset.resultSlide)>0;
+    const cards=[...carousel.children],origin=cards[0].offsetLeft;
+    const starts=cards.map(card=>card.offsetLeft-origin);
+    const start=forward?starts.find(point=>point>carousel.scrollLeft+2):starts.reverse().find(point=>point<carousel.scrollLeft-2);
+    carousel.scrollTo({left:start??(forward?carousel.scrollWidth:0),behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});
+  }
+  const result=event.target.closest('[data-result-measure]');
+  if(result){
+    selectMainComparison(result.dataset.resultMeasure);
+    if(result.hasAttribute('data-result-jump')||(result.hasAttribute('data-result-section')&&matchMedia('(max-width: 760px)').matches)){
+      document.getElementById('main-comparison-body').focus({preventScroll:true});
+      atlasScrollTo(document.querySelector('#comparisons .result-detail'));
+    }
+  }
   const level=event.target.closest('[data-main-level]');
 
   if(level){const id=level.dataset.mainLevel,note=document.getElementById('main-level-note');selectedMainLevel=selectedMainLevel===id?null:id;readMainLevels.add(id);document.querySelectorAll('[data-main-level]').forEach(button=>{button.setAttribute('aria-expanded',String(button.dataset.mainLevel===selectedMainLevel));button.querySelector('i')?.classList.toggle('is-read',readMainLevels.has(button.dataset.mainLevel));});note.hidden=!selectedMainLevel;document.querySelectorAll('.main-capability-table [data-score-level]').forEach(cell=>cell.classList.toggle('is-level-selected',cell.dataset.scoreLevel===selectedMainLevel));if(selectedMainLevel){note.innerHTML=mainLevelExplanation(id);if(level.closest('.level-explanation-tabs'))note.querySelector(`[data-main-level="${id}"]`)?.focus();if(matchMedia('(max-width:600px)').matches&&note.getBoundingClientRect().top<document.querySelector('.masthead').getBoundingClientRect().bottom)atlasScrollTo(note);}}
@@ -183,7 +285,6 @@ document.addEventListener('click',event=>{
   const board=event.target.closest('[data-leaderboard-view]');if(board){view=board.dataset.leaderboardView;render();}
 });
 document.addEventListener('change',event=>{
-  if(event.target.id==='main-resource-measure')selectMainComparison(event.target.value);
   if(event.target.id==='leaderboard-measure'){metric=event.target.value;render();}
 });
 document.addEventListener('keydown',event=>{if(event.key==='Escape'&&selectedMainLevel){selectedMainLevel=null;document.querySelectorAll('.is-level-selected').forEach(cell=>cell.classList.remove('is-level-selected'));document.getElementById('main-level-note')?.setAttribute('hidden','');document.querySelectorAll('[data-main-level]').forEach(button=>button.setAttribute('aria-expanded','false'));}});
