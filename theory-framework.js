@@ -74,6 +74,13 @@ window.interactNetTheory = (() => {
                   <span><var>W<sub>t</sub> = (S<sub>t</sub>, Ψ<sub>t</sub>, E<sub>t</sub>)</var></span>
                 </div>
               </div>
+              <dl class="theory-symbols" aria-label="Reconstruction symbols and equations">
+                <dt><var>t</var></dt><dd>The current exchange.</dd>
+                <dt><var>Ψ<sub>t</sub></var></dt><dd>The evaluator’s estimate of the participants’ states, based on the available evidence.</dd>
+                <dt><var>S<sub>t</sub></var></dt><dd>The effective scene, including roles, objectives, rules, and constraints.</dd>
+                <dt><var>E<sub>t</sub></var></dt><dd>The event chain groups prior events <var>P<sub>t</sub></var>, the current event <var>C<sub>t</sub></var>, and possible future paths <var>F<sub>t</sub></var>.</dd>
+                <dt><var>W<sub>t</sub></var></dt><dd>The world reconstruction combines the effective scene, the estimated latent state, and the event chain.</dd>
+              </dl>
             </section>
             <section class="theory-row theory-row--time" aria-labelledby="theory-movie">
               <p class="theory-mobile-bridge">Process understanding</p>
