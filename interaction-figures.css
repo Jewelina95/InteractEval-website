@@ -151,7 +151,7 @@
   overflow: hidden;
   background: linear-gradient(180deg, #fff 0%, #f0ede6 55%, #8e8270 77%, #090807 100%);
   color: #222426;
-  padding: clamp(78px, 10vw, 140px) clamp(20px, 5vw, 72px) clamp(124px, 14vw, 196px);
+  padding: clamp(116px, 14vw, 198px) clamp(20px, 5vw, 72px) clamp(124px, 14vw, 196px);
 }
 .method-why::before {
   content: "";
@@ -187,7 +187,27 @@
     transform: translateY(28px);
   }
   .method-why.has-reveal.is-revealed p { transition-delay: 140ms; }
+  .method-why-content { transform-origin: left center; }
+  @supports (animation-timeline: view()) {
+    .method-why { view-timeline-name: --why-bridge; }
+    .method-why.has-reveal .method-why-content {
+      animation: method-why-zoom linear both;
+      animation-timeline: --why-bridge;
+      animation-range: entry 28% exit 18%;
+    }
+  }
+  @supports not (animation-timeline: view()) {
+    .method-why.has-reveal.is-revealed .method-why-content {
+      animation: method-why-zoom 1.6s ease-in-out both;
+    }
+  }
+  @keyframes method-why-zoom {
+    0% { transform: scale(.9); }
+    48% { transform: scale(var(--why-zoom-peak, 1.12)); }
+    100% { transform: scale(.96); }
+  }
 }
 @media (max-width: 800px) {
+  .method-why { --why-zoom-peak: 1.05; }
   .method-diagram .pipeline-picture img { width: 100%; }
 }
