@@ -774,18 +774,18 @@
   .zip-results .pair-readout strong { font-size: 26px; }
 }
 
-/* Quiet color encodes the comparison; white surfaces keep the reading continuous. */
+/* Match the white reading surfaces and restrained gold details of the homepage. */
 .zip-results {
-  --chart-accent: #0969da;
-  --chart-secondary: #9a76bb;
-  --divider: #e2e5ee;
+  --chart-accent: #292724;
+  --chart-secondary: #b19462;
+  --divider: #e8e3da;
 }
 .zip-results .glass.card,
 .zip-results .profile {
-  border: 1px solid #e1e5ef;
+  border: 1px solid #e6dfd4;
   border-radius: 22px;
-  background: linear-gradient(145deg, #fff 28%, #f7f8fc 100%);
-  box-shadow: 0 5px 24px #31385b06;
+  background: linear-gradient(145deg, #fff 28%, #faf8f4 100%);
+  box-shadow: 0 5px 24px #31281c06;
 }
 .zip-results .card-grid { align-items: stretch; }
 .zip-results .card-grid > .card { display: flex; flex-direction: column; }
@@ -793,71 +793,71 @@
 .zip-results .results-card-heading {
   margin-bottom: 24px;
   padding-bottom: 18px;
-  border-bottom: 1px solid #eceef4;
+  border-bottom: 1px solid #ede7dc;
 }
 .zip-results .card h3,
-.zip-results .profile h3 { color: #30364c; font-weight: 550; font-size: 19px; letter-spacing: -.025em; }
-.zip-results .metric-note > summary { color: #8b90a1; border-color: #e0e4ee; background: #fff; }
-.zip-results .metric-note[open] > summary { color: #fff; background: #5269d5; border-color: #5269d5; }
+.zip-results .profile h3 { color: #292724; font-weight: 550; font-size: 19px; letter-spacing: -.025em; }
+.zip-results .metric-note > summary { color: #9c907c; border-color: #e6dfd3; background: #fff; }
+.zip-results .metric-note[open] > summary { color: #fff; background: #292724; border-color: #292724; }
 .zip-results .plot-takeaway {
   margin: 0 0 10px;
-  color: #28314e;
+  color: #292724;
   font: 500 clamp(19px, 1.7vw, 23px)/1.4 var(--sans);
   letter-spacing: -.025em;
   text-wrap: balance;
 }
-.zip-results .plot-explanation { color: #71778b; font-size: 14px; line-height: 1.7; }
-.zip-results .plot-explanation b { color: #285faa; font-weight: 500; }
+.zip-results .plot-explanation { color: #777067; font-size: 14px; line-height: 1.7; }
+.zip-results .plot-explanation b { color: #806438; font-weight: 500; }
 .zip-results .paired-legend {
   margin-top: 30px;
   padding-top: 18px;
-  border-top: 1px solid #eceef4;
+  border-top: 1px solid #ede7dc;
   font-size: 11px;
-  color: #7a8194;
+  color: #847866;
 }
 .zip-results .paired-marker { border-color: var(--chart-accent); }
 .zip-results .marker-0 { background: var(--chart-accent); }
 .zip-results .marker-1 { background: #fff; border-color: var(--chart-secondary); }
-.zip-results .paired-track { background: #e8ebf3; }
+.zip-results .paired-track { background: #e9e4da; }
 .zip-results .paired-connector {
   height: 3px;
-  background: linear-gradient(90deg, #9a76bb7d, #0969dab3);
+  background: linear-gradient(90deg, #b194627d, #292724b3);
 }
 .zip-results .paired-track > .paired-marker { width: 10px; height: 10px; box-shadow: 0 0 0 3px #ffffffd9; }
-.zip-results .has-signed-scale .paired-track::before { border-color: #c7cddd; }
-.zip-results .paired-values { color: #626b85; }
-.zip-results .paired-change { display: block; margin-top: 5px; color: #a177a0; font-size: 11px; font-weight: 450; }
+.zip-results .has-signed-scale .paired-track::before { border-color: #cfc4b0; }
+.zip-results .paired-values { color: #6b6050; }
+.zip-results .paired-change { display: block; margin-top: 5px; color: #9a783c; font-size: 11px; font-weight: 450; }
 .zip-results .paired-rows { gap: 30px; }
-.zip-results .plot-axis { color: #9aa1b4; }
-.zip-results .plot-identity { color: #5c6479; }
-.zip-results .plot-track { background: #e7eaf3; }
-.zip-results .plot-track > i { background: linear-gradient(90deg, #8695df, var(--chart-accent)); }
+.zip-results .plot-axis { color: #a09889; }
+.zip-results .plot-identity { color: #635d53; }
+.zip-results .plot-track { background: #e9e4da; }
+.zip-results .plot-track > i { background: linear-gradient(90deg, #9c8a6c, var(--chart-accent)); }
 .zip-results .plot-track > i.is-negative { background: var(--chart-secondary); }
-.zip-results .plot-row > strong { color: #4b587c; font-weight: 500; }
-.zip-results .plot-values { border-color: #e6e9f0; }
-.zip-results .plot-values > summary { color: #8a91a3; }
-.zip-results .plot-measures button { border-color: #e0e5ef; color: #81889b; background: #fff; }
-.zip-results .plot-measures button[aria-pressed="true"] { color: #4e62b0; border-color: #d5dcf5; background: #eff2fc; }
-.zip-results .picker-segment { background: #f0f2f8; }
-.zip-results .picker-segment button { color: #868c9e; }
-.zip-results .picker-segment button[aria-pressed="true"] { background: #4f60a7; color: #fff; }
-.zip-results .picker-buttons button { border-color: #e0e5ef; color: #788098; }
-.zip-results .picker-buttons button[aria-pressed="true"] { color: #4b5eab; border-color: #d5dcf5; background: #f0f3fd; }
-.zip-results .profile { background: linear-gradient(115deg, #f1f4fc, #fff 73%); }
-.zip-results .profile-readout > strong { color: #465a9d; font-weight: 550; }
-.zip-results .profile-readout .profile-level { color: #58657f; font-weight: 450; }
+.zip-results .plot-row > strong { color: #514535; font-weight: 500; }
+.zip-results .plot-values { border-color: #e9e2d7; }
+.zip-results .plot-values > summary { color: #928774; }
+.zip-results .plot-measures button { border-color: #e4dccf; color: #7e7361; background: #fff; }
+.zip-results .plot-measures button[aria-pressed="true"] { color: #76603c; border-color: #d8c5a2; background: #f4eee3; }
+.zip-results .picker-segment { background: #f0ede7; }
+.zip-results .picker-segment button { color: #8b8171; }
+.zip-results .picker-segment button[aria-pressed="true"] { background: #292724; color: #fff; }
+.zip-results .picker-buttons button { border-color: #e4dccf; color: #7d7262; }
+.zip-results .picker-buttons button[aria-pressed="true"] { color: #755c32; border-color: #d8c5a2; background: #f5f0e6; }
+.zip-results .profile { background: linear-gradient(115deg, #f4f0e8, #fff 73%); }
+.zip-results .profile-readout > strong { color: #292724; font-weight: 550; }
+.zip-results .profile-readout .profile-level { color: #70634e; font-weight: 450; }
 .zip-results .profile .chart-series { color: var(--chart-accent); }
-.zip-results .profile .chart-gridline { stroke: #e0e5f1; }
-.zip-results .pair-readout { background: #f1f4fc; }
-.zip-results .matrix-cell { background: rgb(82 105 213 / calc(var(--cell-shade) * 3)); color: #485785; }
-.zip-results .matrix-cell[aria-pressed="true"] { background: #5269d5; color: #fff; }
+.zip-results .profile .chart-gridline { stroke: #e8e0d3; }
+.zip-results .pair-readout { background: #f4f0e8; }
+.zip-results .matrix-cell { background: rgb(139 111 65 / calc(var(--cell-shade) * 3)); color: #66583e; }
+.zip-results .matrix-cell[aria-pressed="true"] { background: #292724; color: #fff; }
 .zip-results .pair-matrix tbody th:first-child { background: #fff; }
-.zip-results thead th { color: #717b92; background: #f0f3fa; }
-.zip-results tbody tr:hover { background: #f2f5fc; }
+.zip-results thead th { color: #7c6e57; background: #f1ece3; }
+.zip-results tbody tr:hover { background: #f5f0e7; }
 .zip-results .interest-panel + .interest-panel .interest-chart { color: var(--chart-secondary); }
 .zip-results .usage-track i + i,
-.zip-results .usage-key span:last-child i { background: #b39dca; }
-.zip-results .cost-summary dd { color: #4a5d9d; font-weight: 550; }
+.zip-results .usage-key span:last-child i { background: #b8a279; }
+.zip-results .cost-summary dd { color: #292724; font-weight: 550; }
 @media (max-width: 720px) {
   .zip-results .card,
   .zip-results .profile { padding: 22px 18px; }
@@ -865,3 +865,46 @@
   .zip-results .plot-explanation { font-size: 13px; }
   .zip-results .results-card-heading { padding-bottom: 14px; margin-bottom: 20px; }
 }
+
+/* Label the comparison at its actual data points. */
+.zip-results .comparison-plot:has(.paired-rows) { --plot-number: 0px; }
+.zip-results .comparison-plot:has(.paired-rows) .plot-axis { margin-right: 0; }
+.zip-results .paired-row { position: relative; grid-template-columns: var(--plot-label) minmax(0, 1fr); }
+.zip-results .paired-track { height: 1px; background: #ddd5c7; }
+.zip-results .paired-connector { height: 2px; top: -.5px; }
+.zip-results .paired-track > .paired-marker { width: 10px; height: 10px; }
+.zip-results .paired-track > .paired-marker::after {
+  content: attr(data-value);
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font: 500 12px/1.3 var(--sans);
+  font-style: normal;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  letter-spacing: -.025em;
+}
+.zip-results .paired-track > .marker-0::after { bottom: 15px; color: #34312b; }
+.zip-results .paired-track > .marker-1::after { top: 15px; color: #94713a; }
+.zip-results .paired-rows { gap: 46px; padding: 20px 18px 20px 0; }
+.zip-results .paired-values { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+.zip-results .paired-change { margin-top: 7px; color: #a08049; font-size: 12px; }
+.zip-results .paired-legend { border: 0; padding-top: 4px; margin-bottom: 24px; }
+.zip-results .results-card-heading { border-bottom: 0; margin-bottom: 12px; padding-bottom: 0; }
+.zip-results .plot-explanation { margin-bottom: 24px; }
+.zip-results .plot-values { margin-top: 24px; }
+@media (max-width: 720px) {
+  .zip-results .paired-rows { gap: 48px; padding-right: 16px; }
+  .zip-results .paired-track > .paired-marker::after { font-size: 11px; }
+}
+
+.zip-results .capability-context { margin: 8px 0 2px; max-width: 62ch; color: #7b7367; font-size: 14px; line-height: 1.6; }
+.zip-results .capability-stage-band { fill: #b1946212; }
+.zip-results .profile .capability-stage-label { fill: #a08a60; font-size: 10px; }
+.zip-results .capability-range { fill: #9f968f20; stroke: none; }
+.zip-results .capability-median { fill: none; stroke: #b19462; stroke-width: 2; stroke-dasharray: 6 5; }
+.zip-results .capability-legend { display: flex; flex-wrap: wrap; gap: 10px 24px; margin: 15px 0 0 6%; font-size: 11px; color: #8a8072; }
+.zip-results .capability-legend > span { display: inline-flex; align-items: center; gap: 7px; }
+.zip-results .capability-legend i { width: 18px; height: 0; border-top: 2px solid #292724; }
+.zip-results .capability-legend .capability-median-key { border-color: #b19462; border-top-style: dashed; }
+.zip-results .capability-legend .capability-range-key { height: 8px; border: 0; background: #9f968f30; }

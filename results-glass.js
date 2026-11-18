@@ -117,6 +117,36 @@ function lineChart(labels, series, description, interactive = false) {
     '" viewBox="0 0 ' + width + ' ' + height + '">' + grid + ticks + lines + '</svg>';
 }
 
+function capabilityComparison(models, selectedIndex) {
+  const selected = models[selectedIndex];
+  const levels = levelLabels.map((_, index) => {
+    const values = models.map(model => model.levels[index]).sort((a, b) => a - b);
+    const middle = Math.floor(values.length / 2);
+    const median = values.length % 2 ? values[middle] : (values[middle - 1] + values[middle]) / 2;
+    return {minimum: values[0], maximum: values.at(-1), median};
+  });
+  const x = index => 44 + 606 * index / 5;
+  const y = value => 228 - 210 * value;
+  const path = (key, reverse = false) => {
+    const points = levels.map((level, index) => [x(index), y(level[key])]);
+    if (reverse) points.reverse();
+    return points.map(([px, py]) => px + ',' + py).join(' L');
+  };
+  const overlay =
+    '<rect class="capability-stage-band" x="' + x(3.5) + '" y="18" width="' + (650 - x(3.5)) + '" height="210"/>' +
+    '<text class="capability-stage-label" x="' + (x(4) + 9) + '" y="35">L5–L6</text>' +
+    '<path class="capability-range" d="M' + path('maximum') + ' L' + path('minimum', true) + ' Z"/>' +
+    '<path class="capability-median" d="M' + path('median') + '"/>';
+  const chart = lineChart(levelLabels.map((_, index) => 'L' + (index + 1)),
+    [{name: displayModel(selected.name), values: selected.levels}],
+    displayModel(selected.name) + ' against the across-model median and range', true);
+  return chart.replace('<g class="chart-series series-0">', overlay + '<g class="chart-series series-0">') +
+    '<div class="capability-legend"><span><i class="capability-selected-key"></i>Selected model</span>' +
+    '<span><i class="capability-median-key"></i>Across-model median</span>' +
+    '<span><i class="capability-range-key"></i>Across-model range</span></div>';
+}
+
+
 function modelPicker(models) {
   const check = '<svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m3.5 8 3 3 6-6"/></svg>';
   const chevron = '<svg viewBox="0 0 16 16" width="15" height="15" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="m4 6.5 4 4 4-4"/></svg>';
@@ -141,6 +171,7 @@ function mainResults(models) {
   return section('main-results', 'Main results',
     '<article class="profile glass"><div class="profile-controls"><h3>Capability profile</h3>' +
       modelPicker(models) + '</div>' +
+    '<p class="capability-context">Compare the selected model with the median and range of all ten models across L1–L6.</p>' +
     '<div class="profile-layout"><div class="profile-readout" id="profile-readout" aria-live="polite"></div>' +
       '<div id="profile-chart"></div></div></article>' +
     card('Six-level scores', table('Six-level scores',
@@ -467,8 +498,8 @@ function pairedComparisonPlot(specification, labels, rows) {
         '<span class="paired-track" aria-hidden="true">' +
           '<i class="paired-connector" style="left:' + Math.min(firstPosition, secondPosition) + '%;width:' +
             Math.abs(secondPosition - firstPosition) + '%"></i>' +
-          '<i class="paired-marker marker-0" style="left:' + firstPosition + '%"></i>' +
-          '<i class="paired-marker marker-1" style="left:' + secondPosition + '%"></i>' +
+          '<i class="paired-marker marker-0" data-value="' + safe(first.text) + '" style="left:' + firstPosition + '%"></i>' +
+          '<i class="paired-marker marker-1" data-value="' + safe(second.text) + '" style="left:' + secondPosition + '%"></i>' +
         '</span><span class="paired-values"><span aria-label="' + safe(labels[0] + ': ' + first.text) +
           '"><i class="paired-marker marker-0" aria-hidden="true"></i><b>' + safe(first.text) +
           '</b></span><span aria-label="' + safe(labels[1] + ': ' + second.text) +
@@ -615,9 +646,7 @@ function setupInteractions(root, models, matrix, episodes, initialTopic, signal)
     selectedModel.innerHTML = modelLabel(models[index].name);
     root.querySelectorAll('[data-profile]').forEach(button =>
       button.setAttribute('aria-pressed', String(Number(button.dataset.profile) === index)));
-    const model = models[index];
-    chart.innerHTML = lineChart(levelLabels.map((_, index) => 'L' + (index + 1)),
-      [{name: displayModel(model.name), values: model.levels}], displayModel(model.name) + ' capability profile', true);
+    chart.innerHTML = capabilityComparison(models, index);
     showLevel(activeLevel);
   }
 
