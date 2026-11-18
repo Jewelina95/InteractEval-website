@@ -377,6 +377,89 @@ function costs() {
     'Evaluation totals exclude participant generation, shown below the divider. The latency is measured along the evaluation critical path.'));
 }
 
+// Plot the values already rendered in the publication tables.
+function enhanceComparisonPlots(root) {
+  const plots = [
+    {label: 'Conversation outcomes', columns: [1, 2, 3, 4], maximum: 100, unit: '%'},
+    {label: 'Controlled probe accuracy', columns: [1, 2], maximum: 100, unit: '%', rowUnit: 'probes'},
+    {label: 'Within-dialogue interest prediction', columns: [1, 2], minimum: -1, maximum: 1, unit: ''},
+    {label: 'Reviewer endorsement', columns: [1], maximum: 100, unit: '%', rowUnit: 'judgments'},
+    {label: 'Purpose and world setting', columns: [1, 2, 3, 4, 5, 6], maximum: 1, unit: ''},
+    {label: 'Matched information conditions', columns: [1, 2, 3], maximum: 1, unit: ''},
+    {label: 'Behavior frequencies', columns: [1, 2], maximum: 100, unit: '%'},
+    {label: 'User-role capability', columns: [1, 2], maximum: 1, unit: ''},
+    {label: 'Matched fixed-horizon scores', columns: [1, 2, 3, 4], maximum: 1, unit: ''},
+    {label: 'Turn-level contribution findings', columns: [1], maximum: 15, unit: '%', rowUnit: 'entries'}
+  ];
+
+  for (const specification of plots) {
+    const region = root.querySelector('.table-scroll[aria-label="' + specification.label + '"]');
+    const table = region.querySelector('table');
+    const labels = specification.columns.map(column => table.rows[0].cells[column].textContent.trim());
+    const rows = [...table.tBodies[0].rows].map(row => ({
+      identity: row.cells[0].innerHTML,
+      values: specification.columns.map(column => {
+        const text = row.cells[column].textContent.trim();
+        return {text, value: Number(text.replace('%', ''))};
+      })
+    }));
+    const figure = document.createElement('div');
+    figure.className = 'comparison-plot';
+    figure.classList.toggle('has-signed-scale', specification.minimum < 0);
+    figure.setAttribute('role', 'group');
+    figure.setAttribute('aria-label', specification.label + ' chart');
+    figure.innerHTML =
+      (labels.length > 1 ? '<div class="plot-measures" role="group" aria-label="' +
+        safe(specification.label) + ' measure">' + labels.map((label, index) =>
+          '<button type="button" data-plot-measure="' + index + '" aria-pressed="' + (index === 0) + '">' +
+          safe(label) + '</button>').join('') + '</div>' : '') +
+      '<div class="plot-content"></div>';
+
+    const details = document.createElement('details');
+    details.className = 'plot-values';
+    const summary = document.createElement('summary');
+    summary.textContent = 'Exact values';
+    details.append(summary);
+    region.before(figure, details);
+    details.append(region);
+
+    function draw(column) {
+      const lowerBound = specification.minimum ?? 0;
+      const scaleWidth = specification.maximum - lowerBound;
+      const zero = (0 - lowerBound) / scaleWidth * 100;
+      const values = rows.map(row => row.values[column].value);
+      const minimum = Math.min(...values), maximum = Math.max(...values);
+      const display = value => rows.find(row => row.values[column].value === value).values[column].text;
+      const range = minimum === maximum ? display(minimum) : display(minimum) + '–' + display(maximum);
+      const scope = rows.length + ' ' + (specification.rowUnit ?? 'models');
+      figure.querySelector('.plot-content').innerHTML =
+        '<div class="plot-stat"><strong>' + safe(range) + '</strong><p>' + safe(labels[column]) +
+          '<span>Observed range · ' + scope + '</span></p></div>' +
+        '<div class="plot-axis" aria-hidden="true">' +
+          [lowerBound, (lowerBound + specification.maximum) / 2, specification.maximum].map(value =>
+            '<span>' + value + specification.unit + '</span>').join('') + '</div>' +
+        '<div class="plot-rows">' + rows.map(row => {
+          const datum = row.values[column];
+          return '<div class="plot-row"><span class="plot-identity">' + row.identity + '</span>' +
+            '<span class="plot-track" aria-hidden="true"><i class="' + (datum.value < 0 ? 'is-negative' : '') +
+            '" style="left:' + (zero + Math.min(0, datum.value) / scaleWidth * 100) +
+            '%;width:' + Math.abs(datum.value) / scaleWidth * 100 + '%"></i></span>' +
+            '<strong>' + safe(datum.text) + '</strong></div>';
+        }).join('') + '</div>';
+    }
+
+    figure.addEventListener('click', event => {
+      const button = event.target.closest('[data-plot-measure]');
+      if (!button) return;
+      for (const control of figure.querySelectorAll('[data-plot-measure]')) {
+        control.setAttribute('aria-pressed', String(control === button));
+      }
+      draw(Number(button.dataset.plotMeasure));
+    });
+    draw(0);
+  }
+}
+
 function setupInteractions(root, models, matrix, episodes, initialTopic, signal) {
   let activeModel = 0;
   let activeLevel = 4;
@@ -415,8 +498,8 @@ function setupInteractions(root, models, matrix, episodes, initialTopic, signal)
   function showLevel(index) {
     activeLevel = index;
     const model = models[activeModel];
-    readout.innerHTML = '<p class="profile-level">L' + (index + 1) + ' · ' + safe(levelLabels[index]) +
-      '</p><strong>' + format(model.levels[index]) + '</strong><p class="profile-score-model">' +
+    readout.innerHTML = '<strong>' + format(model.levels[index]) + '</strong><p class="profile-level">L' + (index + 1) + ' · ' + safe(levelLabels[index]) +
+      '</p><p class="profile-score-model">' +
       modelLabel(model.name) + '</p>';
     chart.querySelectorAll('[data-level]').forEach(point => {
       const chosen = Number(point.dataset.level) === index;
@@ -543,5 +626,6 @@ export function mountResults(root, publication, evidence, research, initialTopic
     mainResults(models) + agentResults(models, agents) + robustness(models, evidence) +
     scenarios(models, matched) + personas(models) + participants(models, matrix) +
     dynamics(models, evidence, episodes) + creativity() + costs();
+  enhanceComparisonPlots(root);
   setupInteractions(root, models, matrix, episodes, initialTopic, signal);
 }

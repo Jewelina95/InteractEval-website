@@ -86,7 +86,7 @@ function render(){
  if(results){
    resultsMount=new AbortController();
    const {signal}=resultsMount;
-   import('./results-glass.js?v=20261116-card-notes').then(({mountResults})=>{
+   import('./results-glass.js?v=20261118-editorial-charts').then(({mountResults})=>{
      if(signal.aborted)return;
      mountResults(results,publication,findingsEvidence,researchEvidence,results.dataset.initialTopic,signal);
    }).catch(error=>{
