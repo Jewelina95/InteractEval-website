@@ -146,9 +146,9 @@
 }
 
 .method-why {
-  background: linear-gradient(180deg, #fff 0%, #fff 59%, #ece8df 75%, #090807 100%);
+  background: #fff;
   color: #222426;
-  padding: clamp(110px, 12vw, 180px) clamp(22px, 5vw, 72px) clamp(150px, 18vw, 260px);
+  padding: clamp(110px, 12vw, 180px) clamp(22px, 5vw, 72px) clamp(40px, 5vw, 72px);
   text-align: center;
 }
 .method-why-content {
