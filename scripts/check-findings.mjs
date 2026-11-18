@@ -44,7 +44,7 @@ for(const f of data.findings){
  assert.ok(/<table|evidence-bars|comparison-bars|architecture-comparison-grid/.test(html),f.id+' missing evidence');
 }
 c.location.hash='#key-findings';
-const approved=['F01','F07','F09','F14','F19','F26','F30'];
+const approved=['F01','F07','F09','F14','F22','F26','F30'];
 assert.deepEqual(data.published_ids,approved);
 assert.deepEqual(data.homepage_ids,approved);
 const homepage=vm.runInContext('coreFindings(true)',c);
@@ -58,7 +58,7 @@ for (const findingsPage of [homepage, standalone]) {
 }
 assert.ok(!homepage.includes('All findings'));
 assert.ok(!homepage.includes('home-finding-search'));
-for(const id of data.homepage_ids)assert.ok(homepage.includes("measure="+encodeURIComponent(data.findings.find(f=>f.id===id).measure)));
+for(const id of data.homepage_ids)assert.ok(homepage.includes(id==='F30'?'#future-directions?direction=creativity':"measure="+encodeURIComponent(data.findings.find(f=>f.id===id).measure)));
 assert.ok(!homepage.includes('data-finding-measure='));
 assert.ok(!homepage.includes('class="finding-category-tag"'));
 assert.ok(!homepage.includes('finding-category-nav'));
@@ -68,11 +68,11 @@ assert.ok(!fs.existsSync('key-findings-zh.html'),'the Chinese companion page mus
 assert.match(homepage,/measure=stage-profile"/);
 assert.match(homepage,/measure=information"/);
 assert.ok(homepage.indexOf('measure=stage-profile')<homepage.indexOf('measure=information'));
-for(const id of ['F03','F05','F24','F25','F33','F36','F43','F13','F22','F35','F16','F17','F32'])assert.ok(!homepage.includes('finding='+id));
+for(const id of ['F03','F05','F24','F25','F33','F36','F43','F13','F19','F35','F16','F17','F32'])assert.ok(!homepage.includes('finding='+id));
 assert.ok(!homepage.includes('Judging six capabilities'),'F44 must stay unpublished');
 assert.ok(homepage.includes('widen as the interaction continues'),'F14 must render');
 assert.equal(vm.runInContext('findingsIndex()',c),standalone);
-assert.match(vm.runInContext("findingsCards('', 'F19')",c),/interaction partner/);
+assert.match(vm.runInContext("findingsCards('', 'F22')",c),/Models perform well.*similar styles/);
 assert.match(vm.runInContext("findingsCards('', 'no matching phrase xyz')",c),/No findings match/);
 for(const id of ['F43','F44','F45','F46','F47','F48'])assert.ok(ids.has(id));
 assert.equal(c.extra.simulated_users.length,11);

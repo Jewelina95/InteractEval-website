@@ -7,14 +7,14 @@ if (location.pathname.endsWith('/index.html') && /^https?:$/.test(location.proto
   history.replaceState(history.state, '', home);
 }
 const $=s=>document.querySelector(s),safe=(s='')=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const REV='20261110-views',levelNames=['Goal preservation','Information uptake','State progression','Contextual expression','Proactive agency','Long-horizon coherence'];
+const REV='20261119-profile-order',levelNames=['Goal preservation','Information uptake','State progression','Contextual expression','Proactive agency','Long-horizon coherence'];
 let publication,researchEvidence,exhibits=[],route='home',metric='composite',agentMetric='composite',architecture='All',caseQuery='',casePurpose='all',view='chart',sortDown=true;
 const modelIconFiles=[[/^claude(?:[-\s]|$)/i,'claude.svg'],[/^(?:gpt|chatgpt|openai)(?:[-\s]|$)/i,'openai.svg'],[/^gemini(?:[-\s]|$)/i,'gemini.png'],[/^deepseek(?:[-\s]|$)/i,'deepseek-product.svg'],[/^qwen/i,'qwen-model.svg'],[/^kimi(?:[-\s]|$)/i,'kimi.png'],[/^(?:glm|z[.-]?ai)(?:[-\s]|$)/i,'glm.svg']];
 const assets=name=>'./assets/providers/'+(modelIconFiles.find(([pattern])=>pattern.test(String(name)))?.[1]||'model.svg');
 const color=name=>name.startsWith('claude')?'#af967c':name.startsWith('gpt')?'#3e6150':name.startsWith('deepseek')?'#668b9e':name.startsWith('gemini')?'#76a9d1':name.startsWith('kimi')?'#7fa590':'#a696ae';
 const number=(v,percent=false)=>percent?(v*100).toFixed(1)+'%':Number(v).toFixed(3);
 const signed=v=>(v>0?'+':'')+number(v);
-const metrics=[{id:'composite',label:'Composite score',table:'models',get:m=>m.composite},...levelNames.map((label,i)=>({id:'L'+(i+1),label:'L'+(i+1)+' · '+label,table:'models',get:m=>m.levels[i]})),...['Passive execution','Responsive adaptation','Proactive promotion'].map((label,i)=>({id:'stage'+i,label,table:'models',get:m=>m.stages[i]})),{id:'coherence',label:'L6 / L5',table:'models',get:m=>m.coherence_ratio},{id:'purpose',label:'Purpose disposition ΔT',table:'models',get:m=>m.purpose_delta,signed:true},{id:'closure',label:'Successful closure',table:'outcomes',get:m=>m.closure,percent:true},{id:'exhaustion',label:'Interest exhaustion',table:'outcomes',get:m=>m.exhaustion,percent:true},...['functional','mixed','nonfunctional','realistic','stylized','science-fictional'].map(id=>({id,label:{functional:'Task-oriented score',mixed:'Mixed-purpose score',nonfunctional:'Open-ended score',realistic:'Realistic-world score',stylized:'Stylized-world score','science-fictional':'Science-fictional-world score'}[id],table:'facets',get:m=>m.facets[id]}))];
+const metrics=[{id:'composite',label:'Composite score',table:'models',get:m=>m.composite},...levelNames.map((label,i)=>({id:'L'+(i+1),label:'L'+(i+1)+' · '+label,table:'models',get:m=>m.levels[i]})),...['Passive execution','Interactive adaptation','Proactive promotion'].map((label,i)=>({id:'stage'+i,label,table:'models',get:m=>m.stages[i]})),{id:'coherence',label:'L6 / L5',table:'models',get:m=>m.coherence_ratio},{id:'purpose',label:'Purpose disposition ΔT',table:'models',get:m=>m.purpose_delta,signed:true},{id:'closure',label:'Successful closure',table:'outcomes',get:m=>m.closure,percent:true},{id:'exhaustion',label:'Interest exhaustion',table:'outcomes',get:m=>m.exhaustion,percent:true},...['functional','mixed','nonfunctional','realistic','stylized','science-fictional'].map(id=>({id,label:{functional:'Task-oriented score',mixed:'Mixed-purpose score',nonfunctional:'Open-ended score',realistic:'Realistic-world score',stylized:'Stylized-world score','science-fictional':'Science-fictional-world score'}[id],table:'facets',get:m=>m.facets[id]}))];
 setupExplorer();
 const metricOf=id=>metrics.find(m=>m.id===id)||metrics[0];
 const format=(v,m)=>m.decimals!==undefined?Number(v).toFixed(m.decimals):m.signed?signed(v):number(v,m.percent);
@@ -59,7 +59,7 @@ function trends(){return `<div class="section-top"><h1>Cognition & interaction</
 let resultsMount;
 function render(){
  const [hash,query='']=location.hash.slice(1).split('?'),page=location.pathname.split('/').pop();
- const resultAnchors=['key-findings','system-overview','resources','illustrations','beneath-the-words','model-readout','capability','comparisons','multi-party','behavior','representations','creativity','cost','stages','scenarios','reliability','process','duration','architectures','partners','takeaways','notes','outcomes','coverage'];
+ const resultAnchors=['key-findings','system-overview','resources','future-directions','illustrations','beneath-the-words','model-readout','capability','comparisons','multi-party','behavior','representations','creativity','cost','stages','scenarios','reliability','process','duration','architectures','partners','takeaways','notes','outcomes','coverage'];
  if(page==='research.html'&&['model-readout','capability','process','duration','partners','outcomes','coverage'].includes(hash)){location.replace('./#'+({outcomes:'process',coverage:'partners'}[hash]||hash));return;}
  route=page==='research.html'?'research':page==='showcase.html'?'cases':hash==='key-findings'?'findings':resultAnchors.includes(hash)?'home':hash||'home';
  if(!['home','models','agents','cases','research','trends','multimodal','leaderboards','compare','architecture','findings'].includes(route)&&!route.startsWith('model/'))route='home';
@@ -82,11 +82,13 @@ function render(){
  else content=home();
  resultsMount?.abort();
  $('#app').innerHTML=content;afterExplorerRender();
+ const atFutureDirections = hash==='future-directions' || hash==='creativity' ||
+   (hash==='comparisons' && params.get('topic')==='creativity');
  const results=document.querySelector('.zip-results #comparisons');
  if(results){
    resultsMount=new AbortController();
    const {signal}=resultsMount;
-   import('./results-glass.js?v=20261118-annotated-comparisons').then(({mountResults})=>{
+   import('./results-glass.js?v=20261119-profile-order').then(({mountResults})=>{
      if(signal.aborted)return;
      mountResults(results,publication,findingsEvidence,researchEvidence,results.dataset.initialTopic,signal);
    }).catch(error=>{
@@ -94,10 +96,12 @@ function render(){
      results.innerHTML='<p role="alert">The evaluation results could not be loaded. Refresh to try again.</p>';
      console.error(error);
    }).finally(()=>{
-     if(!signal.aborted)results.removeAttribute('aria-busy');
+     if(signal.aborted)return;
+     results.removeAttribute('aria-busy');
+     if(atFutureDirections) requestAnimationFrame(()=>{if(!signal.aborted)atlasScrollTo(document.getElementById('future-directions'));});
    });
  }
- if(hash==='comparisons' && (params.has('measure') || params.has('topic'))) requestAnimationFrame(()=>atlasScrollTo(document.getElementById('comparisons')));
+ if(!atFutureDirections && hash==='comparisons' && (params.has('measure') || params.has('topic'))) requestAnimationFrame(()=>atlasScrollTo(document.getElementById('comparisons')));
 }
 document.addEventListener('click',e=>{const m=e.target.closest('[data-metric]');if(m){metric=m.dataset.metric;render();}const level=e.target.closest('[data-home-level]');if(level){metric=level.dataset.homeLevel;$('#home-level').innerHTML=chart(metric);document.querySelectorAll('[data-home-level]').forEach(b=>b.classList.toggle('active',b===level));}const a=e.target.closest('[data-architecture]');if(a){architecture=a.dataset.architecture;render();}const c=e.target.closest('[data-open-example]');if(c)openExample(c.dataset.openExample);if(e.target.closest('#agent-view')){agentView=agentView==='chart'?'table':'chart';render();}if(e.target.closest('#paper-view')){view=view==='chart'?'table':'chart';render();}if(e.target.closest('#sort-paper')){sortDown=!sortDown;render();}if(e.target.closest('#close-example'))$('#example-dialog').close();});
 document.addEventListener('change',e=>{if(e.target.id==='paper-metric'){metric=e.target.value;render();}if(e.target.id==='agent-metric'){agentMetric=e.target.value;render();}if(e.target.id==='case-purpose'){casePurpose=e.target.value;$('#case-library').innerHTML=caseCards();}});

@@ -50,14 +50,44 @@ function setupSiteMenu(){
 }
 setupSiteMenu();
 
-let headerHeroObserver;
+let stopEditorialHeaderSync;
 function syncEditorialHeader(){
-  if(headerHeroObserver)headerHeroObserver.disconnect();
-  const hero=document.querySelector('.atlas-hero--animated, .journal-hero'),header=document.querySelector('.masthead');
-  if(!hero){document.body.classList.remove('nav-on-hero');return;}
-  const height=header.offsetHeight;
-  const update=()=>document.body.classList.toggle('nav-on-hero',hero.getBoundingClientRect().bottom>height);
+  stopEditorialHeaderSync?.();
+  stopEditorialHeaderSync=undefined;
+  const header=document.querySelector('.masthead');
+  const hero=document.querySelector('.atlas-hero--animated, .journal-hero');
+  const darkSections=[...document.querySelectorAll('.zip-results, .future-directions')];
+  if(!header || (!hero && !darkSections.length)){
+    document.body.classList.remove('nav-on-hero','nav-on-dark');
+    return;
+  }
+
+  let frame=null;
+  function update(){
+    frame=null;
+    const boundary=header.getBoundingClientRect().bottom;
+    const overHero=!!hero && hero.getBoundingClientRect().bottom>boundary;
+    const overDarkSection=darkSections.some(section=>{
+      const {top,bottom}=section.getBoundingClientRect();
+      return top<=boundary && bottom>boundary;
+    });
+    document.body.classList.toggle('nav-on-hero',overHero);
+    document.body.classList.toggle('nav-on-dark',overDarkSection);
+  }
+  function scheduleUpdate(){
+    if(frame===null)frame=requestAnimationFrame(update);
+  }
+
+  window.addEventListener('scroll',scheduleUpdate,{passive:true});
+  window.addEventListener('resize',scheduleUpdate);
+  const layoutObserver=new ResizeObserver(scheduleUpdate);
+  layoutObserver.observe(header);
+  layoutObserver.observe(document.querySelector('#app'));
+  stopEditorialHeaderSync=()=>{
+    window.removeEventListener('scroll',scheduleUpdate);
+    window.removeEventListener('resize',scheduleUpdate);
+    layoutObserver.disconnect();
+    if(frame!==null)cancelAnimationFrame(frame);
+  };
   update();
-  headerHeroObserver=new IntersectionObserver(update,{rootMargin:`-${height}px 0px 0px 0px`,threshold:0});
-  headerHeroObserver.observe(hero);
 }

@@ -122,12 +122,12 @@ function resultsHomeV2(){
     ${interactionFigure('system')}
     <section class="method-why" aria-labelledby="method-why-heading">
       <div class="method-why-content">
-        <h2 id="method-why-heading">Why it works</h2>
-        <p>Following an exchange turn by turn shows what a model can do and how the interaction changes across scenarios and participants.</p>
+        <h2 id="method-why-heading">What it reveals</h2>
       </div>
     </section>
     ${resultResources()}
     ${homeCaseStudies()}
+    ${futureDirectionGallery()}
   </article></div>`;
 }
 function comparisonDataTable(ids,labels=ids.map(id=>metricOf(id).label),rows=publication.models,headerModels=[]){

@@ -3,7 +3,7 @@
 let findingsResearch,findingsEvidence;
 const findingById=id=>findingsResearch?.findings.find(f=>f.id===id);
 const findingCategory=slug=>findingsResearch?.categories.find(c=>c.slug===slug);
-const findingLink=f=>`./#comparisons?measure=${encodeURIComponent(f.measure)}`;
+const findingLink=f=>f.id==='F30'?'./#future-directions?direction=creativity':`./#comparisons?measure=${encodeURIComponent(f.measure)}`;
 const findingCategoryLink=slug=>`./#findings?category=${encodeURIComponent(slug)}`;
 function activeResearchFinding(){
  const id=new URLSearchParams(location.hash.split('?')[1]||'').get('finding'),f=findingById(id);

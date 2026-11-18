@@ -15,6 +15,7 @@ const context = vm.createContext({
   safe: value => String(value),
   atlasHero: () => '<header id="main-hero"></header>',
   coreFindings: () => '<section id="key-findings"></section>',
+  findingById: id => JSON.parse(fs.readFileSync(new URL('../data/findings-v5.json', import.meta.url), 'utf8')).findings.find(finding => finding.id === id),
   mainComparisonPanel: () => '<p>Selected comparison</p>'
 });
 const read = file => fs.readFileSync(new URL('../' + file, import.meta.url), 'utf8');
@@ -39,8 +40,8 @@ assert.doesNotMatch(home, /class="method-steps?"/);
 assert.match(home, /<figure id="evaluation-diagram" class="method-diagram"/);
 assert.match(home, /<h3 id="evaluation-diagram-heading">Architecture<\/h3>/);
 assert.ok(home.indexOf('id="system-overview-heading"') < home.indexOf('id="evaluation-diagram"'));
-assert.match(home, /href="[^"]*interactnet-pipeline-v168\.svg/);
-assert.match(home, /src="[^"]*interactnet-pipeline-v168\.svg[^"]*" width="2265" height="925"/);
+assert.match(home, /href="[^"]*interactnet-pipeline-v173\.pdf/);
+assert.match(home, /src="[^"]*interactnet-pipeline-v173\.svg" width="2265" height="925"/);
 assert.doesNotMatch(home, /interactnet-world-architecture-v168/);
 assert.doesNotMatch(home, /interactnet-pipeline-v168-black-gold/);
 assert.doesNotMatch(home, /id="evaluation-results-heading"/);

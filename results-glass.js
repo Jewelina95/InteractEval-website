@@ -8,14 +8,20 @@ const levelLabels = [
   'Goal preservation', 'Information uptake', 'State progression',
   'Contextual expression', 'Proactive agency', 'Long-horizon coherence'
 ];
+const capabilityStages = [
+  ['Passive execution', 'Pursues the current goal within the scene’s constraints and incorporates relevant information from the partner.'],
+  ['Interactive adaptation', 'Updates its state or decisions as new evidence arrives and adapts its expression to the situation.'],
+  ['Proactive promotion', 'Initiates, advances, or revises a justified strategy and carries it through coherently across turns.']
+];
+const proactiveStage = capabilityStages[2][0];
 const resultGroups = [
   ['Results', [
     ['main-results', 'Main results'], ['agents', 'Agent evaluation'], ['robustness', 'Robustness analysis']
-  ], 'Compare model capabilities, agent configurations, and how robust the scores are.'],
+  ]],
   ['Phenomena', [
     ['scenarios', 'Scenario effects'], ['personas', 'Model persona'], ['participants', 'Participant effects'],
-    ['dynamics', 'Interaction dynamics'], ['creativity', 'Creativity analysis'], ['cost', 'Computational cost']
-  ], 'Explore how scenarios, model personas, and participants shape the exchange.']
+    ['dynamics', 'Interaction dynamics'], ['cost', 'Computational cost']
+  ]]
 ];
 const providerIcons = [
   [/^claude/i, 'claude.svg'], [/^gpt/i, 'openai.svg'], [/^gemini/i, 'gemini.png'], [/^gemma/i, 'google.svg'],
@@ -47,25 +53,35 @@ function modelLabel(name) {
 }
 
 function table(label, headers, rows, options = {}) {
-  const heading = headers.map((column, index) =>
+  const groups = options.groups ?? [];
+  const grouped = groups.length > 0;
+  const heading = (grouped ? headers.slice(1) : headers).map((column, index) =>
     '<th scope="col">' + (options.modelHeaders && index > 0 ? modelLabel(column) : safe(column)) + '</th>'
   ).join('');
-  const body = rows.map(([name, ...values], index) => {
-    const identity = options.rowLabel ? options.rowLabel(name) : options.models ? modelLabel(name) : safe(name);
-    const firstCell = options.selectModel
-      ? '<button class="model-button" data-profile="' + index + '" aria-pressed="false">' + identity + '</button>'
-      : identity;
-    return '<tr><th scope="row">' + firstCell + '</th>' +
+  const columnGroups = grouped
+    ? '<colgroup span="1"></colgroup>' + groups.map(([, span]) => '<colgroup span="' + span + '"></colgroup>').join('')
+    : '';
+  const groupRow = grouped
+    ? '<tr class="result-column-groups"><th scope="col" rowspan="2">' + safe(headers[0]) + '</th>' +
+      groups.map(([label, span]) => '<th scope="colgroup" colspan="' + span + '">' + safe(label) + '</th>').join('') + '</tr>'
+    : '';
+  const body = rows.map(([name, ...values]) => {
+    const identity = options.models ? modelLabel(name) : safe(name);
+    return '<tr><th scope="row">' + identity + '</th>' +
       values.map(value => '<td>' + safe(value) + '</td>').join('') + '</tr>';
   }).join('');
   return '<div class="table-scroll" tabindex="0" role="region" aria-label="' + safe(label) +
-    '"><table><thead><tr>' + heading + '</tr></thead><tbody>' + body + '</tbody></table></div>';
+    '"><table>' + columnGroups + '<thead>' + groupRow + '<tr>' + heading + '</tr></thead><tbody>' + body + '</tbody></table></div>';
 }
 
-function card(title, content, note = '') {
+function card(title, content, note = '', definitions = []) {
+  const glossary = definitions.length ? '<dl>' + definitions.map(([label, definition]) =>
+    '<div><dt>' + safe(label) + '</dt><dd>' + safe(definition) + '</dd></div>'
+  ).join('') + '</dl>' : '';
   return '<article class="glass card"><div class="results-card-heading"><h3>' + safe(title) + '</h3>' +
     (note ? '<details class="metric-note"><summary aria-label="Measurement notes for ' + safe(title) +
-      '">i</summary><p>' + safe(note) + '</p></details>' : '') + '</div>' + content + '</article>';
+      '">i</summary><div class="metric-note-content">' + glossary + '<p>' + safe(note) +
+      '</p></div></details>' : '') + '</div>' + content + '</article>';
 }
 
 function section(id, title, content) {
@@ -78,10 +94,10 @@ function resultPicker() {
     '<button type="button" data-group-filter="' + index + '" aria-controls="picker-group-' + index +
       '" aria-pressed="' + (index === 0) + '">' + title + '</button>'
   ).join('');
-  const topics = resultGroups.map(([title, items, description], index) =>
+  const topics = resultGroups.map(([title, items], index) =>
     '<div id="picker-group-' + index + '" class="picker-buttons" role="group" aria-label="' + title +
       ' topics" data-topic-group="' + index + '"' + (index ? ' hidden' : '') +
-      '><p class="picker-description">' + safe(description) + '</p>' +
+      '>' +
       items.map(([id, label]) => '<button type="button" data-section-filter="' + id + '" aria-controls="' +
         'results-topic-' + id + '" aria-pressed="false">' + label + '</button>').join('') + '</div>'
   ).join('');
@@ -89,7 +105,8 @@ function resultPicker() {
     chapters + '</div>' + topics + '</div>';
 }
 
-function lineChart(labels, series, description, interactive = false) {
+function capabilityProfileChart(model, ranges) {
+  const labels = levelLabels.map((_, index) => 'L' + (index + 1));
   const width = 680, height = 270, start = 44, end = 650, top = 18, bottom = 228;
   const x = index => start + (end - start) * index / (labels.length - 1);
   const y = value => bottom - value * (bottom - top);
@@ -100,52 +117,25 @@ function lineChart(labels, series, description, interactive = false) {
   ).join('');
   const ticks = labels.map((label, index) => '<text x="' + x(index) + '" y="259" text-anchor="middle">' +
     safe(label) + '</text>').join('');
-  const lines = series.map((item, seriesIndex) => {
-    const points = item.values.map((value, index) => x(index) + ',' + y(value)).join(' ');
-    const dots = item.values.map((value, index) => {
-      const label = safe(item.name + ', ' + labels[index] + ', ' + format(value));
-      return interactive
-        ? '<g class="chart-point" data-level="' + index + '" tabindex="0" role="button" aria-label="' + label +
-          '"><circle class="point-hit" cx="' + x(index) + '" cy="' + y(value) +
-          '" r="23"/><circle class="point-mark" cx="' + x(index) + '" cy="' + y(value) + '" r="3.3"/></g>'
-        : '<circle class="point-mark" cx="' + x(index) + '" cy="' + y(value) + '" r="2.8"><title>' +
-          label + '</title></circle>';
-    }).join('');
-    return '<g class="chart-series series-' + seriesIndex + '"><polyline points="' + points + '"/>' + dots + '</g>';
+  const point = (value, index) => x(index) + ',' + y(value);
+  const upper = ranges.map(({max}, index) => point(max, index));
+  const lower = ranges.map(({min}, index) => point(min, index)).reverse();
+  const median = ranges.map(({median}, index) => point(median, index)).join(' ');
+  const stageStart = (x(3) + x(4)) / 2;
+  const dots = model.levels.map((value, index) => {
+    const label = safe(displayModel(model.name) + ', ' + labels[index] + ', ' + format(value));
+    return '<g class="chart-point" data-level="' + index + '" tabindex="0" role="button" aria-label="' + label +
+      '"><circle class="point-hit" cx="' + x(index) + '" cy="' + y(value) +
+      '" r="23"/><circle class="point-mark" cx="' + x(index) + '" cy="' + y(value) + '" r="3.3"/></g>';
   }).join('');
-  return '<svg class="line-chart" role="' + (interactive ? 'group' : 'img') + '" aria-label="' + safe(description) +
-    '" viewBox="0 0 ' + width + ' ' + height + '">' + grid + ticks + lines + '</svg>';
+  return '<svg class="line-chart" role="group" aria-label="' + safe(displayModel(model.name)) +
+    ' capability profile with across-model median and range" viewBox="0 0 ' + width + ' ' + height + '">' +
+    '<rect class="profile-stage-band" x="' + stageStart + '" y="' + top + '" width="' + (end - stageStart) +
+    '" height="' + (bottom - top) + '"/><polygon class="profile-range-band" points="' + [...upper, ...lower].join(' ') +
+    '"/>' + grid + ticks + '<text x="' + (stageStart + end) / 2 + '" y="35" text-anchor="middle">L5–L6</text>' +
+    '<polyline class="profile-median" points="' + median + '"/><g class="chart-series">' +
+    '<polyline points="' + model.levels.map(point).join(' ') + '"/>' + dots + '</g></svg>';
 }
-
-function capabilityComparison(models, selectedIndex) {
-  const selected = models[selectedIndex];
-  const levels = levelLabels.map((_, index) => {
-    const values = models.map(model => model.levels[index]).sort((a, b) => a - b);
-    const middle = Math.floor(values.length / 2);
-    const median = values.length % 2 ? values[middle] : (values[middle - 1] + values[middle]) / 2;
-    return {minimum: values[0], maximum: values.at(-1), median};
-  });
-  const x = index => 44 + 606 * index / 5;
-  const y = value => 228 - 210 * value;
-  const path = (key, reverse = false) => {
-    const points = levels.map((level, index) => [x(index), y(level[key])]);
-    if (reverse) points.reverse();
-    return points.map(([px, py]) => px + ',' + py).join(' L');
-  };
-  const overlay =
-    '<rect class="capability-stage-band" x="' + x(3.5) + '" y="18" width="' + (650 - x(3.5)) + '" height="210"/>' +
-    '<text class="capability-stage-label" x="' + (x(4) + 9) + '" y="35">L5–L6</text>' +
-    '<path class="capability-range" d="M' + path('maximum') + ' L' + path('minimum', true) + ' Z"/>' +
-    '<path class="capability-median" d="M' + path('median') + '"/>';
-  const chart = lineChart(levelLabels.map((_, index) => 'L' + (index + 1)),
-    [{name: displayModel(selected.name), values: selected.levels}],
-    displayModel(selected.name) + ' against the across-model median and range', true);
-  return chart.replace('<g class="chart-series series-0">', overlay + '<g class="chart-series series-0">') +
-    '<div class="capability-legend"><span><i class="capability-selected-key"></i>Selected model</span>' +
-    '<span><i class="capability-median-key"></i>Across-model median</span>' +
-    '<span><i class="capability-range-key"></i>Across-model range</span></div>';
-}
-
 
 function modelPicker(models) {
   const check = '<svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m3.5 8 3 3 6-6"/></svg>';
@@ -159,25 +149,48 @@ function modelPicker(models) {
     '<div class="profile-options" role="group" aria-label="Capability profile models">' + options + '</div></details>';
 }
 
+function capabilityScoreTable(models) {
+  const stageHeadings = capabilityStages.map(([label], index) =>
+    '<th scope="colgroup" colspan="2" id="score-stage-' + index + '">' + safe(label) + '</th>'
+  ).join('');
+  const levelHeadings = levelLabels.map((_, index) =>
+    '<th scope="col">L' + (index + 1) + '</th>'
+  ).join('');
+  const scores = models.map((model, modelIndex) => {
+    const scoreCells = model.levels.map(value => '<td>' + format(value) + '</td>').join('');
+    const stageCells = model.stages.map((value, index) =>
+      '<td class="capability-stage-cell" colspan="2" headers="score-model-' + modelIndex + ' score-stage-' + index +
+      '"><div class="capability-stage-score"><strong>' + format(value) +
+      '</strong><i aria-hidden="true" style="--stage-score:' + value * 100 + '%"></i></div></td>'
+    ).join('');
+    return '<tbody class="capability-model-scores"><tr><th scope="rowgroup" id="score-model-' + modelIndex +
+      '" rowspan="2"><button type="button" data-profile="' + modelIndex +
+      '" class="model-button" aria-pressed="false">' + modelLabel(model.name) + '</button></th>' + scoreCells +
+      '<td rowspan="2" class="capability-composite">' + format(model.composite) + ' ± ' + format(model.reliability.sd, 4) + '</td></tr>' +
+      '<tr class="capability-stage-row">' + stageCells + '</tr></tbody>';
+  }).join('');
+  return '<div class="table-scroll" role="region" aria-label="Capability scores by model" tabindex="0">' +
+    '<table class="capability-score-table"><colgroup span="1"></colgroup>' +
+    capabilityStages.map(() => '<colgroup span="2"></colgroup>').join('') +
+    '<colgroup span="1"></colgroup><thead><tr class="capability-stage-headings"><th scope="col" rowspan="2">Model</th>' +
+    stageHeadings + '<th scope="col" rowspan="2">Composite ± SD</th></tr>' +
+    '<tr class="capability-level-headings">' + levelHeadings + '</tr></thead>' + scores + '</table></div>';
+}
+
 function mainResults(models) {
-  const scoreRows = models.map(model => [
-    model.name, ...model.levels.map(value => format(value)), ...model.stages.map(value => format(value)),
-    format(model.composite) + ' ± ' + format(model.reliability.sd, 4)
-  ]);
   const outcomes = models.map(model => [
     model.name, percent(model.closure), percent(model.exhaustion),
     percent(model.functional_closure), percent(model.nonfunctional_closure)
   ]);
   return section('main-results', 'Main results',
+    card('Capability scores', capabilityScoreTable(models),
+    'Each stage score summarizes the two levels above it. Composite SD describes variation across three independent runs.',
+    capabilityStages.map(([, definition], index) => ['L' + (index * 2 + 1) + '–L' + (index * 2 + 2), definition])) +
     '<article class="profile glass"><div class="profile-controls"><h3>Capability profile</h3>' +
       modelPicker(models) + '</div>' +
-    '<p class="capability-context">Compare the selected model with the median and range of all ten models across L1–L6.</p>' +
     '<div class="profile-layout"><div class="profile-readout" id="profile-readout" aria-live="polite"></div>' +
-      '<div id="profile-chart"></div></div></article>' +
-    card('Six-level scores', table('Six-level scores',
-      ['Model', 'L1', 'L2', 'L3', 'L4', 'L5', 'L6', 'L1–L2', 'L3–L4', 'L5–L6', 'Composite ± SD'],
-      scoreRows, {models: true, selectModel: true}),
-    'Composite SD measures variation across the three independent runs. Stage columns summarize the two levels shown in each heading.') +
+      '<div class="profile-plot"><div id="profile-chart"></div><ul class="profile-legend">' +
+      '<li>Selected model</li><li>Across-model median</li><li>Across-model range</li></ul></div></div></article>' +
     card('Conversation outcomes', table('Conversation outcomes',
       ['Model', 'Successful closure', 'Interest exhaustion', 'Task-oriented closure', 'Open-ended closure'],
       outcomes, {models: true}),
@@ -214,11 +227,11 @@ function agentResults(models, records) {
     '</span><i><b style="width:' + (value / .08 * 100) + '%"></b></i><strong>' + delta(value) + '</strong></div>'
   ).join('');
   return section('agents', 'Agent evaluation',
-    card('Proactive gains on shared base models', '<div class="gain-chart" role="group" aria-label="Mean L5–L6 gain by architecture">' +
-      visual + '</div>', 'L5–L6 gain averaged over the ' + stageRows.length + ' eligible Claude base models shared by all three configurations.') +
+    card('Proactive promotion gains on shared base models', '<div class="gain-chart" role="group" aria-label="Mean proactive promotion gain by architecture">' +
+      visual + '</div>', 'Proactive promotion gain averaged over the ' + stageRows.length + ' eligible Claude base models shared by all three configurations.') +
     card('Gains over the base model', table('Matched agent gains', [
-    'Base model', ...architectures.flatMap(name => [name + ' · Overall', name + ' · L5–L6'])
-  ], rows, {models: true}),
+    'Base model', ...architectures.flatMap(() => ['Overall', proactiveStage])
+  ], rows, {models: true, groups: architectures.map(name => [name, 2])}),
   'Each gain uses the same underlying model as its baseline. Claude Code comparisons cover the eligible Claude configurations.'));
 }
 
@@ -256,11 +269,9 @@ function scenarios(models, matched) {
   );
 }
 
-function personas(models) {
-  return section('personas', 'Model persona', card('Observed interaction behaviors',
-    table('Behavior frequencies', ['Model', 'Clarification', 'Unsupported factual additions'],
-      models.map(model => [model.name, percent(model.behavior.clarification), percent(model.behavior.fabrication)]),
-      {models: true}), 'Shares of evaluated assistant turns. These measurements describe observable behavior.'));
+function personas() {
+  return section('personas', 'Model persona',
+    '<div class="glass card pending-result"><strong>Pending</strong><p>Model persona results are under review.</p></div>');
 }
 
 function participants(models, matrix) {
@@ -279,8 +290,14 @@ function participants(models, matrix) {
       models.map(model => '<th scope="col">' + modelLabel(model.name) + '</th>').join('') +
       '</tr></thead><tbody>' + controls + '</tbody></table></div>',
     'Rows identify simulated users. Columns identify the assistants being scored.') +
-    card('Performance in the user role', table('User-role capability', ['Model', 'User composite', 'User L5–L6'],
-      models.map(model => [model.name, format(model.user_role.composite), format(model.user_role.stages[2])]), {models: true}))
+    card('Role similarity and self-play', table('Interaction patterns and pairing scores',
+      ['Model', 'Similarity across roles', 'Standard-user score', 'Self-play score', 'Self-play gain'],
+      models.map(({name, self_play}) => [name, format(self_play.similarity), format(self_play.standard_user),
+        format(self_play.score), delta(self_play.score - self_play.standard_user)]), {models: true}),
+      'Across the ten models, greater similarity between user-role and assistant-role behavior is associated with a larger self-play gain (r = 0.65).') +
+    card('Performance in the user role', table('User-role capability', ['Model', 'User composite', proactiveStage],
+      models.map(model => [model.name, format(model.user_role.composite), format(model.user_role.stages[2])]), {models: true}),
+    'In the user role, proactive promotion summarizes Proactive probing (L5) and Long-horizon consistency (L6).')
   );
 }
 
@@ -346,23 +363,6 @@ function dynamics(models, evidence, episodes) {
   );
 }
 
-function creativity() {
-  const cognizerRates = new Map([
-    ['claude-opus-5.5', '12.3%'],
-    ['gpt-6-astra', '11.6%'],
-    ['claude-fable-5.1', '9.1%'],
-    ['claude-opus-5', '8.7%']
-  ]);
-  return section('creativity', 'Creativity analysis', card('Substantive contributions',
-    table('Turn-level contribution findings', ['Configuration', 'Turns judged as breakthroughs'], [
-      ['Base models', '0.0%'], ['MetaMind', '0.0%'], ...cognizerRates
-    ], {
-      rowLabel: name => cognizerRates.has(name)
-        ? '<span class="configuration-label">Cognizer <span class="configuration-model">(' + modelLabel(name) + ')</span></span>'
-        : safe(name)
-    }), 'Rates use evaluated assistant turns as the denominator. The other six Cognizer configurations recorded 0.0%.'));
-}
-
 const evaluationUsage = [
   {name:'Capability grading', calls:6, input:57000, output:3120},
   {name:'Latent-state reconstruction', calls:4, input:48800, output:5840},
@@ -408,195 +408,40 @@ function costs() {
     'Evaluation totals exclude participant generation, shown below the divider. The latency is measured along the evaluation critical path.'));
 }
 
-function comparisonContext(specification, rows, column) {
-  const values = rows.map(row => row.values[column].value);
-  const minimum = Math.min(...values), maximum = Math.max(...values);
-  const display = value => rows.find(row => row.values[column].value === value).values[column].text;
-  const range = safe(display(minimum)) + ' to ' + safe(display(maximum));
-  const descriptions = {
-    'Conversation outcomes': [
-      'of evaluated episodes reached successful closure.',
-      'of evaluated episodes stopped through interest exhaustion.',
-      'of task-oriented episodes reached successful closure.',
-      'of open-ended episodes reached successful closure.'
-    ],
-    'Purpose and world setting': [
-      'Task-oriented', 'Mixed-purpose', 'Open-ended', 'Realistic-world', 'Stylized-world', 'Science-fictional-world'
-    ],
-    'Matched information conditions': [
-      'sufficient', 'partial', 'insufficient'
-    ],
-    'Behavior frequencies': [
-      'showed clarification.',
-      'contained unsupported factual additions.'
-    ],
-    'User-role capability': [
-      'Composite scores', 'L5–L6 scores'
-    ],
-    'Matched fixed-horizon scores': [
-      'through adaptive stopping', 'over 8 turns', 'over 16 turns', 'over 32 turns'
-    ]
-  };
-  const description = descriptions[specification.label]?.[column];
+const standardMotion = matchMedia('(prefers-reduced-motion: no-preference)');
+const readoutMotion = new WeakMap();
 
-  switch (specification.label) {
-    case 'Controlled probe accuracy': {
-      const drops = rows.map(row => row.values[0].value - row.values[1].value);
-      return '<p class="plot-explanation">Probe accuracy falls by <b>' + drops[0] +
-        ' percentage points</b> without latent states and <b>' + drops[1] + '</b> without event chains.</p>';
-    }
-    case 'Within-dialogue interest prediction': {
-      const qwen = rows.find(row => row.name === 'Qwen3.5-35B-A3B');
-      return '<p class="plot-explanation">For Qwen3.5-35B-A3B, interest R² is <b>' +
-        safe(qwen.values[1].text) + ' on the user side</b> versus <b>' +
-        safe(qwen.values[0].text) + ' on the assistant side</b>.</p>';
-    }
-    case 'Behavior frequencies':
-      return '<p class="plot-explanation">Across ten models, <b>' + range +
-        '</b> of evaluated assistant turns ' + description + '</p>';
-    case 'Conversation outcomes':
-      return '<p class="plot-explanation">Across ten models, <b>' + range + '</b> ' + description + '</p>';
-    case 'Reviewer endorsement':
-      return '<p class="plot-explanation">Human endorsement of evaluator judgments, from <b>311 turn records audited by 22 reviewers</b>.</p>';
-    case 'Purpose and world setting':
-      return '<p class="plot-explanation"><b>' + description +
-        ' composite scores</b> across ten models, on a 0–1 scale.</p>';
-    case 'Matched information conditions':
-      return '<p class="plot-explanation">Composite scores for three models on matched scenarios with <b>' +
-        description + ' information</b>.</p>';
-    case 'User-role capability':
-      return '<p class="plot-explanation"><b>' + description +
-        '</b> for ten models playing the user role, on a 0–1 scale.</p>';
-    case 'Matched fixed-horizon scores':
-      return '<p class="plot-explanation">Composite scores on the <b>same matched subsample</b>, evaluated ' +
-        description + '.</p>';
-    case 'Turn-level contribution findings': {
-      const nonzero = rows.filter(row => row.values[0].value > 0);
-      const rates = nonzero.map(row => row.values[0].value);
-      return '<p class="plot-explanation">Breakthroughs occur in <b>' +
-        Math.min(...rates) + '%–' + Math.max(...rates) +
-        '% of evaluated turns</b> for four Cognizer configurations.</p>';
-    }
-  }
+function transitionData(element, keyframes, duration = 190) {
+  if (!standardMotion.matches || typeof element?.animate !== 'function') return;
+  readoutMotion.get(element)?.cancel();
+  readoutMotion.set(element, element.animate(keyframes, {
+    duration,
+    easing: 'cubic-bezier(0.23, 1, 0.32, 1)'
+  }));
 }
 
-function pairedComparisonPlot(specification, labels, rows) {
-  const lowerBound = specification.minimum ?? 0;
-  const scaleWidth = specification.maximum - lowerBound;
-  const position = value => (value - lowerBound) / scaleWidth * 100;
-  return '<div class="paired-legend">' + labels.map((label, index) =>
-    '<span><i class="paired-marker marker-' + index + '"></i>' + safe(label) + '</span>').join('') + '</div>' +
-    '<div class="plot-axis" aria-hidden="true">' +
-      [lowerBound, (lowerBound + specification.maximum) / 2, specification.maximum].map(value =>
-        '<span>' + value + specification.unit + '</span>').join('') + '</div>' +
-    '<div class="paired-rows">' + rows.map(row => {
-      const [first, second] = row.values;
-      const firstPosition = position(first.value), secondPosition = position(second.value);
-      const change = specification.label === 'Controlled probe accuracy'
-        ? '<small class="paired-change">−' + (first.value - second.value) + ' pp</small>' : '';
-      return '<div class="paired-row"><span class="plot-identity">' + row.identity + change + '</span>' +
-        '<span class="paired-track" aria-hidden="true">' +
-          '<i class="paired-connector" style="left:' + Math.min(firstPosition, secondPosition) + '%;width:' +
-            Math.abs(secondPosition - firstPosition) + '%"></i>' +
-          '<i class="paired-marker marker-0" data-value="' + safe(first.text) + '" style="left:' + firstPosition + '%"></i>' +
-          '<i class="paired-marker marker-1" data-value="' + safe(second.text) + '" style="left:' + secondPosition + '%"></i>' +
-        '</span><span class="paired-values"><span aria-label="' + safe(labels[0] + ': ' + first.text) +
-          '"><i class="paired-marker marker-0" aria-hidden="true"></i><b>' + safe(first.text) +
-          '</b></span><span aria-label="' + safe(labels[1] + ': ' + second.text) +
-          '"><i class="paired-marker marker-1" aria-hidden="true"></i><b>' + safe(second.text) +
-          '</b></span></span></div>';
-    }).join('') + '</div>';
-}
-
-
-// Plot the values already rendered in the publication tables.
-function enhanceComparisonPlots(root) {
-  const plots = [
-    {label: 'Conversation outcomes', columns: [1, 2, 3, 4], maximum: 100, unit: '%'},
-    {label: 'Controlled probe accuracy', columns: [1, 2], maximum: 100, unit: '%', paired: true},
-    {label: 'Within-dialogue interest prediction', columns: [1, 2], minimum: -.25, maximum: .25, unit: '', paired: true},
-    {label: 'Reviewer endorsement', columns: [1], maximum: 100, unit: '%'},
-    {label: 'Purpose and world setting', columns: [1, 2, 3, 4, 5, 6], maximum: 1, unit: ''},
-    {label: 'Matched information conditions', columns: [1, 2, 3], maximum: 1, unit: ''},
-    {label: 'Behavior frequencies', columns: [1, 2], maximum: 100, unit: '%'},
-    {label: 'User-role capability', columns: [1, 2], maximum: 1, unit: ''},
-    {label: 'Matched fixed-horizon scores', columns: [1, 2, 3, 4], maximum: 1, unit: ''},
-    {label: 'Turn-level contribution findings', columns: [1], maximum: 15, unit: '%'}
-  ];
-
-  for (const specification of plots) {
-    const region = root.querySelector('.table-scroll[aria-label="' + specification.label + '"]');
-    const table = region.querySelector('table');
-    const labels = specification.columns.map(column => table.rows[0].cells[column].textContent.trim());
-    const rows = [...table.tBodies[0].rows].map(row => ({
-      name: row.cells[0].textContent.trim(),
-      identity: row.cells[0].innerHTML,
-      values: specification.columns.map(column => {
-        const text = row.cells[column].textContent.trim();
-        return {text, value: Number(text.replace('%', ''))};
-      })
-    }));
-    const figure = document.createElement('div');
-    figure.className = 'comparison-plot';
-    figure.classList.toggle('has-signed-scale', specification.minimum < 0);
-    figure.setAttribute('role', 'group');
-    figure.setAttribute('aria-label', specification.label + ' chart');
-    figure.innerHTML =
-      (!specification.paired && labels.length > 1 ? '<div class="plot-measures" role="group" aria-label="' +
-        safe(specification.label) + ' measure">' + labels.map((label, index) =>
-          '<button type="button" data-plot-measure="' + index + '" aria-pressed="' + (index === 0) + '">' +
-          safe(label) + '</button>').join('') + '</div>' : '') +
-      '<div class="plot-content"></div>';
-
-    const details = document.createElement('details');
-    details.className = 'plot-values';
-    const summary = document.createElement('summary');
-    summary.textContent = 'Exact values';
-    details.append(summary);
-    region.before(figure, details);
-    details.append(region);
-
-    function draw(column) {
-      const lowerBound = specification.minimum ?? 0;
-      const scaleWidth = specification.maximum - lowerBound;
-      const zero = (0 - lowerBound) / scaleWidth * 100;
-      const context = comparisonContext(specification, rows, column);
-      if (specification.paired) {
-        figure.querySelector('.plot-content').innerHTML =
-          context + pairedComparisonPlot(specification, labels, rows);
-        return;
-      }
-      figure.querySelector('.plot-content').innerHTML =
-        context +
-        '<div class="plot-axis" aria-hidden="true">' +
-          [lowerBound, (lowerBound + specification.maximum) / 2, specification.maximum].map(value =>
-            '<span>' + value + specification.unit + '</span>').join('') + '</div>' +
-        '<div class="plot-rows">' + rows.map(row => {
-          const datum = row.values[column];
-          return '<div class="plot-row"><span class="plot-identity">' + row.identity + '</span>' +
-            '<span class="plot-track" aria-hidden="true"><i class="' + (datum.value < 0 ? 'is-negative' : '') +
-            '" style="left:' + (zero + Math.min(0, datum.value) / scaleWidth * 100) +
-            '%;width:' + Math.abs(datum.value) / scaleWidth * 100 + '%"></i></span>' +
-            '<strong>' + safe(datum.text) + '</strong></div>';
-        }).join('') + '</div>';
+function observeData(root, signal) {
+  if (!('IntersectionObserver' in window)) return;
+  const observer = new IntersectionObserver(entries => {
+    for (const {target, isIntersecting} of entries) {
+      if (!isIntersecting) continue;
+      target.dataset.dataVisible = '';
+      observer.unobserve(target);
     }
-
-    figure.addEventListener('click', event => {
-      const button = event.target.closest('[data-plot-measure]');
-      if (!button) return;
-      for (const control of figure.querySelectorAll('[data-plot-measure]')) {
-        control.setAttribute('aria-pressed', String(control === button));
-      }
-      draw(Number(button.dataset.plotMeasure));
-    });
-    draw(0);
-  }
+  }, {threshold: 0.12});
+  root.querySelectorAll('.card, .profile').forEach(card => observer.observe(card));
+  signal.addEventListener('abort', () => observer.disconnect(), {once: true});
 }
 
 function setupInteractions(root, models, matrix, episodes, initialTopic, signal) {
   let activeModel = 0;
   let activeLevel = 4;
   const chart = root.querySelector('#profile-chart');
+  const ranges = levelLabels.map((_, index) => {
+    const values = models.map(model => model.levels[index]).sort((a, b) => a - b);
+    const center = (values.length - 1) / 2;
+    return {min: values[0], max: values.at(-1), median: (values[Math.floor(center)] + values[Math.ceil(center)]) / 2};
+  });
   const readout = root.querySelector('#profile-readout');
   const picker = root.querySelector('.profile-picker');
   const pickerTrigger = picker.querySelector('summary');
@@ -609,6 +454,7 @@ function setupInteractions(root, models, matrix, episodes, initialTopic, signal)
   const interestPlot = root.querySelector('.trajectory-grid');
   const rememberedTopics = resultGroups.map(([, items]) => items[0][0]);
   let activeGroup = 0;
+  const scoreReveal = [{opacity: .45, transform: 'translateY(4px)'}, {opacity: 1, transform: 'translateY(0)'}];
 
   function showSections(id) {
     rememberedTopics[activeGroup] = id;
@@ -628,12 +474,14 @@ function setupInteractions(root, models, matrix, episodes, initialTopic, signal)
     showSections(rememberedTopics[index]);
   }
 
-  function showLevel(index) {
+  function showLevel(index, animate = false) {
     activeLevel = index;
     const model = models[activeModel];
-    readout.innerHTML = '<strong>' + format(model.levels[index]) + '</strong><p class="profile-level">L' + (index + 1) + ' · ' + safe(levelLabels[index]) +
+    readout.innerHTML = '<strong>' + format(model.levels[index]) +
+      '</strong><p class="profile-level">L' + (index + 1) + ' · ' + safe(levelLabels[index]) +
       '</p><p class="profile-score-model">' +
       modelLabel(model.name) + '</p>';
+    if (animate) transitionData(readout.querySelector('strong'), scoreReveal);
     chart.querySelectorAll('[data-level]').forEach(point => {
       const chosen = Number(point.dataset.level) === index;
       point.classList.toggle('is-selected', chosen);
@@ -641,16 +489,17 @@ function setupInteractions(root, models, matrix, episodes, initialTopic, signal)
     });
   }
 
-  function showModel(index) {
+  function showModel(index, animate = false) {
     activeModel = index;
     selectedModel.innerHTML = modelLabel(models[index].name);
     root.querySelectorAll('[data-profile]').forEach(button =>
       button.setAttribute('aria-pressed', String(Number(button.dataset.profile) === index)));
-    chart.innerHTML = capabilityComparison(models, index);
-    showLevel(activeLevel);
+    const model = models[index];
+    chart.innerHTML = capabilityProfileChart(model, ranges);
+    showLevel(activeLevel, animate);
   }
 
-  function showPair(row, column) {
+  function showPair(row, column, animate = false) {
     const record = matrix[row];
     root.querySelectorAll('[data-pair]').forEach(button =>
       button.setAttribute('aria-pressed', String(button.dataset.pair === row + ',' + column)));
@@ -660,10 +509,12 @@ function setupInteractions(root, models, matrix, episodes, initialTopic, signal)
     partner.title = displayModel(record.partner);
     assistant.innerHTML = modelLabel(models[column].name);
     assistant.title = displayModel(models[column].name);
-    root.querySelector('#selected-pair-score').textContent = format(record.scores[column]);
+    const score = root.querySelector('#selected-pair-score');
+    score.textContent = format(record.scores[column]);
+    if (animate) transitionData(score, scoreReveal);
   }
 
-  function showInterestTurn(turn) {
+  function showInterestTurn(turn, animate = false) {
     for (const point of interestPlot.querySelectorAll('[data-interest-turn]')) {
       point.setAttribute('aria-pressed', String(Number(point.dataset.interestTurn) === turn));
     }
@@ -673,12 +524,13 @@ function setupInteractions(root, models, matrix, episodes, initialTopic, signal)
       readout.innerHTML = '<span>Turn ' + turn + '</span>' + (value === undefined
         ? '<strong aria-label="No observation">—</strong>'
         : '<strong>' + format(value, 2) + '</strong>');
+      if (animate) transitionData(readout.querySelector('strong'), scoreReveal);
     });
   }
 
   interestPlot.addEventListener('click', event => {
     const turn = event.target.closest('[data-interest-turn]');
-    if (turn) showInterestTurn(Number(turn.dataset.interestTurn));
+    if (turn) showInterestTurn(Number(turn.dataset.interestTurn), event.detail > 0);
   });
   interestPlot.addEventListener('keydown', event => {
     if (event.target.matches('[data-interest-turn]') && ['Enter', ' '].includes(event.key)) {
@@ -723,17 +575,20 @@ function setupInteractions(root, models, matrix, episodes, initialTopic, signal)
       history.replaceState(history.state, '', '#comparisons?topic=' + encodeURIComponent(topic));
     }
     const point = event.target.closest('[data-level]');
-    if (point) showLevel(Number(point.dataset.level));
+    if (point) showLevel(Number(point.dataset.level), event.detail > 0);
     const profile = event.target.closest('[data-profile]');
     if (profile) {
-      showModel(Number(profile.dataset.profile));
+      showModel(Number(profile.dataset.profile), event.detail > 0);
       if (picker.contains(profile)) {
         picker.open = false;
         pickerTrigger.focus();
       }
     }
     const cell = event.target.closest('[data-pair]');
-    if (cell) showPair(...cell.dataset.pair.split(',').map(Number));
+    if (cell) {
+      const [row, column] = cell.dataset.pair.split(',').map(Number);
+      showPair(row, column, event.detail > 0);
+    }
   });
   chart.addEventListener('keydown', event => {
     if (event.target.matches('[data-level]') && ['Enter', ' '].includes(event.key)) {
@@ -755,8 +610,8 @@ export function mountResults(root, publication, evidence, research, initialTopic
   root.innerHTML =
     resultPicker() +
     mainResults(models) + agentResults(models, agents) + robustness(models, evidence) +
-    scenarios(models, matched) + personas(models) + participants(models, matrix) +
-    dynamics(models, evidence, episodes) + creativity() + costs();
-  enhanceComparisonPlots(root);
+    scenarios(models, matched) + personas() + participants(models, matrix) +
+    dynamics(models, evidence, episodes) + costs();
   setupInteractions(root, models, matrix, episodes, initialTopic, signal);
+  observeData(root, signal);
 }

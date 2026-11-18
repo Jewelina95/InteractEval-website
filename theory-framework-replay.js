@@ -13,18 +13,18 @@ window.interactNetTheory = (() => {
   const stackClip = clipBand(stackTop, 0, 1);
   const waveClip = clipBand(waveTop, waveTop, waveBottom - waveTop);
   const layers = [
-    {name:'state', art:'iceberg', band:[stackTop, .349], width:.43, title:'Data Iceberg Theory', bridge:'State interpretation', alt:'Cutaway of a glacier above and below the waterline'},
-    {name:'time', art:'trajectory', band:[.349, waveTop], width:.49, title:'Movie Evaluation Theory', bridge:'Casual modeling', alt:'A branching illuminated trajectory crosses three film frames'},
-    {name:'agency', art:'agency-waves', band:[waveTop, waveBottom], width:.59, clip:waveClip, title:'Agency Principle', bridge:'Contribution attribution', alt:'Two wave surfaces with illuminated paths diverging across them'}
+    {name:'state', art:'iceberg', band:[stackTop, .349], width:.43, title:'Data Iceberg Theory', bridge:'World reconstruction', alt:'Cutaway of a glacier above and below the waterline'},
+    {name:'time', art:'trajectory', band:[.349, waveTop], width:.49, title:'Movie Evaluation Theory', bridge:'Causal modeling', alt:'A branching illuminated trajectory crosses three film frames'},
+    {name:'agency', art:'agency-waves', band:[waveTop, waveBottom], width:.59, clip:waveClip, title:'Agency Principle', bridge:'Capability attribution', alt:'Two wave surfaces with illuminated paths diverging across them'}
   ];
 
   const capabilities = [
-    ['Goal preservation', 'Maintain the operative goal.'],
-    ['Information uptake', 'Use relevant new information.'],
-    ['State progression', 'Show a change in feeling or decision that the evidence supports.'],
-    ['Contextual expression', 'Adapt expression to the situation and the other participant.'],
-    ['Proactive agency', 'Introduce a justified new direction.'],
-    ['Long-horizon coherence', 'Carry that direction through the interaction.']
+    ['Goal preservation', 'Act consistently with the current goal or persona and the world rules.'],
+    ['Information uptake', 'Use what the partner’s latest turn implies for the goal.'],
+    ['State progression', 'Show a change in feeling or decision grounded in new evidence and prior state.'],
+    ['Contextual expression', 'Choose wording that fits the expressed state, partner, and situation.'],
+    ['Proactive agency', 'Initiate, advance, or revise one’s own strategy with a justified, feasible next step.'],
+    ['Long-horizon coherence', 'Build on consequences and partner responses to carry the strategy forward across turns.']
   ];
 
   function render(){
@@ -48,78 +48,82 @@ window.interactNetTheory = (() => {
               </div>
               <figcaption>${title}</figcaption>
             </figure>
-            <div class="theory-arrow theory-arrow--${name}"><span>${bridge}</span><i aria-hidden="true"></i></div>
+            <div class="theory-arrow theory-arrow--${name}">${bridge ? `<span>${bridge}</span>` : ''}<i aria-hidden="true"></i></div>
             <div class="theory-morph theory-morph--${name}" aria-hidden="true" style="--world-image:url('${image}')${clip ? `;clip-path:${clip}` : ''}"></div>
           `).join('')}
           <div class="theory-diagrams">
-            <section class="theory-row theory-row--state" aria-labelledby="theory-iceberg">
-              <p class="theory-mobile-bridge">State interpretation</p>
-              <div class="theory-row-title"><h3 id="theory-iceberg">Interaction-world reconstruction</h3></div>
-              <div class="theory-state-flow">
-                <ol class="theory-state-inputs" aria-label="Reconstruction update order">
-                  <li class="theory-node theory-node--latent">
-                    <strong>Latent state <var>Ψ<sub>t</sub></var></strong>
-                  </li>
-                  <li class="theory-node theory-node--event">
-                    <strong>Casual Chain <var>E<sub>t</sub></var></strong>
-                  </li>
-                  <li class="theory-node theory-node--scene">
-                    <strong>Scene <var>S<sub>t</sub></var></strong>
-                  </li>
-                </ol>
-                <i class="theory-reconstruction-link" aria-hidden="true"></i>
-                <div class="theory-node theory-node--outcome">
-                  <strong>World reconstruction <var>W<sub>t</sub></var></strong>
-                  <span><var>W<sub>t</sub> = (S<sub>t</sub>, Ψ<sub>t</sub>, E<sub>t</sub>)</var></span>
+            <section class="theory-row theory-row--state" aria-label="World reconstruction">
+              <p class="theory-mobile-bridge">World reconstruction</p>
+              <div class="theory-diagram theory-diagram--state">
+                <div class="theory-state-flow">
+                  <ul class="theory-state-inputs" aria-label="Components of the interaction world">
+                    <li class="theory-node"><strong>Scene <var>S<sub>t</sub></var></strong></li>
+                    <li class="theory-node"><strong>Latent state <var>&Psi;<sub>t</sub></var></strong></li>
+                    <li class="theory-node"><strong>Causal chain <var>E<sub>t</sub></var></strong></li>
+                  </ul>
+                  <i class="theory-reconstruction-link" aria-hidden="true"></i>
+                  <div class="theory-node theory-node--outcome">
+                    <strong>Interaction world <var>W<sub>t</sub></var></strong>
+                    <span><var>W<sub>t</sub> = (S<sub>t</sub>, Ψ<sub>t</sub>, E<sub>t</sub>)</var></span>
+                  </div>
                 </div>
               </div>
               <details class="theory-details">
                 <summary>What do the symbols mean?</summary>
                 <dl class="theory-symbols">
-                  <dt><var>W<sub>t</sub></var></dt><dd>An operational reconstruction of the interaction world inferred from observable behavior and available context. It combines the effective scene, the estimated latent state, and the casual chain.</dd>
                   <dt><var>t</var></dt><dd>The current exchange.</dd>
-                  <dt><var>Ψ<sub>t</sub></var></dt><dd>The evaluator’s estimate of the participants’ states, based on the available evidence.</dd>
+                  <dt><var>W<sub>t</sub></var></dt><dd>An operational reconstruction of the interaction world inferred from observable behavior and available context.</dd>
                   <dt><var>S<sub>t</sub></var></dt><dd>The effective scene, including roles, objectives, rules, and constraints.</dd>
-                  <dt><var>E<sub>t</sub></var></dt><dd>The casual chain groups prior events <var>P<sub>t</sub></var>, the current event <var>C<sub>t</sub></var>, and possible future paths <var>F<sub>t</sub></var>.</dd>
+                  <dt><var>Ψ<sub>t</sub></var></dt><dd>The evaluator’s estimate of the participants’ states, based on the available evidence.</dd>
+                  <dt><var>E<sub>t</sub></var></dt><dd>The causal chain groups prior events <var>P<sub>t</sub></var>, the current event <var>C<sub>t</sub></var>, and possible future paths <var>F<sub>t</sub></var>.</dd>
                 </dl>
               </details>
             </section>
-            <section class="theory-row theory-row--time" aria-labelledby="theory-movie">
-              <p class="theory-mobile-bridge">Casual modeling</p>
-              <div class="theory-row-title"><h3 id="theory-movie">Trajectory understanding</h3></div>
-              <p class="theory-timeline-label">Casual Chain <var>E<sub>t</sub></var></p>
-              <div class="theory-timeline">
-                <div class="theory-node"><strong>Past <var>P<sub>t</sub></var></strong></div>
-                <div class="theory-node"><strong>Present <var>C<sub>t</sub></var></strong></div>
-                <div class="theory-node theory-node--future"><strong>Future <var>F<sub>t</sub></var></strong></div>
+            <section class="theory-row theory-row--time" aria-label="Causal modeling">
+              <p class="theory-mobile-bridge">Causal modeling</p>
+              <div class="theory-diagram theory-diagram--timeline">
+                <p class="theory-timeline-label">Causal chain <var>E<sub>t</sub></var></p>
+                <div class="theory-timeline">
+                  <ul class="theory-past-inputs" aria-label="Past information"><li>Memory</li><li>Causes</li></ul>
+                  <svg class="theory-flow-in" viewBox="0 0 30 100" preserveAspectRatio="none" aria-hidden="true">
+                    <path d="M0 25 H7 Q13 25 13 33 V42 Q13 50 21 50 H28 M0 75 H7 Q13 75 13 67 V58 Q13 50 21 50 M22 44 L28 50 L22 56"/>
+                  </svg>
+                  <div class="theory-node"><strong>Past <var>P<sub>t</sub></var></strong></div>
+                  <div class="theory-node"><strong>Current <var>C<sub>t</sub></var></strong></div>
+                  <div class="theory-node theory-node--future"><strong>Future <var>F<sub>t</sub></var></strong></div>
+                  <svg class="theory-path-brace" viewBox="0 0 28 100" preserveAspectRatio="none" aria-hidden="true">
+                    <path d="M0 50 H8"/>
+                    <path stroke-dasharray="3 3" d="M8 50 V12 H26 M8 50 V37 H26 M8 50 V63 H26 M8 63 V88 H26"/>
+                    <path d="m22 9 4 3-4 3 m0 19 4 3-4 3 m0 20 4 3-4 3 m0 19 4 3-4 3"/>
+                  </svg>
+                  <ul class="theory-transitions" aria-label="Candidate path labels">
+                    <li><span aria-hidden="true">↗</span> Advance</li>
+                    <li><span aria-hidden="true">→</span> Maintain</li>
+                    <li><span aria-hidden="true">↘</span> Degrade</li>
+                    <li><span aria-hidden="true">×</span> Collapse</li>
+                  </ul>
+                </div>
               </div>
-              <ul class="theory-transitions" aria-label="Candidate path labels">
-                <li><span aria-hidden="true">↗</span> Advance</li>
-                <li><span aria-hidden="true">→</span> Maintain</li>
-                <li><span aria-hidden="true">↘</span> Degrade</li>
-                <li><span aria-hidden="true">×</span> Collapse</li>
-              </ul>
             </section>
-            <section class="theory-row theory-row--agency" aria-labelledby="theory-agency">
-              <p class="theory-mobile-bridge">Contribution attribution</p>
-              <div class="theory-row-title"><h3 id="theory-agency">Capability adjudication</h3></div>
-              <ol class="theory-levels" aria-label="Six levels of assistant capability">
-                ${capabilities.map(([label], index) => `<li><strong>L${index + 1}</strong><span>${label}</span></li>`).join('')}
-              </ol>
-              <div class="theory-capabilities">
-                ${[
-                  ['L1–L2', 'Passive execution'],
-                  ['L3–L4', 'Interactive adaptation'],
-                  ['L5–L6', 'Proactive promotion']
-                ].map(([levels, label]) => `<div class="theory-node">
-                  <strong>${levels}</strong><span>${label}</span>
-                </div>`).join('')}
+            <section class="theory-row theory-row--agency" aria-label="Capability attribution">
+              <p class="theory-mobile-bridge">Capability attribution</p>
+              <div class="theory-diagram theory-diagram--levels">
+                <ol class="theory-levels" aria-label="Six levels of assistant capability">
+                  ${capabilities.map(([label], index) => `<li><strong>L${index + 1}</strong><span>${label}</span></li>`).join('')}
+                </ol>
+                <div class="theory-capabilities">
+                  ${[
+                    ['L1–L2', 'Passive execution'],
+                    ['L3–L4', 'Interactive adaptation'],
+                    ['L5–L6', 'Proactive promotion']
+                  ].map(([levels, label]) => `<div class="theory-node">
+                    <strong>${levels}</strong><span>${label.replace(' ', '<br/>')}</span>
+                  </div>`).join('')}
+                </div>
               </div>
               <details class="theory-details">
                 <summary>What do L1–L6 measure?</summary>
-                <dl>
-                  ${capabilities.map(([label, description], index) => `<dt>L${index + 1} · ${label}</dt><dd>${description}</dd>`).join('')}
-                </dl>
+                <dl>${capabilities.map(([label, description], index) => `<dt>L${index + 1} · ${label}</dt><dd>${description}</dd>`).join('')}</dl>
               </details>
             </section>
           </div>

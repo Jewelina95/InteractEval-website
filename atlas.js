@@ -67,7 +67,7 @@ function atlasWorldFigure(){
       </span>
     </div>
     <div class="atlas-world-controls">
-      <button type="button" class="atlas-world-sound" hidden aria-pressed="false">Sound</button>
+      <button type="button" class="atlas-world-sound" hidden aria-pressed="true">Sound</button>
       <button type="button" class="atlas-world-replay" hidden aria-label="Replay layer animation" title="Replay layer animation">
         <span class="replay-glyph" aria-hidden="true"></span>
       </button>
@@ -207,8 +207,10 @@ function setupAtlasWorld(){
   let audio;
   let output;
   let roomImpulse;
-  let soundEnabled = false;
+  let soundEnabled = true;
+  let stageInView = false;
   let observer;
+  const heroLink = figure.closest('.atlas-hero')?.querySelector('.atlas-hero-actions a');
 
   function stopSound(){
     output?.disconnect();
@@ -219,13 +221,58 @@ function setupAtlasWorld(){
     if(document.hidden) stopSound();
   }
 
+  function soundIsAvailable(){
+    if(!soundEnabled || !stageInView || document.hidden || reducedMotion.matches || !AudioContext) return false;
+    const demoTracks = document.querySelectorAll('.why-demo audio, .why-demo video');
+    return !Array.from(demoTracks).some(track => !track.paused);
+  }
+
+  function onAudioReady(){
+    if(audio?.state === 'running' && soundIsAvailable() && figure.isConnected && !output) play();
+  }
+
+  function armSound(){
+    if(!soundIsAvailable()) return false;
+    try {
+      if(!audio) {
+        audio = new AudioContext();
+        audio.addEventListener('statechange', onAudioReady);
+      }
+      if(audio.state === 'running') return true;
+      audio.resume().catch(() => {});
+    } catch {
+      return false;
+    }
+    return false;
+  }
+
+  function resumeOnInteraction(event){
+    if(event.target.closest?.('.atlas-world-controls, .atlas-hero-actions, .why-demo')) return;
+    if(armSound() && !output) play();
+  }
+
+  function stopForDemo(event){
+    if(event.target.closest?.('.why-demo')) stopSound();
+  }
+
   document.addEventListener('visibilitychange', onVisibility);
+  document.addEventListener('play', stopForDemo, true);
+  document.addEventListener('click', resumeOnInteraction, true);
+  document.addEventListener('keydown', resumeOnInteraction);
+  heroLink?.addEventListener('click', stopSound);
   atlasWorldCleanup = () => {
     observer?.disconnect();
     animations.forEach(animation => animation.cancel());
     stopSound();
-    if(audio) void audio.close();
+    if(audio) {
+      audio.removeEventListener('statechange', onAudioReady);
+      void audio.close();
+    }
     document.removeEventListener('visibilitychange', onVisibility);
+    document.removeEventListener('play', stopForDemo, true);
+    document.removeEventListener('click', resumeOnInteraction, true);
+    document.removeEventListener('keydown', resumeOnInteraction);
+    heroLink?.removeEventListener('click', stopSound);
   };
 
   function play(){
@@ -239,7 +286,7 @@ function setupAtlasWorld(){
     sound.hidden = still || !AudioContext;
     if(still) return;
     const width = stage.clientWidth;
-    const audible = soundEnabled && audio?.state === 'running' && !document.hidden;
+    const audible = soundIsAvailable() && audio?.state === 'running';
     const soundStart = audible ? audio.currentTime : 0;
     let ambience;
     if(audible){
@@ -296,39 +343,36 @@ function setupAtlasWorld(){
     );
   }
 
-  replay.addEventListener('click', async () => {
-    if(soundEnabled && audio?.state === 'suspended'){
-      await audio.resume().catch(() => {});
-    }
+  replay.addEventListener('click', () => {
+    armSound();
     if(figure.isConnected) play();
   });
-  sound.addEventListener('click', async () => {
-    soundEnabled = !soundEnabled;
-    sound.setAttribute('aria-pressed', String(soundEnabled));
-    if(!soundEnabled){
-      stopSound();
+  sound.addEventListener('click', () => {
+    if(soundEnabled && !output){
+      if(armSound()) play();
       return;
     }
-    try{
-      audio ??= new AudioContext();
-      await audio.resume();
-      if(soundEnabled && figure.isConnected) play();
-    }catch{
-      soundEnabled = false;
-      sound.setAttribute('aria-pressed', 'false');
-    }
+    soundEnabled = !soundEnabled;
+    sound.setAttribute('aria-pressed', String(soundEnabled));
+    if(!soundEnabled) stopSound();
+    else if(armSound()) play();
   });
   if(reducedMotion.matches || !('IntersectionObserver' in window)){
+    stageInView = true;
     figure.classList.add('is-in-view');
+    armSound();
     play();
     return;
   }
 
   observer = new IntersectionObserver(([entry]) => {
-    const visible = entry.intersectionRatio >= .25;
-    figure.classList.toggle('is-in-view', visible);
-    if(!visible) stopSound();
-    if(visible && !started) play();
+    stageInView = entry.intersectionRatio >= .25;
+    figure.classList.toggle('is-in-view', stageInView);
+    if(!stageInView) stopSound();
+    if(stageInView && !started) {
+      armSound();
+      play();
+    }
   }, {threshold:.25});
   observer.observe(stage);
 }

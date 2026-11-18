@@ -115,7 +115,7 @@
     "F07",
     "F09",
     "F14",
-    "F19",
+    "F22",
     "F26",
     "F30"
   ],
@@ -124,7 +124,7 @@
     "F07",
     "F09",
     "F14",
-    "F19",
+    "F22",
     "F26",
     "F30"
   ],
@@ -1700,7 +1700,7 @@
       "evidence_summary_en": "With the standard user, Sol 0.515 > Qwen 0.482; with the DeepSeek user, Sol 0.394 < Qwen 0.510.",
       "review_status": "provisional",
       "website_order": 5,
-      "published": true
+      "published": false
     },
     {
       "id": "F21",
@@ -1756,7 +1756,7 @@
       "group": "交互对象与群体效应",
       "editorial_tier": "延伸发现",
       "title_zh": "自我交互评测可能使不同角色下行为模式相似的模型获得评分优势。",
-      "title_en": "Partners with similar interaction patterns score higher together.",
+      "title_en": "Models perform well with partners having similar styles.",
       "clarification": "同一模型分饰用户和助手时，角色行为适配可能抬高评分",
       "supporting_data": "配对额外效应+0.020（95% CI +0.012~+0.028）；相似度与标准减自我差值相关−0.65",
       "paper_source": "Table 11; Table 27; §4.5.1",
@@ -1778,7 +1778,7 @@
       "next_finding_url_proposed": "https://worldeology.com/InteractionNet/index.html#comparisons?measure=extractor-stability&finding=F40",
       "category_url_proposed": "https://worldeology.com/InteractionNet/index.html#findings?category=partners",
       "clean_permalink_proposed": "https://worldeology.com/InteractionNet/index.html#comparisons?measure=self-gap&finding=F22",
-      "summary_en": "When both sides ask and advance in a similar style, the pairing scores higher than the same models paired with a dissimilar partner.",
+      "summary_en": "Models with more similar interaction patterns across user and assistant roles tend to score better in self-play relative to their scores with the standard user.",
       "limitation_en": "Self-play is not advantageous for every model, and the association is not causal. The headline remains provisional in the source review.",
       "tier_en": "Further finding",
       "verified_pages": [
@@ -1791,7 +1791,7 @@
       "evidence_summary_en": "Self-pairing excess: +0.020 (95% CI +0.012 to +0.028). Role-pattern similarity correlates at −0.65 with standard-user score minus self-play score.",
       "review_status": "provisional",
       "website_order": 6,
-      "published": false
+      "published": true
     },
     {
       "id": "F23",
@@ -2027,8 +2027,8 @@
       "id": "F30",
       "group": "认知架构与能力增强",
       "editorial_tier": "首页核心",
-      "title_zh": "认知架构对较弱模型的主动能力提升更大，但高水平前沿贡献仍集中在较强模型上。",
-      "title_en": "Weaker bases gain more proactive capability, but frontier contributions stay with stronger bases.",
+      "title_zh": "案例中的前沿贡献体现为对研究方法的实质改进。",
+      "title_en": "Frontier contributions are notably attributed to methodological iteration.",
       "clarification": "主动能力的边际增益与严格前沿贡献在模型强弱上的分布相反",
       "supporting_data": "基础主动分与增益r≤−0.99；FE非零仅强的4个基础模型搭配Cognizer/Claude Code",
       "paper_source": "Table 16; Table 17; §4.8",
@@ -2050,7 +2050,7 @@
       "next_finding_url_proposed": "https://worldeology.com/InteractionNet/index.html#comparisons?measure=role-probes&finding=F31",
       "category_url_proposed": "https://worldeology.com/InteractionNet/index.html#findings?category=architectures",
       "clean_permalink_proposed": "https://worldeology.com/InteractionNet/index.html#comparisons?measure=architecture-headroom&finding=F30",
-      "summary_en": "Marginal proactive gain and stringent frontier-level contribution have opposite distributions across base models.",
+      "summary_en": "The paired research dialogues illustrate how successive turns can substantially refine a research method, for example by exposing a missing assumption or deriving a testable prediction.",
       "limitation_en": "Score ceilings can contribute to the gain relationship. Frontier Emergence is not an independently validated scientific breakthrough.",
       "tier_en": "Core finding",
       "verified_pages": [
@@ -2060,7 +2060,7 @@
       "related_ids": [
         "F25"
       ],
-      "evidence_summary_en": "Base proactive score versus gain: reported r ≤ −0.99. Nonzero Frontier Emergence occurs only with the four stronger bases paired with Cognizer or Claude Code.",
+      "evidence_summary_en": "Illustrative research dialogues revisit how to verify an agent’s values and how to test a mechanism for in-context learning.",
       "review_status": "confirmed",
       "website_order": 9,
       "published": true

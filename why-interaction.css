@@ -84,28 +84,36 @@
 
 .why-panels {
   display: grid;
+  container-type: inline-size;
   grid-template-columns: minmax(255px, 1fr) minmax(0, 1.62fr);
+  align-items: start;
   gap: 12px clamp(14px, 2vw, 29px);
-  grid-template-rows: auto auto auto;
   padding: clamp(16px, 2.3vw, 32px);
 }
 .why-response, .why-interactive {
-  display: grid;
-  grid-row: 1 / span 3;
-  grid-template-rows: subgrid;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
   min-width: 0;
   position: relative;
 }
-.why-response { grid-column: 1; }
-.why-interactive { grid-column: 2; }
-.why-chat, .why-situations { grid-row: 2; }
-.why-situation-navigation { grid-row: 3; }
+.why-panel-heading {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+}
 .why-demo .why-panels h3 {
   margin: 0;
-  align-self: end;
-  font: 680 clamp(23px, 2.5vw, 36px)/1.12 var(--sans);
+  font: 680 min(clamp(23px, 2.5vw, 36px), calc((100cqi - clamp(14px, 2vw, 29px)) / 2.62 * .092))/1.12 var(--sans);
   letter-spacing: -.043em;
   color: var(--why-ink);
+  white-space: nowrap;
+}
+.why-interactive-heading-row {
+  --why-control-size: clamp(32px, 9cqi, 44px);
+  --why-controls-gap: 5px;
+  justify-content: space-between;
+  gap: var(--why-controls-gap);
 }
 .why-chat {
   display: flex;
@@ -158,7 +166,7 @@
 }
 .why-situations::after { content: ''; flex: 0 0 calc(var(--next-preview) - var(--card-gap)); }
 .why-situations::-webkit-scrollbar { display: none; }
-.why-situation-navigation { display: flex; align-items: center; justify-content: center; gap: 7px; }
+.why-situation-navigation { position: relative; display: flex; align-items: center; justify-content: center; gap: 7px; }
 .why-situation-indicators { display: flex; align-items: center; gap: 3px; padding: 2px 9px; border-radius: 99px; background: #e7e7e7; }
 .why-situation-indicators button {
   display: grid;
@@ -206,6 +214,38 @@
 }
 .why-situation-heading { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 8px; margin-bottom: 9px; }
 .why-demo .why-situation h4 { margin: 0; color: var(--why-ink); font: 690 clamp(15px, 1.35vw, 21px)/1.2 var(--sans); letter-spacing: -.035em; }
+.why-video-controls { display: flex; flex: none; gap: var(--why-controls-gap); }
+.why-video-controls button {
+  display: grid;
+  place-items: center;
+  width: var(--why-control-size);
+  height: var(--why-control-size);
+  padding: 0;
+  border: 1px solid var(--why-line);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--why-ink);
+  cursor: pointer;
+}
+.why-video-controls button:is(:hover, [aria-pressed=true]) { background: #ececec; }
+.why-video-controls svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.5; }
+.why-video-controls .why-play-glyph { fill: currentColor; }
+.why-video-controls :is(.why-pause-glyph, .why-muted-glyph),
+.why-video-controls [data-playing] .why-play-glyph,
+.why-video-controls [aria-pressed=true] .why-sound-glyph { display: none; }
+.why-video-controls [data-playing] .why-pause-glyph,
+.why-video-controls [aria-pressed=true] .why-muted-glyph { display: block; }
+.why-video-surface {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: #181818;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.why-video-surface:focus-visible { outline: 2px solid #646464; outline-offset: 3px; }
 .why-situation video, .why-frame-image img {
   display: block;
   width: 100%;
@@ -309,12 +349,11 @@
     column-gap: clamp(10px, 1.4vw, 16px);
     padding: clamp(12px, 1.5vw, 17px);
   }
-  .why-demo .why-panels h3 { font-size: clamp(19px, 2.1vw, 23px); }
 }
 @media (max-width: 730px) {
-  .why-panels { grid-template-columns: 1fr; grid-template-rows: none; gap: 24px; }
-  .why-response, .why-interactive { grid-column: auto; grid-row: auto; grid-template-rows: none; gap: 12px; }
-  .why-chat, .why-situations, .why-situation-navigation { grid-row: auto; }
+  .why-panels { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+  .why-interactive-heading-row { --why-control-size: 32px; }
+  .why-demo .why-panels h3 { font-size: min(36px, calc((100cqi - 74px) * .095)); }
 }
 @media (max-width: 495px) {
   .why-demo { --why-stage-width: calc(100vw - 28px); }

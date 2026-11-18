@@ -418,7 +418,7 @@ body.interactnet-home.nav-on-hero {
   color: #f7f7f7;
 }
 
-body.interactnet-home.nav-on-hero .masthead {
+body.interactnet-home:is(.nav-on-hero,.nav-on-dark) .masthead {
   --nav-ink: #fff4e1;
   --nav-muted: #c1ae91;
   --nav-surface: #161411;
@@ -431,8 +431,8 @@ body.interactnet-home.nav-on-hero .masthead {
 
 body .masthead .wordmark { color: #171411; }
 .masthead .wordmark .brand-accent { color: #795323; }
-body.interactnet-home.nav-on-hero .masthead .wordmark { color: #fff8eb; }
-body.interactnet-home.nav-on-hero .wordmark .brand-accent { color: #e9c27e; }
+body.interactnet-home:is(.nav-on-hero,.nav-on-dark) .masthead .wordmark { color: #fff8eb; }
+body.interactnet-home:is(.nav-on-hero,.nav-on-dark) .wordmark .brand-accent { color: #e9c27e; }
 
 .atlas-hero.atlas-hero--animated {
   display: grid;
