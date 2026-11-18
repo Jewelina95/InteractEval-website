@@ -377,19 +377,124 @@ function costs() {
     'Evaluation totals exclude participant generation, shown below the divider. The latency is measured along the evaluation critical path.'));
 }
 
+function comparisonContext(specification, labels, rows, column) {
+  const values = rows.map(row => row.values[column].value);
+  const minimum = Math.min(...values), maximum = Math.max(...values);
+  const display = value => rows.find(row => row.values[column].value === value).values[column].text;
+  const range = safe(display(minimum)) + ' to ' + safe(display(maximum));
+  const descriptions = {
+    'Conversation outcomes': [
+      'of evaluated episodes reached the protocol’s successful stopping outcome.',
+      'of evaluated episodes stopped through simulated-user interest exhaustion.',
+      'of task-oriented episodes reached successful closure.',
+      'of open-ended episodes reached successful closure.'
+    ],
+    'Purpose and world setting': [
+      'Task-oriented', 'Mixed-purpose', 'Open-ended', 'Realistic-world', 'Stylized-world', 'Science-fictional-world'
+    ],
+    'Matched information conditions': [
+      'sufficient', 'partial', 'insufficient'
+    ],
+    'Behavior frequencies': [
+      'were flagged for clarification.',
+      'contained an unsupported, task-relevant factual addition.'
+    ],
+    'User-role capability': [
+      'Composite scores', 'L5–L6 scores'
+    ],
+    'Matched fixed-horizon scores': [
+      'through the first adaptive stopping decision', 'over 8 turns', 'over 16 turns', 'over 32 turns'
+    ]
+  };
+  const description = descriptions[specification.label]?.[column];
+
+  switch (specification.label) {
+    case 'Controlled probe accuracy': {
+      const drops = rows.map(row => row.values[0].value - row.values[1].value);
+      return '<div class="plot-finding"><strong>' + Math.min(...drops) + '–' + Math.max(...drops) +
+        '<small>percentage points</small></strong><p>Removing reconstruction inputs lowers probe accuracy.</p></div>' +
+        '<p class="plot-explanation">Without latent-state input, accuracy falls from <b>' +
+        safe(rows[0].values[0].text) + ' to ' + safe(rows[0].values[1].text) +
+        '</b>. Without the event chain, it falls from <b>' + safe(rows[1].values[0].text) + ' to ' +
+        safe(rows[1].values[1].text) + '</b>. Both comparisons use the same dialogue evidence.</p>';
+    }
+    case 'Within-dialogue interest prediction': {
+      const qwen = rows.find(row => row.name === 'Qwen3.5-35B-A3B');
+      return '<p class="plot-takeaway">Interest readouts depend on the model’s role.</p>' +
+        '<p class="plot-explanation">For Qwen3.5-35B-A3B, within-dialogue R² is <b>' +
+        safe(qwen.values[1].text) + ' on the user side</b> and <b>' + safe(qwen.values[0].text) +
+        ' on the assistant side</b>. The paired markers compare both roles for each model, using held-out scenes at 75% model depth.</p>';
+    }
+    case 'Behavior frequencies':
+      return '<p class="plot-explanation">Across the ten models, <b>' + range +
+        '</b> of evaluated assistant turns ' + description + ' Each bar shows one model’s turn-level rate.</p>';
+    case 'Conversation outcomes':
+      return '<p class="plot-explanation">Across the ten models, <b>' + range + '</b> ' +
+        description + ' Each bar uses all episodes in its corresponding model and scenario group.</p>';
+    case 'Reviewer endorsement':
+      return '<p class="plot-explanation"><b>22 reviewers audited 311 turn records.</b> The bars show the percentage of judgments endorsed by human reviewers, with the reviewed record counts available below.</p>';
+    case 'Purpose and world setting':
+      return '<p class="plot-explanation"><b>' + description + ' composite scores</b> range from ' +
+        range + ' across the ten models. Switch conditions to compare where the same models perform differently on the 0–1 scale.</p>';
+    case 'Matched information conditions':
+      return '<p class="plot-explanation">The same three models are compared on matched scenarios with <b>' +
+        description + ' information</b>. Each bar is a composite score on the 0–1 scale.</p>';
+    case 'User-role capability':
+      return '<p class="plot-explanation">Here the model plays the <b>user role</b>. ' + description +
+        ' range from ' + range + '; each bar represents one model in that role.</p>';
+    case 'Matched fixed-horizon scores':
+      return '<p class="plot-explanation">These composite scores use the <b>same matched subsample</b>, evaluated ' +
+        description + '. Switch horizons to compare how the stopping rule changes the reported scores.</p>';
+    case 'Turn-level contribution findings': {
+      const nonzero = rows.filter(row => row.values[0].value > 0);
+      const rates = nonzero.map(row => row.values[0].value);
+      return '<p class="plot-explanation"><b>Four Cognizer configurations have nonzero breakthrough rates</b>, from ' +
+        Math.min(...rates) + '% to ' + Math.max(...rates) +
+        '% of evaluated assistant turns. Base models, MetaMind, and the other six Cognizer configurations recorded 0.0%.</p>';
+    }
+  }
+}
+
+function pairedComparisonPlot(specification, labels, rows) {
+  const lowerBound = specification.minimum ?? 0;
+  const scaleWidth = specification.maximum - lowerBound;
+  const position = value => (value - lowerBound) / scaleWidth * 100;
+  return '<div class="paired-legend">' + labels.map((label, index) =>
+    '<span><i class="paired-marker marker-' + index + '"></i>' + safe(label) + '</span>').join('') + '</div>' +
+    '<div class="plot-axis" aria-hidden="true">' +
+      [lowerBound, (lowerBound + specification.maximum) / 2, specification.maximum].map(value =>
+        '<span>' + value + specification.unit + '</span>').join('') + '</div>' +
+    '<div class="paired-rows">' + rows.map(row => {
+      const [first, second] = row.values;
+      const firstPosition = position(first.value), secondPosition = position(second.value);
+      return '<div class="paired-row"><span class="plot-identity">' + row.identity + '</span>' +
+        '<span class="paired-track" aria-hidden="true">' +
+          '<i class="paired-connector" style="left:' + Math.min(firstPosition, secondPosition) + '%;width:' +
+            Math.abs(secondPosition - firstPosition) + '%"></i>' +
+          '<i class="paired-marker marker-0" style="left:' + firstPosition + '%"></i>' +
+          '<i class="paired-marker marker-1" style="left:' + secondPosition + '%"></i>' +
+        '</span><span class="paired-values"><span aria-label="' + safe(labels[0] + ': ' + first.text) +
+          '"><i class="paired-marker marker-0" aria-hidden="true"></i><b>' + safe(first.text) +
+          '</b></span><span aria-label="' + safe(labels[1] + ': ' + second.text) +
+          '"><i class="paired-marker marker-1" aria-hidden="true"></i><b>' + safe(second.text) +
+          '</b></span></span></div>';
+    }).join('') + '</div>';
+}
+
+
 // Plot the values already rendered in the publication tables.
 function enhanceComparisonPlots(root) {
   const plots = [
     {label: 'Conversation outcomes', columns: [1, 2, 3, 4], maximum: 100, unit: '%'},
-    {label: 'Controlled probe accuracy', columns: [1, 2], maximum: 100, unit: '%', rowUnit: 'probes'},
-    {label: 'Within-dialogue interest prediction', columns: [1, 2], minimum: -1, maximum: 1, unit: ''},
-    {label: 'Reviewer endorsement', columns: [1], maximum: 100, unit: '%', rowUnit: 'judgments'},
+    {label: 'Controlled probe accuracy', columns: [1, 2], maximum: 100, unit: '%', paired: true},
+    {label: 'Within-dialogue interest prediction', columns: [1, 2], minimum: -.25, maximum: .25, unit: '', paired: true},
+    {label: 'Reviewer endorsement', columns: [1], maximum: 100, unit: '%'},
     {label: 'Purpose and world setting', columns: [1, 2, 3, 4, 5, 6], maximum: 1, unit: ''},
     {label: 'Matched information conditions', columns: [1, 2, 3], maximum: 1, unit: ''},
     {label: 'Behavior frequencies', columns: [1, 2], maximum: 100, unit: '%'},
     {label: 'User-role capability', columns: [1, 2], maximum: 1, unit: ''},
     {label: 'Matched fixed-horizon scores', columns: [1, 2, 3, 4], maximum: 1, unit: ''},
-    {label: 'Turn-level contribution findings', columns: [1], maximum: 15, unit: '%', rowUnit: 'entries'}
+    {label: 'Turn-level contribution findings', columns: [1], maximum: 15, unit: '%'}
   ];
 
   for (const specification of plots) {
@@ -397,6 +502,7 @@ function enhanceComparisonPlots(root) {
     const table = region.querySelector('table');
     const labels = specification.columns.map(column => table.rows[0].cells[column].textContent.trim());
     const rows = [...table.tBodies[0].rows].map(row => ({
+      name: row.cells[0].textContent.trim(),
       identity: row.cells[0].innerHTML,
       values: specification.columns.map(column => {
         const text = row.cells[column].textContent.trim();
@@ -409,7 +515,7 @@ function enhanceComparisonPlots(root) {
     figure.setAttribute('role', 'group');
     figure.setAttribute('aria-label', specification.label + ' chart');
     figure.innerHTML =
-      (labels.length > 1 ? '<div class="plot-measures" role="group" aria-label="' +
+      (!specification.paired && labels.length > 1 ? '<div class="plot-measures" role="group" aria-label="' +
         safe(specification.label) + ' measure">' + labels.map((label, index) =>
           '<button type="button" data-plot-measure="' + index + '" aria-pressed="' + (index === 0) + '">' +
           safe(label) + '</button>').join('') + '</div>' : '') +
@@ -427,14 +533,14 @@ function enhanceComparisonPlots(root) {
       const lowerBound = specification.minimum ?? 0;
       const scaleWidth = specification.maximum - lowerBound;
       const zero = (0 - lowerBound) / scaleWidth * 100;
-      const values = rows.map(row => row.values[column].value);
-      const minimum = Math.min(...values), maximum = Math.max(...values);
-      const display = value => rows.find(row => row.values[column].value === value).values[column].text;
-      const range = minimum === maximum ? display(minimum) : display(minimum) + '–' + display(maximum);
-      const scope = rows.length + ' ' + (specification.rowUnit ?? 'models');
+      const context = comparisonContext(specification, labels, rows, column);
+      if (specification.paired) {
+        figure.querySelector('.plot-content').innerHTML =
+          context + pairedComparisonPlot(specification, labels, rows);
+        return;
+      }
       figure.querySelector('.plot-content').innerHTML =
-        '<div class="plot-stat"><strong>' + safe(range) + '</strong><p>' + safe(labels[column]) +
-          '<span>Observed range · ' + scope + '</span></p></div>' +
+        context +
         '<div class="plot-axis" aria-hidden="true">' +
           [lowerBound, (lowerBound + specification.maximum) / 2, specification.maximum].map(value =>
             '<span>' + value + specification.unit + '</span>').join('') + '</div>' +

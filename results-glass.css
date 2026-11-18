@@ -615,15 +615,84 @@
 }
 .zip-results .plot-measures button[aria-pressed="true"] { color: #ffffff; border-color: #303030; background: #303030; }
 .zip-results .comparison-plot { --plot-label: 178px; --plot-number: 60px; --plot-gap: 14px; }
-.zip-results .plot-stat { display: flex; flex-wrap: wrap; align-items: baseline; gap: 12px 22px; margin: 0 0 30px; }
-.zip-results .plot-stat > strong {
-  color: #252525;
-  font: 650 clamp(34px, 4vw, 56px)/1.08 var(--sans);
-  letter-spacing: -.065em;
+/* A highlighted number always describes the comparison shown beneath it. */
+.zip-results .plot-finding { margin: 0 0 14px; }
+.zip-results .plot-finding > strong {
+  display: block;
+  font: 600 clamp(38px, 4.4vw, 62px)/1.1 var(--sans);
+  letter-spacing: -.055em;
   font-variant-numeric: tabular-nums;
+  color: #242424;
 }
-.zip-results .plot-stat > p { margin: 0; color: #4a4a4a; font-size: 14px; }
-.zip-results .plot-stat p span { display: block; margin-top: 3px; color: #767676; font-size: 12px; }
+.zip-results .plot-finding small {
+  display: block;
+  margin-top: 8px;
+  font: 450 13px/1.4 var(--sans);
+  letter-spacing: 0;
+  color: #666;
+}
+.zip-results .plot-finding > p,
+.zip-results .plot-takeaway {
+  margin: 14px 0 10px;
+  color: #303030;
+  font: 550 18px/1.4 var(--sans);
+  letter-spacing: -.02em;
+}
+.zip-results .plot-explanation {
+  max-width: 78ch;
+  margin: 0 0 30px;
+  color: #656565;
+  font: 400 15px/1.7 var(--sans);
+  text-wrap: pretty;
+}
+.zip-results .plot-explanation b { font-weight: 550; color: #343434; }
+.zip-results .paired-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 24px;
+  margin: 28px 0 20px;
+  color: #626262;
+  font: 12px/1.5 var(--sans);
+}
+.zip-results .paired-legend > span { display: inline-flex; align-items: center; gap: 8px; }
+.zip-results .paired-marker {
+  display: inline-block;
+  flex: none;
+  width: 9px;
+  height: 9px;
+  border: 1.5px solid #303030;
+  border-radius: 50%;
+}
+.zip-results .marker-0 { background: #303030; }
+.zip-results .marker-1 { background: #f5f5f5; }
+.zip-results .paired-rows { display: grid; gap: 24px; padding-block: 4px; }
+.zip-results .paired-row {
+  display: grid;
+  grid-template-columns: var(--plot-label) minmax(0, 1fr) var(--plot-number);
+  align-items: center;
+  gap: var(--plot-gap);
+  font-size: 12px;
+}
+.zip-results .paired-track {
+  display: block;
+  position: relative;
+  height: 3px;
+  background: #e0e0e0;
+}
+.zip-results .has-signed-scale .paired-track::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: -8px;
+  height: 19px;
+  border-left: 1px solid #aaa;
+}
+.zip-results .paired-connector { position: absolute; top: 0; height: 3px; background: #848484; }
+.zip-results .paired-track > .paired-marker { position: absolute; top: 50%; transform: translate(-50%, -50%); }
+.zip-results .paired-values { display: grid; gap: 5px; font-size: 11px; font-variant-numeric: tabular-nums; }
+.zip-results .paired-values > span { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+.zip-results .paired-values b { font-weight: 500; }
+.zip-results .paired-values .paired-marker { width: 6px; height: 6px; }
 .zip-results .plot-axis {
   display: flex;
   justify-content: space-between;
@@ -659,7 +728,6 @@
 .zip-results .plot-values > summary { padding-top: 14px; color: #656565; cursor: pointer; font-size: 12px; }
 .zip-results .plot-values[open] > summary { margin-bottom: 16px; }
 .zip-results .card-grid .comparison-plot { --plot-label: 126px; --plot-number: 48px; --plot-gap: 10px; }
-.zip-results .card-grid .plot-stat > strong { font-size: clamp(32px, 3.5vw, 48px); }
 .zip-results .pair-readout { background: #ffffff; border: 0; border-radius: 16px; margin-bottom: 24px; padding: 20px; }
 .zip-results .pair-readout strong { color: var(--chart-accent); font-size: 36px; font-weight: 600; letter-spacing: -.055em; }
 .zip-results .matrix-cell { background: rgb(38 38 38 / calc(var(--cell-shade) * 3)); color: #3b3b3b; border-radius: 5px; }
@@ -709,11 +777,11 @@
   .zip-results .profile .line-chart text { font-size: 18px; }
   .zip-results .comparison-plot,
   .zip-results .card-grid .comparison-plot { --plot-label: 120px; --plot-number: 50px; --plot-gap: 8px; }
-  .zip-results .plot-stat > strong { font-size: clamp(29px, 7.8vw, 42px); }
-  .zip-results .plot-stat { gap: 10px; margin-bottom: 25px; }
   .zip-results .plot-identity .model-label { gap: 5px; }
   .zip-results .plot-identity .model-label img { width: 14px; height: 14px; }
-  .zip-results .plot-row { font-size: 11px; }
+  .zip-results .plot-row,
+  .zip-results .paired-row { font-size: 11px; }
+  .zip-results .plot-explanation { font-size: 14px; }
   .zip-results .plot-row > strong { font-size: 11px; }
   .zip-results .cost-summary { gap: 12px; grid-template-columns: minmax(0, 1fr); }
   .zip-results .cost-summary > div { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
