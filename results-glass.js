@@ -411,19 +411,17 @@ function comparisonContext(specification, labels, rows, column) {
   switch (specification.label) {
     case 'Controlled probe accuracy': {
       const drops = rows.map(row => row.values[0].value - row.values[1].value);
-      return '<div class="plot-finding"><strong>' + Math.min(...drops) + '–' + Math.max(...drops) +
-        '<small>percentage points</small></strong><p>Removing reconstruction inputs lowers probe accuracy.</p></div>' +
-        '<p class="plot-explanation">Without latent-state input, accuracy falls from <b>' +
-        safe(rows[0].values[0].text) + ' to ' + safe(rows[0].values[1].text) +
-        '</b>. Without the event chain, it falls from <b>' + safe(rows[1].values[0].text) + ' to ' +
-        safe(rows[1].values[1].text) + '</b>. Both comparisons use the same dialogue evidence.</p>';
+      return '<p class="plot-takeaway">Reconstruction inputs improve probe accuracy.</p>' +
+        '<p class="plot-explanation">Removing latent-state input lowers accuracy by <b>' + drops[0] +
+        ' percentage points</b>. Removing the event chain lowers it by <b>' + drops[1] +
+        ' points</b>, using the same dialogue evidence.</p>';
     }
     case 'Within-dialogue interest prediction': {
       const qwen = rows.find(row => row.name === 'Qwen3.5-35B-A3B');
-      return '<p class="plot-takeaway">Interest readouts depend on the model’s role.</p>' +
-        '<p class="plot-explanation">For Qwen3.5-35B-A3B, within-dialogue R² is <b>' +
-        safe(qwen.values[1].text) + ' on the user side</b> and <b>' + safe(qwen.values[0].text) +
-        ' on the assistant side</b>. The paired markers compare both roles for each model, using held-out scenes at 75% model depth.</p>';
+      return '<p class="plot-takeaway">Interest decoding varies by role.</p>' +
+        '<p class="plot-explanation">User-side R² is higher for all three models. For Qwen3.5-35B-A3B, it rises from <b>' +
+        safe(qwen.values[0].text) + ' to ' + safe(qwen.values[1].text) +
+        '</b> on held-out scenes at 75% model depth.</p>';
     }
     case 'Behavior frequencies':
       return '<p class="plot-explanation">Across the ten models, <b>' + range +
@@ -467,7 +465,9 @@ function pairedComparisonPlot(specification, labels, rows) {
     '<div class="paired-rows">' + rows.map(row => {
       const [first, second] = row.values;
       const firstPosition = position(first.value), secondPosition = position(second.value);
-      return '<div class="paired-row"><span class="plot-identity">' + row.identity + '</span>' +
+      const change = specification.label === 'Controlled probe accuracy'
+        ? '<small class="paired-change">−' + (first.value - second.value) + ' pp</small>' : '';
+      return '<div class="paired-row"><span class="plot-identity">' + row.identity + change + '</span>' +
         '<span class="paired-track" aria-hidden="true">' +
           '<i class="paired-connector" style="left:' + Math.min(firstPosition, secondPosition) + '%;width:' +
             Math.abs(secondPosition - firstPosition) + '%"></i>' +
