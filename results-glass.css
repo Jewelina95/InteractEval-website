@@ -908,3 +908,20 @@
 .zip-results .capability-legend i { width: 18px; height: 0; border-top: 2px solid #292724; }
 .zip-results .capability-legend .capability-median-key { border-color: #b19462; border-top-style: dashed; }
 .zip-results .capability-legend .capability-range-key { height: 8px; border: 0; background: #9f968f30; }
+
+/* Keep model names and values readable at normal browser zoom. */
+.zip-results .plot-row { font-size: 16px; line-height: 1.5; min-height: 30px; }
+.zip-results .plot-row > strong { font-size: 16px; }
+.zip-results .plot-rows { gap: 15px; }
+.zip-results .plot-axis { font-size: 13px; color: #807666; }
+.zip-results .plot-values > summary { font-size: 14px; }
+.zip-results .comparison-plot:not(:has(.paired-rows)) { --plot-label: 210px; --plot-number: 64px; }
+.zip-results .card-grid .comparison-plot:not(:has(.paired-rows)) { --plot-label: 154px; --plot-number: 56px; }
+@media (max-width: 720px) {
+  .zip-results .plot-row, .zip-results .plot-row > strong { font-size: 13px; }
+  .zip-results .plot-row { min-height: 32px; }
+  .zip-results .plot-rows { gap: 12px; }
+  .zip-results .plot-axis { font-size: 12px; }
+  .zip-results .comparison-plot:not(:has(.paired-rows)),
+  .zip-results .card-grid .comparison-plot:not(:has(.paired-rows)) { --plot-label: 125px; --plot-number: 44px; }
+}
