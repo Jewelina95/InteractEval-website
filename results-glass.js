@@ -377,15 +377,15 @@ function costs() {
     'Evaluation totals exclude participant generation, shown below the divider. The latency is measured along the evaluation critical path.'));
 }
 
-function comparisonContext(specification, labels, rows, column) {
+function comparisonContext(specification, rows, column) {
   const values = rows.map(row => row.values[column].value);
   const minimum = Math.min(...values), maximum = Math.max(...values);
   const display = value => rows.find(row => row.values[column].value === value).values[column].text;
   const range = safe(display(minimum)) + ' to ' + safe(display(maximum));
   const descriptions = {
     'Conversation outcomes': [
-      'of evaluated episodes reached the protocol’s successful stopping outcome.',
-      'of evaluated episodes stopped through simulated-user interest exhaustion.',
+      'of evaluated episodes reached successful closure.',
+      'of evaluated episodes stopped through interest exhaustion.',
       'of task-oriented episodes reached successful closure.',
       'of open-ended episodes reached successful closure.'
     ],
@@ -396,14 +396,14 @@ function comparisonContext(specification, labels, rows, column) {
       'sufficient', 'partial', 'insufficient'
     ],
     'Behavior frequencies': [
-      'were flagged for clarification.',
-      'contained an unsupported, task-relevant factual addition.'
+      'showed clarification.',
+      'contained unsupported factual additions.'
     ],
     'User-role capability': [
       'Composite scores', 'L5–L6 scores'
     ],
     'Matched fixed-horizon scores': [
-      'through the first adaptive stopping decision', 'over 8 turns', 'over 16 turns', 'over 32 turns'
+      'through adaptive stopping', 'over 8 turns', 'over 16 turns', 'over 32 turns'
     ]
   };
   const description = descriptions[specification.label]?.[column];
@@ -411,44 +411,40 @@ function comparisonContext(specification, labels, rows, column) {
   switch (specification.label) {
     case 'Controlled probe accuracy': {
       const drops = rows.map(row => row.values[0].value - row.values[1].value);
-      return '<p class="plot-takeaway">Reconstruction inputs improve probe accuracy.</p>' +
-        '<p class="plot-explanation">Removing latent-state input lowers accuracy by <b>' + drops[0] +
-        ' percentage points</b>. Removing the event chain lowers it by <b>' + drops[1] +
-        ' points</b>, using the same dialogue evidence.</p>';
+      return '<p class="plot-explanation">Probe accuracy falls by <b>' + drops[0] +
+        ' percentage points</b> without latent states and <b>' + drops[1] + '</b> without event chains.</p>';
     }
     case 'Within-dialogue interest prediction': {
       const qwen = rows.find(row => row.name === 'Qwen3.5-35B-A3B');
-      return '<p class="plot-takeaway">Interest decoding varies by role.</p>' +
-        '<p class="plot-explanation">User-side R² is higher for all three models. For Qwen3.5-35B-A3B, it rises from <b>' +
-        safe(qwen.values[0].text) + ' to ' + safe(qwen.values[1].text) +
-        '</b> on held-out scenes at 75% model depth.</p>';
+      return '<p class="plot-explanation">For Qwen3.5-35B-A3B, interest R² is <b>' +
+        safe(qwen.values[1].text) + ' on the user side</b> versus <b>' +
+        safe(qwen.values[0].text) + ' on the assistant side</b>.</p>';
     }
     case 'Behavior frequencies':
-      return '<p class="plot-explanation">Across the ten models, <b>' + range +
-        '</b> of evaluated assistant turns ' + description + ' Each bar shows one model’s turn-level rate.</p>';
+      return '<p class="plot-explanation">Across ten models, <b>' + range +
+        '</b> of evaluated assistant turns ' + description + '</p>';
     case 'Conversation outcomes':
-      return '<p class="plot-explanation">Across the ten models, <b>' + range + '</b> ' +
-        description + ' Each bar uses all episodes in its corresponding model and scenario group.</p>';
+      return '<p class="plot-explanation">Across ten models, <b>' + range + '</b> ' + description + '</p>';
     case 'Reviewer endorsement':
-      return '<p class="plot-explanation"><b>22 reviewers audited 311 turn records.</b> The bars show the percentage of judgments endorsed by human reviewers, with the reviewed record counts available below.</p>';
+      return '<p class="plot-explanation">Human endorsement of evaluator judgments, from <b>311 turn records audited by 22 reviewers</b>.</p>';
     case 'Purpose and world setting':
-      return '<p class="plot-explanation"><b>' + description + ' composite scores</b> range from ' +
-        range + ' across the ten models. Switch conditions to compare where the same models perform differently on the 0–1 scale.</p>';
+      return '<p class="plot-explanation"><b>' + description +
+        ' composite scores</b> across ten models, on a 0–1 scale.</p>';
     case 'Matched information conditions':
-      return '<p class="plot-explanation">The same three models are compared on matched scenarios with <b>' +
-        description + ' information</b>. Each bar is a composite score on the 0–1 scale.</p>';
+      return '<p class="plot-explanation">Composite scores for three models on matched scenarios with <b>' +
+        description + ' information</b>.</p>';
     case 'User-role capability':
-      return '<p class="plot-explanation">Here the model plays the <b>user role</b>. ' + description +
-        ' range from ' + range + '; each bar represents one model in that role.</p>';
+      return '<p class="plot-explanation"><b>' + description +
+        '</b> for ten models playing the user role, on a 0–1 scale.</p>';
     case 'Matched fixed-horizon scores':
-      return '<p class="plot-explanation">These composite scores use the <b>same matched subsample</b>, evaluated ' +
-        description + '. Switch horizons to compare how the stopping rule changes the reported scores.</p>';
+      return '<p class="plot-explanation">Composite scores on the <b>same matched subsample</b>, evaluated ' +
+        description + '.</p>';
     case 'Turn-level contribution findings': {
       const nonzero = rows.filter(row => row.values[0].value > 0);
       const rates = nonzero.map(row => row.values[0].value);
-      return '<p class="plot-explanation"><b>Four Cognizer configurations have nonzero breakthrough rates</b>, from ' +
-        Math.min(...rates) + '% to ' + Math.max(...rates) +
-        '% of evaluated assistant turns. Base models, MetaMind, and the other six Cognizer configurations recorded 0.0%.</p>';
+      return '<p class="plot-explanation">Breakthroughs occur in <b>' +
+        Math.min(...rates) + '%–' + Math.max(...rates) +
+        '% of evaluated turns</b> for four Cognizer configurations.</p>';
     }
   }
 }
@@ -533,7 +529,7 @@ function enhanceComparisonPlots(root) {
       const lowerBound = specification.minimum ?? 0;
       const scaleWidth = specification.maximum - lowerBound;
       const zero = (0 - lowerBound) / scaleWidth * 100;
-      const context = comparisonContext(specification, labels, rows, column);
+      const context = comparisonContext(specification, rows, column);
       if (specification.paired) {
         figure.querySelector('.plot-content').innerHTML =
           context + pairedComparisonPlot(specification, labels, rows);

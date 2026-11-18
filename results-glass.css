@@ -776,7 +776,7 @@
 
 /* Quiet color encodes the comparison; white surfaces keep the reading continuous. */
 .zip-results {
-  --chart-accent: #5269d5;
+  --chart-accent: #0969da;
   --chart-secondary: #9a76bb;
   --divider: #e2e5ee;
 }
@@ -807,7 +807,7 @@
   text-wrap: balance;
 }
 .zip-results .plot-explanation { color: #71778b; font-size: 14px; line-height: 1.7; }
-.zip-results .plot-explanation b { color: #465cae; font-weight: 500; }
+.zip-results .plot-explanation b { color: #285faa; font-weight: 500; }
 .zip-results .paired-legend {
   margin-top: 30px;
   padding-top: 18px;
@@ -821,7 +821,7 @@
 .zip-results .paired-track { background: #e8ebf3; }
 .zip-results .paired-connector {
   height: 3px;
-  background: linear-gradient(90deg, #9a76bb7d, #5269d59c);
+  background: linear-gradient(90deg, #9a76bb7d, #0969dab3);
 }
 .zip-results .paired-track > .paired-marker { width: 10px; height: 10px; box-shadow: 0 0 0 3px #ffffffd9; }
 .zip-results .has-signed-scale .paired-track::before { border-color: #c7cddd; }
@@ -846,7 +846,7 @@
 .zip-results .profile { background: linear-gradient(115deg, #f1f4fc, #fff 73%); }
 .zip-results .profile-readout > strong { color: #465a9d; font-weight: 550; }
 .zip-results .profile-readout .profile-level { color: #58657f; font-weight: 450; }
-.zip-results .profile .chart-series { color: #657bd7; }
+.zip-results .profile .chart-series { color: var(--chart-accent); }
 .zip-results .profile .chart-gridline { stroke: #e0e5f1; }
 .zip-results .pair-readout { background: #f1f4fc; }
 .zip-results .matrix-cell { background: rgb(82 105 213 / calc(var(--cell-shade) * 3)); color: #485785; }
