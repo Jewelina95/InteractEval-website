@@ -577,7 +577,7 @@
   font: 650 clamp(60px, 7.5vw, 108px)/.95 var(--sans);
   letter-spacing: -.075em;
 }
-.zip-results .profile-readout .profile-level { max-width: none; width: auto; margin: 0 0 10px; font-size: 18px; color: #373941; }
+.zip-results .profile-readout .profile-level { display: block; max-width: none; width: auto; margin: 0 0 10px; font-size: 18px; color: #373941; }
 .zip-results .profile-readout .profile-score-model { font-size: 14px; color: #6d6f78; }
 .zip-results .profile .line-chart text { fill: #73757d; font-size: 13px; }
 .zip-results .profile .chart-gridline { stroke: #dadce2; stroke-dasharray: 2 5; }
