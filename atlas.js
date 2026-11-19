@@ -214,6 +214,14 @@ function setupAtlasWorld(){
   let observer;
   const heroLink = figure.closest('.atlas-hero')?.querySelector('.atlas-hero-actions a');
 
+  function syncSoundButton(){
+    const active = soundEnabled && audio?.state === 'running';
+    const label = active ? 'Mute intro audio' : 'Play intro audio';
+    sound.setAttribute('aria-pressed', String(active));
+    sound.setAttribute('aria-label', label);
+    sound.title = label;
+  }
+
   function stopSound(){
     output?.disconnect();
     output = undefined;
@@ -230,6 +238,7 @@ function setupAtlasWorld(){
   }
 
   function onAudioReady(){
+    syncSoundButton();
     if(audio?.state === 'running' && soundIsAvailable() && figure.isConnected && !output) play();
   }
 
@@ -239,9 +248,10 @@ function setupAtlasWorld(){
       if(!audio) {
         audio = new AudioContext();
         audio.addEventListener('statechange', onAudioReady);
+        syncSoundButton();
       }
       if(audio.state === 'running') return true;
-      audio.resume().catch(() => {});
+      audio.resume().then(onAudioReady).catch(syncSoundButton);
     } catch {
       return false;
     }
@@ -350,10 +360,12 @@ function setupAtlasWorld(){
     if(figure.isConnected) play();
   });
   sound.addEventListener('click', () => {
+    if(soundEnabled && audio?.state !== 'running'){
+      if(armSound()) play();
+      return;
+    }
     soundEnabled = !soundEnabled;
-    sound.setAttribute('aria-pressed', String(soundEnabled));
-    sound.setAttribute('aria-label', soundEnabled ? 'Mute intro audio' : 'Unmute intro audio');
-    sound.title = soundEnabled ? 'Mute intro audio' : 'Unmute intro audio';
+    syncSoundButton();
     if(!soundEnabled) stopSound();
     else if(armSound()) play();
   });
