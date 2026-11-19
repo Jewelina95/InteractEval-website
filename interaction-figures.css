@@ -216,6 +216,7 @@
 .future-model { display: inline-flex; align-items: center; gap: 5px; vertical-align: middle; }
 .future-model :is(img, svg) { width: 17px; height: 17px; flex: none; }
 .future-model--code { display: inline-grid; grid-template-columns: 17px max-content; }
+.future-model-reference { display: inline-block; white-space: nowrap; }
 .future-results sup { margin-inline-start: 2px; font-size: .7em; }
 .future-results sup a { color: #e9c58a; text-decoration: underline; text-underline-offset: 2px; }
 .future-artwork {
