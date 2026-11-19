@@ -67,7 +67,9 @@ function atlasWorldFigure(){
       </span>
     </div>
     <div class="atlas-world-controls">
-      <button type="button" class="atlas-world-sound" hidden aria-pressed="true">Sound</button>
+      <button type="button" class="atlas-world-sound" hidden aria-pressed="true" aria-label="Mute intro audio" title="Mute intro audio">
+        <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 8h4l4-4v12l-4-4H3Z"/><path class="atlas-sound-waves" d="M14 7q3 3 0 6m2-8q5 5 0 10"/><path class="atlas-sound-muted" d="m14 8 4 4m0-4-4 4"/></svg>
+      </button>
       <button type="button" class="atlas-world-replay" hidden aria-label="Replay layer animation" title="Replay layer animation">
         <span class="replay-glyph" aria-hidden="true"></span>
       </button>
@@ -348,12 +350,10 @@ function setupAtlasWorld(){
     if(figure.isConnected) play();
   });
   sound.addEventListener('click', () => {
-    if(soundEnabled && !output){
-      if(armSound()) play();
-      return;
-    }
     soundEnabled = !soundEnabled;
     sound.setAttribute('aria-pressed', String(soundEnabled));
+    sound.setAttribute('aria-label', soundEnabled ? 'Mute intro audio' : 'Unmute intro audio');
+    sound.title = soundEnabled ? 'Mute intro audio' : 'Unmute intro audio';
     if(!soundEnabled) stopSound();
     else if(armSound()) play();
   });

@@ -50,7 +50,7 @@ function creativityResults() {
     <caption>Frontier Emergence rate by configuration</caption>
     <thead><tr><th scope="col">Model</th>
       <th scope="col"><span class="future-model"><svg viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.3"><path d="m10 2 7 4v8l-7 4-7-4V6Z M3 6l7 4 7-4 M10 10v8"/></svg>Cognizer</span><sup><a href="https://worldeology.com/blog/cognizer/" target="_blank" rel="noopener" aria-label="Reference 1, Cognizer">[1]</a></sup></th>
-      <th scope="col"><span class="future-model"><img src="./assets/providers/claude.svg" alt="" width="17" height="17"/>Claude Code</span></th>
+      <th scope="col"><span class="future-model future-model--code"><img src="./assets/providers/claude.svg" alt="" width="17" height="17"/><span>Claude Code</span></span></th>
       <th scope="col">Model alone</th></tr></thead>
     <tbody>${rates.map(([name, icon, cognizer, code]) => `<tr><th scope="row"><span class="future-model"><img src="./assets/providers/${icon}" alt="" width="17" height="17"/>${name}</span></th><td>${cognizer}</td><td>${code}</td><td>0.0%</td></tr>`).join('')}</tbody>
   </table>`;

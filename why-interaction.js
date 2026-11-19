@@ -79,7 +79,7 @@
             <section class="why-response" aria-labelledby="why-response-heading">
               <div class="why-panel-heading"><h3 id="why-response-heading">Responsive Intelligence</h3></div>
               <div class="why-chat">
-                <audio preload="metadata" src="${media}response-dialogue-video-voices.m4a?v=20261118-clean-opening"></audio>
+                <audio preload="metadata" src="${media}response-dialogue-matched-tony.m4a?v=20261119-urgent-reference"></audio>
                 <ol class="why-turns" aria-label="Two exchanges between Tony and the AI">${turns.map(turnMarkup).join('')}</ol>
                 <button type="button" class="why-play why-assistant-control"><span>Play dialogue</span></button>
               </div>

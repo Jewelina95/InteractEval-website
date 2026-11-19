@@ -215,6 +215,7 @@
 .future-results th:first-child { text-align: start; }
 .future-model { display: inline-flex; align-items: center; gap: 5px; vertical-align: middle; }
 .future-model :is(img, svg) { width: 17px; height: 17px; flex: none; }
+.future-model--code { display: inline-grid; grid-template-columns: 17px max-content; }
 .future-results sup { margin-inline-start: 2px; font-size: .7em; }
 .future-results sup a { color: #e9c58a; text-decoration: underline; text-underline-offset: 2px; }
 .future-artwork {
@@ -267,6 +268,7 @@
   .future-tabs button:hover { color: #fff0d1; background: rgb(233 197 138 / 7%); }
 }
 @media (max-width: 660px) {
+  .future-model--code > span { max-width: 4.5em; }
   .future-tabs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .future-tabs button { min-height: 54px; }
   .future-panel { grid-template-columns: 1fr; }

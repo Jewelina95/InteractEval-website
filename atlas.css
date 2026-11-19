@@ -822,15 +822,22 @@ body.interactnet-home:is(.nav-on-hero,.nav-on-dark) .wordmark .brand-accent { co
 }
 
 .atlas-world-sound {
-  min-height: 32px;
-  padding: 4px 10px;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
   border: 1px solid #505050;
-  border-radius: 20px;
+  border-radius: 50%;
   background: #151515;
   color: #f0f0f0;
   font: 650 12px/1.1 var(--sans);
   cursor: pointer;
 }
+.atlas-world-sound svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.atlas-world-sound .atlas-sound-muted,
+.atlas-world-sound[aria-pressed="false"] .atlas-sound-waves { display: none; }
+.atlas-world-sound[aria-pressed="false"] .atlas-sound-muted { display: block; }
 
 .atlas-world-sound[aria-pressed="true"] {
   background: #f1e4d0;
