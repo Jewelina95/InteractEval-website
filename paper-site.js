@@ -88,7 +88,7 @@ function render(){
  if(results){
    resultsMount=new AbortController();
    const {signal}=resultsMount;
-   import('./results-glass.js?v=20261119-profile-order').then(({mountResults})=>{
+   import('./results-glass.js?v=20261120-agent-references').then(({mountResults})=>{
      if(signal.aborted)return;
      mountResults(results,publication,findingsEvidence,researchEvidence,results.dataset.initialTopic,signal);
    }).catch(error=>{

@@ -543,6 +543,8 @@
   border-inline-start: 1px solid var(--divider);
   color: var(--accent);
 }
+.zip-results .architecture-reference { margin-inline-start: 2px; font-size: .7em; }
+.zip-results .architecture-reference a { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; }
 .zip-results .pending-result strong { display: block; color: var(--accent); font-size: 23px; }
 .zip-results .pending-result p { margin: 4px 0 0; color: var(--muted); }
 

@@ -52,6 +52,19 @@ function modelLabel(name) {
     '<span>' + safe(displayModel(name)) + '</span></span>';
 }
 
+function architectureLabel(name) {
+  const references = {
+    MetaMind: [1, 'https://neurips.cc/virtual/2025/loc/san-diego/poster/115802'],
+    Cognizer: [2, 'https://worldeology.com/blog/cognizer/']
+  };
+  const reference = references[name];
+  return safe(name) + (reference
+    ? '<sup class="architecture-reference"><a href="' + reference[1] +
+      '" target="_blank" rel="noopener" aria-label="Reference ' + reference[0] + ', ' + safe(name) +
+      '">[' + reference[0] + ']</a></sup>'
+    : '');
+}
+
 function table(label, headers, rows, options = {}) {
   const groups = options.groups ?? [];
   const grouped = groups.length > 0;
@@ -63,7 +76,7 @@ function table(label, headers, rows, options = {}) {
     : '';
   const groupRow = grouped
     ? '<tr class="result-column-groups"><th scope="col" rowspan="2">' + safe(headers[0]) + '</th>' +
-      groups.map(([label, span]) => '<th scope="colgroup" colspan="' + span + '">' + safe(label) + '</th>').join('') + '</tr>'
+      groups.map(([label, span]) => '<th scope="colgroup" colspan="' + span + '">' + (options.groupLabel ?? safe)(label) + '</th>').join('') + '</tr>'
     : '';
   const body = rows.map(([name, ...values]) => {
     const identity = options.models ? modelLabel(name) : safe(name);
@@ -223,7 +236,7 @@ function agentResults(models, records) {
     return [name, values.reduce((total, value) => total + value, 0) / values.length];
   });
   const visual = gains.map(([name, value]) =>
-    '<div class="gain-row"><span>' + safe(name) +
+    '<div class="gain-row"><span>' + architectureLabel(name) +
     '</span><i><b style="width:' + (value / .08 * 100) + '%"></b></i><strong>' + delta(value) + '</strong></div>'
   ).join('');
   return section('agents', 'Agent evaluation',
@@ -231,7 +244,7 @@ function agentResults(models, records) {
       visual + '</div>', 'Proactive promotion gain averaged over the ' + stageRows.length + ' eligible Claude base models shared by all three configurations.') +
     card('Gains over the base model', table('Matched agent gains', [
     'Base model', ...architectures.flatMap(() => ['Overall', proactiveStage])
-  ], rows, {models: true, groups: architectures.map(name => [name, 2])}),
+  ], rows, {models: true, groups: architectures.map(name => [name, 2]), groupLabel: architectureLabel}),
   'Each gain uses the same underlying model as its baseline. Claude Code comparisons cover the eligible Claude configurations.'));
 }
 
