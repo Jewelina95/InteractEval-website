@@ -71,6 +71,15 @@
       "page": 29
     }
   },
+  "additional_capability_results": [
+    {
+      "name": "qwen4",
+      "source": "User-provided main-results row",
+      "composite": 0.581,
+      "levels": [0.784, 0.763, 0.725, 0.679, 0.486, 0.436],
+      "stages": [0.775, 0.703, 0.461]
+    }
+  ],
   "models": [
     {
       "name": "claude-opus-5.5",

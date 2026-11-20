@@ -37,6 +37,7 @@ const modelNames = {
   'claude-opus-5': 'Claude Opus 5',
   'gpt-5.6-sol': 'GPT-5.6 Sol',
   'qwen3.8-max': 'Qwen3.8-Max',
+  'qwen4': 'Qwen4',
   'gemini-3.8-flash': 'Gemini 3.8 Flash',
   'deepseek-v4-pro': 'DeepSeek-V4-Pro',
   'kimi-k3': 'Kimi K3',
@@ -170,6 +171,9 @@ function capabilityScoreTable(models) {
     '<th scope="col">L' + (index + 1) + '</th>'
   ).join('');
   const scores = models.map((model, modelIndex) => {
+    const composite = format(model.composite) + (Number.isFinite(model.reliability?.sd)
+      ? ' ± ' + format(model.reliability.sd, 4)
+      : '');
     const scoreCells = model.levels.map(value => '<td>' + format(value) + '</td>').join('');
     const stageCells = model.stages.map((value, index) =>
       '<td class="capability-stage-cell" colspan="2" headers="score-model-' + modelIndex + ' score-stage-' + index +
@@ -179,7 +183,7 @@ function capabilityScoreTable(models) {
     return '<tbody class="capability-model-scores"><tr><th scope="rowgroup" id="score-model-' + modelIndex +
       '" rowspan="2"><button type="button" data-profile="' + modelIndex +
       '" class="model-button" aria-pressed="false">' + modelLabel(model.name) + '</button></th>' + scoreCells +
-      '<td rowspan="2" class="capability-composite">' + format(model.composite) + ' ± ' + format(model.reliability.sd, 4) + '</td></tr>' +
+      '<td rowspan="2" class="capability-composite">' + composite + '</td></tr>' +
       '<tr class="capability-stage-row">' + stageCells + '</tr></tbody>';
   }).join('');
   return '<div class="table-scroll" role="region" aria-label="Capability scores by model" tabindex="0">' +
@@ -190,17 +194,17 @@ function capabilityScoreTable(models) {
     '<tr class="capability-level-headings">' + levelHeadings + '</tr></thead>' + scores + '</table></div>';
 }
 
-function mainResults(models) {
+function mainResults(models, capabilityModels) {
   const outcomes = models.map(model => [
     model.name, percent(model.closure), percent(model.exhaustion),
     percent(model.functional_closure), percent(model.nonfunctional_closure)
   ]);
   return section('main-results', 'Main results',
-    card('Capability scores', capabilityScoreTable(models),
-    'Each stage score summarizes the two levels above it. Composite SD describes variation across three independent runs.',
+    card('Capability scores', capabilityScoreTable(capabilityModels),
+    'Each stage score summarizes the two levels above it. Composite SD, where reported, describes variation across three independent runs.',
     capabilityStages.map(([, definition], index) => ['L' + (index * 2 + 1) + '–L' + (index * 2 + 2), definition])) +
     '<article class="profile glass"><div class="profile-controls"><h3>Capability profile</h3>' +
-      modelPicker(models) + '</div>' +
+      modelPicker(capabilityModels) + '</div>' +
     '<div class="profile-layout"><div class="profile-readout" id="profile-readout" aria-live="polite"></div>' +
       '<div class="profile-plot"><div id="profile-chart"></div><ul class="profile-legend">' +
       '<li>Selected model</li><li>Across-model median</li><li>Across-model range</li></ul></div></div></article>' +
@@ -446,12 +450,12 @@ function observeData(root, signal) {
   signal.addEventListener('abort', () => observer.disconnect(), {once: true});
 }
 
-function setupInteractions(root, models, matrix, episodes, initialTopic, signal) {
+function setupInteractions(root, models, capabilityModels, matrix, episodes, initialTopic, signal) {
   let activeModel = 0;
   let activeLevel = 4;
   const chart = root.querySelector('#profile-chart');
   const ranges = levelLabels.map((_, index) => {
-    const values = models.map(model => model.levels[index]).sort((a, b) => a - b);
+    const values = capabilityModels.map(model => model.levels[index]).sort((a, b) => a - b);
     const center = (values.length - 1) / 2;
     return {min: values[0], max: values.at(-1), median: (values[Math.floor(center)] + values[Math.ceil(center)]) / 2};
   });
@@ -489,7 +493,7 @@ function setupInteractions(root, models, matrix, episodes, initialTopic, signal)
 
   function showLevel(index, animate = false) {
     activeLevel = index;
-    const model = models[activeModel];
+    const model = capabilityModels[activeModel];
     readout.innerHTML = '<strong>' + format(model.levels[index]) +
       '</strong><p class="profile-level">L' + (index + 1) + ' · ' + safe(levelLabels[index]) +
       '</p><p class="profile-score-model">' +
@@ -504,10 +508,10 @@ function setupInteractions(root, models, matrix, episodes, initialTopic, signal)
 
   function showModel(index, animate = false) {
     activeModel = index;
-    selectedModel.innerHTML = modelLabel(models[index].name);
+    selectedModel.innerHTML = modelLabel(capabilityModels[index].name);
     root.querySelectorAll('[data-profile]').forEach(button =>
       button.setAttribute('aria-pressed', String(Number(button.dataset.profile) === index)));
-    const model = models[index];
+    const model = capabilityModels[index];
     chart.innerHTML = capabilityProfileChart(model, ranges);
     showLevel(activeLevel, animate);
   }
@@ -619,12 +623,14 @@ function setupInteractions(root, models, matrix, episodes, initialTopic, signal)
 
 export function mountResults(root, publication, evidence, research, initialTopic, signal) {
   const {models, agents, interaction_matrix: matrix, matched_information: matched} = publication;
+  const capabilityModels = [...models, ...(publication.additional_capability_results ?? [])]
+    .sort((first, second) => second.composite - first.composite);
   const episodes = research.trajectories.episodes;
   root.innerHTML =
     resultPicker() +
-    mainResults(models) + agentResults(models, agents) + robustness(models, evidence) +
+    mainResults(models, capabilityModels) + agentResults(models, agents) + robustness(models, evidence) +
     scenarios(models, matched) + personas() + participants(models, matrix) +
     dynamics(models, evidence, episodes) + costs();
-  setupInteractions(root, models, matrix, episodes, initialTopic, signal);
+  setupInteractions(root, models, capabilityModels, matrix, episodes, initialTopic, signal);
   observeData(root, signal);
 }

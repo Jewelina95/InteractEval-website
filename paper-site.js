@@ -7,7 +7,7 @@ if (location.pathname.endsWith('/index.html') && /^https?:$/.test(location.proto
   history.replaceState(history.state, '', home);
 }
 const $=s=>document.querySelector(s),safe=(s='')=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const REV='20261119-profile-order',levelNames=['Goal preservation','Information uptake','State progression','Contextual expression','Proactive agency','Long-horizon coherence'];
+const REV='20261120-qwen4',levelNames=['Goal preservation','Information uptake','State progression','Contextual expression','Proactive agency','Long-horizon coherence'];
 let publication,researchEvidence,exhibits=[],route='home',metric='composite',agentMetric='composite',architecture='All',caseQuery='',casePurpose='all',view='chart',sortDown=true;
 const modelIconFiles=[[/^claude(?:[-\s]|$)/i,'claude.svg'],[/^(?:gpt|chatgpt|openai)(?:[-\s]|$)/i,'openai.svg'],[/^gemini(?:[-\s]|$)/i,'gemini.png'],[/^deepseek(?:[-\s]|$)/i,'deepseek-product.svg'],[/^qwen/i,'qwen-model.svg'],[/^kimi(?:[-\s]|$)/i,'kimi.png'],[/^(?:glm|z[.-]?ai)(?:[-\s]|$)/i,'glm.svg']];
 const assets=name=>'./assets/providers/'+(modelIconFiles.find(([pattern])=>pattern.test(String(name)))?.[1]||'model.svg');
@@ -88,7 +88,7 @@ function render(){
  if(results){
    resultsMount=new AbortController();
    const {signal}=resultsMount;
-   import('./results-glass.js?v=20261120-agent-references').then(({mountResults})=>{
+   import('./results-glass.js?v=20261120-qwen4').then(({mountResults})=>{
      if(signal.aborted)return;
      mountResults(results,publication,findingsEvidence,researchEvidence,results.dataset.initialTopic,signal);
    }).catch(error=>{
