@@ -37,7 +37,7 @@ const modelNames = {
   'claude-opus-5': 'Claude Opus 5',
   'gpt-5.6-sol': 'GPT-5.6 Sol',
   'qwen3.8-max': 'Qwen3.8-Max',
-  'qwen4': 'Qwen4',
+  'qwen4': 'Qwen4-Max',
   'gemini-3.8-flash': 'Gemini 3.8 Flash',
   'deepseek-v4-pro': 'DeepSeek-V4-Pro',
   'kimi-k3': 'Kimi K3',

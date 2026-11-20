@@ -88,7 +88,7 @@ function render(){
  if(results){
    resultsMount=new AbortController();
    const {signal}=resultsMount;
-   import('./results-glass.js?v=20261120-qwen4').then(({mountResults})=>{
+   import('./results-glass.js?v=20261120-qwen4-max').then(({mountResults})=>{
      if(signal.aborted)return;
      mountResults(results,publication,findingsEvidence,researchEvidence,results.dataset.initialTopic,signal);
    }).catch(error=>{
